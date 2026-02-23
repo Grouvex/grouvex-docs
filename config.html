@@ -62,9 +62,17 @@
                         </div>
                     </div>
                     <div class="admin-actions">
-                        <button onclick="exportData()" class="btn-secondary">
+                        <button onclick="exportAllData()" class="btn-secondary">
                             <i class="fas fa-download"></i>
-                            Exportar JSON
+                            Backup Completo
+                        </button>
+                        <button onclick="importAllData()" class="btn-secondary">
+                            <i class="fas fa-upload"></i>
+                            Restaurar Backup
+                        </button>
+                        <button onclick="viewFullHistory()" class="btn-secondary">
+                            <i class="fas fa-history"></i>
+                            Exportar Historial
                         </button>
                         <button onclick="signOut()" class="btn-outline">
                             <i class="fas fa-sign-out-alt"></i>
@@ -80,8 +88,8 @@
                         Editor de Documentos (DDOO)
                     </h2>
                     <p class="editor-description">
-                        Edita el JSON directamente. Los cambios se guardan con timestamp.
-                        Usuarios autorizados: @grouvex.com
+                        Edita el JSON directamente. Los cambios se guardan en dos archivos:
+                        <strong>data.json</strong> (documentos actuales) y <strong>versions.json</strong> (historial).
                     </p>
                     
                     <div class="editor-container">
@@ -106,7 +114,7 @@
                 <div class="version-history-section">
                     <h3>
                         <i class="fas fa-history"></i>
-                        Últimas versiones guardadas
+                        Historial de versiones (versions.json)
                     </h3>
                     <div id="versionHistory" class="version-history"></div>
                 </div>

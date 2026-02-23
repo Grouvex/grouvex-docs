@@ -39,16 +39,20 @@ async function loadCurrentData() {
 }
 
 // Cargar historial de versiones
-function loadVersions() {
-    const stored = localStorage.getItem('ddoo_versions');
-    if (stored) {
-        versions = JSON.parse(stored);
+async function loadVersions() {
+    try {
+        const response = await fetch('versions.json?' + Date.now());
+        versions = await response.json();
+        renderVersionHistory();
+    } catch (error) {
+        console.error('Error loading versions:', error);
+        versions = { versions: [] };
         renderVersionHistory();
     }
 }
 
 // Guardar versión
-function saveVersion(data, changes) {
+async function saveVersion(data, changes) {
     const version = {
         id: Date.now().toString(),
         date: Math.floor(Date.now() / 1000),
@@ -57,24 +61,40 @@ function saveVersion(data, changes) {
         data: data
     };
     
-    versions.unshift(version);
-    // Mantener solo últimas 20 versiones
-    versions = versions.slice(0, 20);
+    versions.versions = versions.versions || [];
+    versions.versions.unshift(version);
+    // Mantener solo últimas 50 versiones
+    versions.versions = versions.versions.slice(0, 50);
     
-    localStorage.setItem('ddoo_versions', JSON.stringify(versions));
+    // Guardar en archivo versions.json
+    await saveVersionsFile();
     renderVersionHistory();
+}
+
+// Guardar archivo de versiones
+async function saveVersionsFile() {
+    const versionsBlob = new Blob([JSON.stringify(versions, null, 2)], { type: 'application/json' });
+    const versionsUrl = URL.createObjectURL(versionsBlob);
+    const versionsLink = document.createElement('a');
+    versionsLink.href = versionsUrl;
+    versionsLink.download = 'versions.json';
+    versionsLink.click();
+    URL.revokeObjectURL(versionsUrl);
+    
+    showEditorMessage('success', 'Archivo versions.json generado. Súbelo al servidor.');
 }
 
 // Renderizar historial
 function renderVersionHistory() {
     const container = document.getElementById('versionHistory');
+    const versionsList = versions.versions || [];
     
-    if (!versions.length) {
+    if (!versionsList.length) {
         container.innerHTML = '<p class="loading-small">No hay versiones guardadas</p>';
         return;
     }
     
-    container.innerHTML = versions.map(version => `
+    container.innerHTML = versionsList.map(version => `
         <div class="version-item">
             <div class="version-info">
                 <div class="version-date">
@@ -92,7 +112,7 @@ function renderVersionHistory() {
             </div>
             <button class="version-restore-btn" onclick="restoreVersion('${version.id}')">
                 <i class="fas fa-history"></i>
-                Restaurar
+                Ver/Restaurar
             </button>
         </div>
     `).join('');
@@ -100,13 +120,11 @@ function renderVersionHistory() {
 
 // Restaurar versión
 function restoreVersion(versionId) {
-    if (!confirm('¿Restaurar esta versión? Se perderán los cambios no guardados.')) return;
-    
-    const version = versions.find(v => v.id === versionId);
+    const version = versions.versions.find(v => v.id === versionId);
     if (!version) return;
     
     document.getElementById('jsonEditor').value = JSON.stringify(version.data, null, 2);
-    showEditorMessage('success', 'Versión cargada. Haz clic en Guardar para aplicarla.');
+    showEditorMessage('success', 'Versión cargada en el editor. Haz clic en Guardar Cambios para aplicarla.');
 }
 
 // Guardar JSON
@@ -129,20 +147,20 @@ async function saveJSON() {
             return;
         }
         
-        // Guardar versión
-        saveVersion(parsed, changes);
+        // Guardar versión en el historial
+        await saveVersion(parsed, changes);
         
-        // Crear archivo para descarga
-        const blob = new Blob([jsonText], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `data_${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+        // Crear archivo data.json para descarga
+        const dataBlob = new Blob([jsonText], { type: 'application/json' });
+        const dataUrl = URL.createObjectURL(dataBlob);
+        const dataLink = document.createElement('a');
+        dataLink.href = dataUrl;
+        dataLink.download = 'data.json';
+        dataLink.click();
+        URL.revokeObjectURL(dataUrl);
         
         currentData = parsed;
-        showEditorMessage('success', 'JSON guardado correctamente');
+        showEditorMessage('success', '✅ data.json y versions.json generados. Súbelos al servidor.');
         
     } catch (error) {
         console.error('Error saving JSON:', error);
@@ -162,15 +180,82 @@ function formatJSON() {
     }
 }
 
-// Exportar datos
-function exportData() {
+// Exportar datos completos (data + versions)
+function exportAllData() {
     if (!currentData) return;
     
-    const blob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
+    const exportData = {
+        exportedAt: Math.floor(Date.now() / 1000),
+        exportedBy: currentUser?.email,
+        data: currentData,
+        versions: versions
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ddoo_backup_${Date.now()}.json`;
+    a.download = `ddoo_full_backup_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Importar datos completos
+function importAllData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = async (e) => {
+            try {
+                const imported = JSON.parse(e.target.result);
+                
+                if (imported.data && imported.versions) {
+                    // Restaurar ambos archivos
+                    document.getElementById('jsonEditor').value = JSON.stringify(imported.data, null, 2);
+                    
+                    // Guardar versions
+                    versions = imported.versions;
+                    await saveVersionsFile();
+                    
+                    showEditorMessage('success', 'Backup importado. Revisa y guarda los cambios.');
+                } else {
+                    showEditorMessage('error', 'Archivo de backup inválido');
+                }
+            } catch (error) {
+                showEditorMessage('error', 'Error al importar: ' + error.message);
+            }
+        };
+        
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
+// Ver historial completo
+function viewFullHistory() {
+    if (!versions.versions || !versions.versions.length) {
+        alert('No hay historial disponible');
+        return;
+    }
+    
+    let historyText = 'HISTORIAL COMPLETO DE VERSIONES\n\n';
+    versions.versions.forEach((v, index) => {
+        historyText += `${index + 1}. ${formatDate(v.date)} - ${v.author}\n`;
+        historyText += `   Cambios: ${v.changes}\n`;
+        historyText += `   ID: ${v.id}\n\n`;
+    });
+    
+    const blob = new Blob([historyText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `historial_${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -227,10 +312,13 @@ function showEditorMessage(type, message) {
     messageEl.textContent = message;
     messageEl.className = `editor-message ${type}`;
     
-    setTimeout(() => {
-        messageEl.textContent = '';
-        messageEl.className = 'editor-message';
-    }, 3000);
+    // No auto-ocultar mensajes de éxito importantes
+    if (type !== 'success' || !message.includes('✅')) {
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.className = 'editor-message';
+        }, 5000);
+    }
 }
 
 function formatDate(timestamp) {
