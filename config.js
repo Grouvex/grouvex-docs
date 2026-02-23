@@ -1,11 +1,12 @@
 // Variables globales
 let currentUser = null;
-let documents = [];
+let currentData = null;
+let versions = [];
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     setupAuthListener();
-    setupEventListeners();
+    loadVersions();
 });
 
 // Configurar listener de autenticación
@@ -14,10 +15,9 @@ function setupAuthListener() {
         if (user && isAuthorized(user.email)) {
             currentUser = user;
             showAdminPanel();
-            await loadDocuments();
+            await loadCurrentData();
         } else {
             if (user) {
-                // Usuario no autorizado
                 await auth.signOut();
                 showAuthMessage('error', 'No tienes permisos para acceder');
             }
@@ -26,581 +26,253 @@ function setupAuthListener() {
     });
 }
 
-// Configurar event listeners
-function setupEventListeners() {
-    document.getElementById('adminSearch')?.addEventListener('input', (e) => {
-        filterAdminDocuments(e.target.value);
-    });
-}
-
-// Mostrar sección de autenticación
-function showAuthSection() {
-    document.getElementById('authSection').style.display = 'flex';
-    document.getElementById('adminPanel').style.display = 'none';
-}
-
-// Mostrar panel de administración
-function showAdminPanel() {
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    
-    // Actualizar info del usuario
-    document.getElementById('userName').textContent = currentUser.displayName || 'Usuario';
-    document.getElementById('userEmail').textContent = currentUser.email;
-    document.getElementById('userAvatar').src = currentUser.photoURL || 'https://via.placeholder.com/56x56?text=User';
-}
-
-// Cargar documentos
-async function loadDocuments() {
+// Cargar datos actuales
+async function loadCurrentData() {
     try {
-        const snapshot = await db.collection('documents')
-            .orderBy('createdAt', 'desc')
-            .get();
-        
-        documents = [];
-        snapshot.forEach(doc => {
-            documents.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
-        renderAdminDocuments();
-        
+        const response = await fetch('data.json?' + Date.now());
+        currentData = await response.json();
+        document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 2);
     } catch (error) {
-        console.error('Error loading documents:', error);
-        showAuthMessage('error', 'Error al cargar documentos');
+        console.error('Error loading data:', error);
+        showEditorMessage('error', 'Error al cargar los datos');
     }
 }
 
-// Renderizar lista de documentos en admin
-function renderAdminDocuments(filter = '') {
-    const list = document.getElementById('adminDocumentsList');
-    
-    let filtered = documents;
-    if (filter) {
-        const term = filter.toLowerCase();
-        filtered = documents.filter(doc => 
-            doc.title?.toLowerCase().includes(term) ||
-            doc.reference?.toLowerCase().includes(term)
-        );
+// Cargar historial de versiones
+async function loadVersions() {
+    try {
+        const response = await fetch('versions.json?' + Date.now());
+        versions = await response.json();
+        renderVersionHistory();
+    } catch (error) {
+        console.error('Error loading versions:', error);
+        versions = { versions: [] };
+        renderVersionHistory();
     }
+}
+
+// Guardar versión
+async function saveVersion(data, changes) {
+    const version = {
+        id: Date.now().toString(),
+        date: Math.floor(Date.now() / 1000),
+        author: currentUser?.email || 'unknown',
+        changes: changes || 'Actualización de documentos',
+        data: data
+    };
     
-    if (filtered.length === 0) {
-        list.innerHTML = '<div class="loading"><p>No hay documentos</p></div>';
+    versions.versions = versions.versions || [];
+    versions.versions.unshift(version);
+    // Mantener solo últimas 50 versiones
+    versions.versions = versions.versions.slice(0, 50);
+    
+    // Guardar en archivo versions.json
+    await saveVersionsFile();
+    renderVersionHistory();
+}
+
+// Guardar archivo de versiones
+async function saveVersionsFile() {
+    const versionsBlob = new Blob([JSON.stringify(versions, null, 2)], { type: 'application/json' });
+    const versionsUrl = URL.createObjectURL(versionsBlob);
+    const versionsLink = document.createElement('a');
+    versionsLink.href = versionsUrl;
+    versionsLink.download = 'versions.json';
+    versionsLink.click();
+    URL.revokeObjectURL(versionsUrl);
+    
+    showEditorMessage('success', 'Archivo versions.json generado. Súbelo al servidor.');
+}
+
+// Renderizar historial
+function renderVersionHistory() {
+    const container = document.getElementById('versionHistory');
+    const versionsList = versions.versions || [];
+    
+    if (!versionsList.length) {
+        container.innerHTML = '<p class="loading-small">No hay versiones guardadas</p>';
         return;
     }
     
-    list.innerHTML = filtered.map(doc => `
-        <div class="admin-doc-item">
-            <div class="admin-doc-info">
-                <h4>${escapeHtml(doc.title)}</h4>
-                <p>${escapeHtml(doc.reference || 'Sin referencia')}</p>
-                <div class="admin-doc-meta">
-                    <span>v${doc.version || 1}</span>
-                    <span>${getTypeLabel(doc.type)}</span>
-                    <span>${formatDate(doc.createdAt)}</span>
+    container.innerHTML = versionsList.map(version => `
+        <div class="version-item">
+            <div class="version-info">
+                <div class="version-date">
+                    <i class="fas fa-clock"></i>
+                    ${formatDate(version.date)}
+                </div>
+                <div class="version-user">
+                    <i class="fas fa-user"></i>
+                    ${escapeHtml(version.author)}
+                </div>
+                <div class="version-changes">
+                    <i class="fas fa-edit"></i>
+                    ${escapeHtml(version.changes)}
                 </div>
             </div>
-            <div class="admin-doc-actions">
-                <button class="edit-btn" onclick="editDocument('${doc.id}')" title="Editar">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="history-btn" onclick="showDocumentHistory('${doc.id}')" title="Historial">
-                    <i class="fas fa-history"></i>
-                </button>
-                <button class="delete-btn" onclick="deleteDocument('${doc.id}')" title="Eliminar">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
+            <button class="version-restore-btn" onclick="restoreVersion('${version.id}')">
+                <i class="fas fa-history"></i>
+                Ver/Restaurar
+            </button>
         </div>
     `).join('');
 }
 
-// Filtrar documentos en admin
-function filterAdminDocuments(term) {
-    renderAdminDocuments(term);
+// Restaurar versión
+function restoreVersion(versionId) {
+    const version = versions.versions.find(v => v.id === versionId);
+    if (!version) return;
+    
+    document.getElementById('jsonEditor').value = JSON.stringify(version.data, null, 2);
+    showEditorMessage('success', 'Versión cargada en el editor. Haz clic en Guardar Cambios para aplicarla.');
 }
 
-// Crear nuevo documento
-async function createDocument() {
+// Guardar JSON
+async function saveJSON() {
     try {
-        const title = document.getElementById('newTitle').value;
-        const type = document.getElementById('newType').value;
-        const category = document.getElementById('newCategory').value;
-        const reference = document.getElementById('newReference').value;
-        const description = document.getElementById('newDescription').value;
-        const content = document.getElementById('newContent').value;
-        const tags = document.getElementById('newTags').value.split(',').map(t => t.trim()).filter(t => t);
-        
-        if (!title || !type || !content) {
-            alert('Por favor completa los campos obligatorios');
-            return;
-        }
-        
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        const documentData = {
-            title,
-            type,
-            category,
-            reference,
-            description,
-            content,
-            tags,
-            status: 'active',
-            version: 1,
-            createdBy: currentUser.email,
-            createdAt: timestamp,
-            updatedAt: timestamp,
-            date: timestamp
-        };
-        
-        // Crear documento principal
-        const docRef = await db.collection('documents').add(documentData);
-        
-        // Crear primera versión en el historial
-        await db.collection('documents')
-            .doc(docRef.id)
-            .collection('versions')
-            .add({
-                ...documentData,
-                version: 1,
-                changes: 'Versión inicial',
-                createdAt: timestamp,
-                createdBy: currentUser.email
-            });
-        
-        // Limpiar formulario
-        clearNewDocumentForm();
-        
-        // Recargar documentos
-        await loadDocuments();
-        
-        showAuthMessage('success', 'Documento creado correctamente');
-        
-    } catch (error) {
-        console.error('Error creating document:', error);
-        showAuthMessage('error', 'Error al crear documento');
-    }
-}
-
-// Editar documento
-async function editDocument(docId) {
-    try {
-        const doc = documents.find(d => d.id === docId);
-        if (!doc) return;
-        
-        const modalBody = document.getElementById('editModalBody');
-        
-        modalBody.innerHTML = `
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Título</label>
-                    <input type="text" id="editTitle" value="${escapeHtml(doc.title || '')}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Tipo</label>
-                    <select id="editType">
-                        <option value="boletin" ${doc.type === 'boletin' ? 'selected' : ''}>Boletín Oficial</option>
-                        <option value="disposicion" ${doc.type === 'disposicion' ? 'selected' : ''}>Disposición</option>
-                        <option value="edicto" ${doc.type === 'edicto' ? 'selected' : ''}>Edicto</option>
-                        <option value="noticia" ${doc.type === 'noticia' ? 'selected' : ''}>Noticia</option>
-                        <option value="anexo" ${doc.type === 'anexo' ? 'selected' : ''}>Anexo</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="editCategory">
-                        <option value="general" ${doc.category === 'general' ? 'selected' : ''}>General</option>
-                        <option value="records" ${doc.category === 'records' ? 'selected' : ''}>Grouvex Records</option>
-                        <option value="designs" ${doc.category === 'designs' ? 'selected' : ''}>Grouvex Designs</option>
-                        <option value="comunidad" ${doc.category === 'comunidad' ? 'selected' : ''}>Comunidad</option>
-                        <option value="gco" ${doc.category === 'gco' ? 'selected' : ''}>Gestión GCO</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Referencia</label>
-                    <input type="text" id="editReference" value="${escapeHtml(doc.reference || '')}">
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Descripción</label>
-                    <textarea id="editDescription" rows="3">${escapeHtml(doc.description || '')}</textarea>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Contenido</label>
-                    <textarea id="editContent" rows="10">${escapeHtml(doc.content || '')}</textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Tags (separados por coma)</label>
-                    <input type="text" id="editTags" value="${doc.tags ? doc.tags.join(', ') : ''}">
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Descripción de cambios</label>
-                    <textarea id="editChanges" rows="2" placeholder="Describe los cambios realizados..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <button onclick="saveDocument('${docId}', ${doc.version})" class="btn-primary">
-                        <i class="fas fa-save"></i>
-                        Guardar Cambios
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        document.getElementById('editModal').classList.add('active');
-        
-    } catch (error) {
-        console.error('Error editing document:', error);
-        alert('Error al cargar el documento');
-    }
-}
-
-// Guardar cambios del documento (crea nueva versión)
-async function saveDocument(docId, currentVersion) {
-    try {
-        const title = document.getElementById('editTitle').value;
-        const type = document.getElementById('editType').value;
-        const category = document.getElementById('editCategory').value;
-        const reference = document.getElementById('editReference').value;
-        const description = document.getElementById('editDescription').value;
-        const content = document.getElementById('editContent').value;
-        const tags = document.getElementById('editTags').value.split(',').map(t => t.trim()).filter(t => t);
-        const changes = document.getElementById('editChanges').value;
+        const jsonText = document.getElementById('jsonEditor').value;
+        const changes = prompt('Describe los cambios realizados:', 'Actualización de documentos');
         
         if (!changes) {
-            alert('Por favor describe los cambios realizados');
+            showEditorMessage('error', 'Debes describir los cambios');
             return;
         }
         
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        const newVersion = (currentVersion || 0) + 1;
+        // Validar JSON
+        const parsed = JSON.parse(jsonText);
         
-        // Obtener documento actual
-        const docRef = db.collection('documents').doc(docId);
-        const docSnap = await docRef.get();
-        const oldData = docSnap.data();
+        // Validar estructura
+        if (!parsed.documents || !Array.isArray(parsed.documents)) {
+            showEditorMessage('error', 'El JSON debe contener un array "documents"');
+            return;
+        }
         
-        // Guardar versión anterior en historial
-        await docRef.collection('versions').add({
-            ...oldData,
-            version: currentVersion,
-            changes: changes,
-            archivedAt: timestamp,
-            archivedBy: currentUser.email
-        });
+        // Guardar versión en el historial
+        await saveVersion(parsed, changes);
         
-        // Actualizar documento principal
-        await docRef.update({
-            title,
-            type,
-            category,
-            reference,
-            description,
-            content,
-            tags,
-            version: newVersion,
-            updatedAt: timestamp,
-            updatedBy: currentUser.email
-        });
+        // Crear archivo data.json para descarga
+        const dataBlob = new Blob([jsonText], { type: 'application/json' });
+        const dataUrl = URL.createObjectURL(dataBlob);
+        const dataLink = document.createElement('a');
+        dataLink.href = dataUrl;
+        dataLink.download = 'data.json';
+        dataLink.click();
+        URL.revokeObjectURL(dataUrl);
         
-        closeEditModal();
-        await loadDocuments();
-        
-        showAuthMessage('success', 'Documento actualizado correctamente (nueva versión creada)');
+        currentData = parsed;
+        showEditorMessage('success', '✅ data.json y versions.json generados. Súbelos al servidor.');
         
     } catch (error) {
-        console.error('Error saving document:', error);
-        showAuthMessage('error', 'Error al guardar documento');
+        console.error('Error saving JSON:', error);
+        showEditorMessage('error', 'JSON inválido: ' + error.message);
     }
 }
 
-// Mostrar historial del documento
-async function showDocumentHistory(docId) {
+// Formatear JSON
+function formatJSON() {
     try {
-        const versionsSnapshot = await db.collection('documents')
-            .doc(docId)
-            .collection('versions')
-            .orderBy('version', 'desc')
-            .get();
-        
-        const doc = documents.find(d => d.id === docId);
-        
-        let html = '<div class="versions-list">';
-        
-        // Versión actual
-        html += `
-            <div class="version-item current">
-                <div class="version-header">
-                    <span class="version-badge current">Actual v${doc.version}</span>
-                    <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(doc.updatedAt || doc.createdAt)}</span>
-                </div>
-                <div class="version-changes">
-                    <strong>Cambios:</strong> Versión actual
-                </div>
-                <div class="version-restore">
-                    <button class="btn-secondary" onclick="viewVersion('${docId}', ${doc.version})">
-                        <i class="fas fa-eye"></i>
-                        Ver versión
-                    </button>
-                </div>
-            </div>
-        `;
-        
-        // Versiones anteriores
-        versionsSnapshot.forEach(versionDoc => {
-            const version = versionDoc.data();
-            html += `
-                <div class="version-item">
-                    <div class="version-header">
-                        <span class="version-badge">v${version.version}</span>
-                        <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(version.archivedAt || version.createdAt)}</span>
-                        <span class="version-author"><i class="fas fa-user"></i> ${escapeHtml(version.archivedBy || version.createdBy || 'Sistema')}</span>
-                    </div>
-                    <div class="version-changes">
-                        <strong>Cambios:</strong> ${escapeHtml(version.changes || 'Sin descripción')}
-                    </div>
-                    <div class="version-restore">
-                        <button class="btn-secondary" onclick="viewVersion('${docId}', ${version.version})">
-                            <i class="fas fa-eye"></i>
-                            Ver versión
-                        </button>
-                        <button class="btn-primary" onclick="restoreVersion('${docId}', ${version.version})">
-                            <i class="fas fa-history"></i>
-                            Restaurar
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += '</div>';
-        
-        document.getElementById('historyModalBody').innerHTML = html;
-        document.getElementById('historyModal').classList.add('active');
-        
+        const editor = document.getElementById('jsonEditor');
+        const parsed = JSON.parse(editor.value);
+        editor.value = JSON.stringify(parsed, null, 2);
+        showEditorMessage('success', 'JSON formateado');
     } catch (error) {
-        console.error('Error showing history:', error);
-        alert('Error al cargar el historial');
+        showEditorMessage('error', 'Error al formatear: JSON inválido');
     }
 }
 
-// Ver una versión específica
-async function viewVersion(docId, version) {
-    try {
-        let versionData;
+// Exportar datos completos (data + versions)
+function exportAllData() {
+    if (!currentData) return;
+    
+    const exportData = {
+        exportedAt: Math.floor(Date.now() / 1000),
+        exportedBy: currentUser?.email,
+        data: currentData,
+        versions: versions
+    };
+    
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ddoo_full_backup_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Importar datos completos
+function importAllData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
         
-        if (version === documents.find(d => d.id === docId).version) {
-            // Versión actual
-            versionData = documents.find(d => d.id === docId);
-        } else {
-            // Versión del historial
-            const versionsSnapshot = await db.collection('documents')
-                .doc(docId)
-                .collection('versions')
-                .where('version', '==', version)
-                .limit(1)
-                .get();
-            
-            if (!versionsSnapshot.empty) {
-                versionData = versionsSnapshot.docs[0].data();
+        reader.onload = async (e) => {
+            try {
+                const imported = JSON.parse(e.target.result);
+                
+                if (imported.data && imported.versions) {
+                    // Restaurar ambos archivos
+                    document.getElementById('jsonEditor').value = JSON.stringify(imported.data, null, 2);
+                    
+                    // Guardar versions
+                    versions = imported.versions;
+                    await saveVersionsFile();
+                    
+                    showEditorMessage('success', 'Backup importado. Revisa y guarda los cambios.');
+                } else {
+                    showEditorMessage('error', 'Archivo de backup inválido');
+                }
+            } catch (error) {
+                showEditorMessage('error', 'Error al importar: ' + error.message);
             }
-        }
+        };
         
-        if (versionData) {
-            document.getElementById('modalTitle').textContent = `${versionData.title} (v${version})`;
-            document.getElementById('modalBody').innerHTML = `
-                <div class="document-viewer">
-                    <div class="doc-metadata">
-                        <p><strong>Referencia:</strong> ${escapeHtml(versionData.reference || 'N/A')}</p>
-                        <p><strong>Tipo:</strong> ${getTypeLabel(versionData.type)}</p>
-                        <p><strong>Fecha:</strong> ${formatDate(versionData.createdAt)}</p>
-                    </div>
-                    <div class="doc-content">
-                        <h3>Contenido</h3>
-                        <pre>${escapeHtml(versionData.content || 'Sin contenido')}</pre>
-                    </div>
-                </div>
-            `;
-            document.getElementById('documentModal').classList.add('active');
-        }
-        
-    } catch (error) {
-        console.error('Error viewing version:', error);
-        alert('Error al cargar la versión');
-    }
+        reader.readAsText(file);
+    };
+    
+    input.click();
 }
 
-// Restaurar una versión anterior
-async function restoreVersion(docId, version) {
-    if (!confirm('¿Estás seguro de restaurar esta versión? Se creará una nueva versión en el historial.')) {
+// Ver historial completo
+function viewFullHistory() {
+    if (!versions.versions || !versions.versions.length) {
+        alert('No hay historial disponible');
         return;
     }
     
-    try {
-        let versionData;
-        
-        if (version === documents.find(d => d.id === docId).version) {
-            alert('Esta es la versión actual');
-            return;
-        } else {
-            const versionsSnapshot = await db.collection('documents')
-                .doc(docId)
-                .collection('versions')
-                .where('version', '==', version)
-                .limit(1)
-                .get();
-            
-            if (!versionsSnapshot.empty) {
-                versionData = versionsSnapshot.docs[0].data();
-            }
-        }
-        
-        if (!versionData) {
-            alert('Versión no encontrada');
-            return;
-        }
-        
-        const docRef = db.collection('documents').doc(docId);
-        const docSnap = await docRef.get();
-        const currentData = docSnap.data();
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        const newVersion = (currentData.version || 0) + 1;
-        
-        // Guardar versión actual en historial
-        await docRef.collection('versions').add({
-            ...currentData,
-            version: currentData.version,
-            changes: `Auto-archivado antes de restaurar versión ${version}`,
-            archivedAt: timestamp,
-            archivedBy: currentUser.email
-        });
-        
-        // Restaurar versión anterior como nueva versión
-        await docRef.update({
-            title: versionData.title,
-            type: versionData.type,
-            category: versionData.category,
-            reference: versionData.reference,
-            description: versionData.description,
-            content: versionData.content,
-            tags: versionData.tags || [],
-            version: newVersion,
-            updatedAt: timestamp,
-            updatedBy: currentUser.email,
-            restoredFrom: version
-        });
-        
-        closeHistoryModal();
-        await loadDocuments();
-        
-        showAuthMessage('success', `Versión ${version} restaurada como versión ${newVersion}`);
-        
-    } catch (error) {
-        console.error('Error restoring version:', error);
-        showAuthMessage('error', 'Error al restaurar versión');
-    }
-}
-
-// Eliminar documento (soft delete)
-async function deleteDocument(docId) {
-    if (!confirm('¿Estás seguro de eliminar este documento? Se moverá al historial.')) {
-        return;
-    }
+    let historyText = 'HISTORIAL COMPLETO DE VERSIONES\n\n';
+    versions.versions.forEach((v, index) => {
+        historyText += `${index + 1}. ${formatDate(v.date)} - ${v.author}\n`;
+        historyText += `   Cambios: ${v.changes}\n`;
+        historyText += `   ID: ${v.id}\n\n`;
+    });
     
-    try {
-        const docRef = db.collection('documents').doc(docId);
-        const docSnap = await docRef.get();
-        const docData = docSnap.data();
-        
-        // Guardar en historial antes de eliminar
-        await docRef.collection('versions').add({
-            ...docData,
-            version: docData.version,
-            changes: 'Documento eliminado',
-            deletedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            deletedBy: currentUser.email
-        });
-        
-        // Marcar como eliminado
-        await docRef.update({
-            status: 'deleted',
-            deletedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            deletedBy: currentUser.email
-        });
-        
-        await loadDocuments();
-        
-        showAuthMessage('success', 'Documento eliminado correctamente');
-        
-    } catch (error) {
-        console.error('Error deleting document:', error);
-        showAuthMessage('error', 'Error al eliminar documento');
-    }
+    const blob = new Blob([historyText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `historial_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
-// Mostrar historial completo
-async function showHistory() {
-    try {
-        const snapshot = await db.collectionGroup('versions')
-            .orderBy('createdAt', 'desc')
-            .limit(50)
-            .get();
-        
-        let html = '<div class="versions-list">';
-        
-        snapshot.forEach(doc => {
-            const version = doc.data();
-            html += `
-                <div class="version-item">
-                    <div class="version-header">
-                        <span class="version-badge">v${version.version}</span>
-                        <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(version.createdAt || version.archivedAt)}</span>
-                        <span class="version-author"><i class="fas fa-user"></i> ${escapeHtml(version.createdBy || version.archivedBy || 'Sistema')}</span>
-                    </div>
-                    <div class="version-changes">
-                        <strong>Cambios:</strong> ${escapeHtml(version.changes || 'Sin descripción')}
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += '</div>';
-        
-        document.getElementById('historyModalBody').innerHTML = html;
-        document.getElementById('historyModal').classList.add('active');
-        
-    } catch (error) {
-        console.error('Error showing full history:', error);
-        alert('Error al cargar el historial');
-    }
+// Mostrar panel de admin
+function showAdminPanel() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    
+    document.getElementById('userName').textContent = currentUser.displayName || 'Administrador';
+    document.getElementById('userEmail').textContent = currentUser.email;
+    document.getElementById('userAvatar').src = currentUser.photoURL || 'https://via.placeholder.com/56x56?text=Admin';
 }
 
-// Limpiar formulario de nuevo documento
-function clearNewDocumentForm() {
-    document.getElementById('newTitle').value = '';
-    document.getElementById('newType').value = 'boletin';
-    document.getElementById('newCategory').value = 'general';
-    document.getElementById('newReference').value = '';
-    document.getElementById('newDescription').value = '';
-    document.getElementById('newContent').value = '';
-    document.getElementById('newTags').value = '';
-}
-
-// Cerrar modales
-function closeEditModal() {
-    document.getElementById('editModal').classList.remove('active');
-}
-
-function closeHistoryModal() {
-    document.getElementById('historyModal').classList.remove('active');
+function showAuthSection() {
+    document.getElementById('authSection').style.display = 'flex';
+    document.getElementById('adminPanel').style.display = 'none';
 }
 
 // Autenticación
@@ -610,34 +282,6 @@ function signInWithGoogle() {
         .catch(error => {
             console.error('Error signing in:', error);
             showAuthMessage('error', 'Error al iniciar sesión');
-        });
-}
-
-function toggleEmailSignIn() {
-    const emailSignIn = document.getElementById('emailSignIn');
-    emailSignIn.style.display = emailSignIn.style.display === 'none' ? 'flex' : 'none';
-}
-
-function sendSignInLink() {
-    const email = document.getElementById('emailInput').value;
-    if (!email) {
-        showAuthMessage('error', 'Por favor ingresa un email');
-        return;
-    }
-    
-    const actionCodeSettings = {
-        url: window.location.href,
-        handleCodeInApp: true
-    };
-    
-    auth.sendSignInLinkToEmail(email, actionCodeSettings)
-        .then(() => {
-            window.localStorage.setItem('emailForSignIn', email);
-            showAuthMessage('success', 'Enlace de acceso enviado a tu email');
-        })
-        .catch(error => {
-            console.error('Error sending sign-in link:', error);
-            showAuthMessage('error', 'Error al enviar el enlace');
         });
 }
 
@@ -663,30 +307,22 @@ function showAuthMessage(type, message) {
     }, 5000);
 }
 
-function getTypeLabel(type) {
-    const labels = {
-        'boletin': 'Boletín Oficial',
-        'disposicion': 'Disposición',
-        'edicto': 'Edicto',
-        'noticia': 'Noticia',
-        'anexo': 'Anexo'
-    };
-    return labels[type] || type;
+function showEditorMessage(type, message) {
+    const messageEl = document.getElementById('editorMessage');
+    messageEl.textContent = message;
+    messageEl.className = `editor-message ${type}`;
+    
+    // No auto-ocultar mensajes de éxito importantes
+    if (type !== 'success' || !message.includes('✅')) {
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.className = 'editor-message';
+        }, 5000);
+    }
 }
 
 function formatDate(timestamp) {
-    if (!timestamp) return 'Fecha desconocida';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
-
-function formatDateTime(timestamp) {
-    if (!timestamp) return 'Fecha desconocida';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp * 1000);
     return date.toLocaleString('es-ES', {
         year: 'numeric',
         month: 'long',
