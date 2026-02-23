@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grouvex Studios - Administración</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://via.placeholder.com/48x48?text=GS" alt="Grouvex Studios">
+                    <div>
+                        <h1>Grouvex Studios</h1>
+                        <span class="badge">Panel de Administración</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="index.html" class="btn-outline">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver al Boletín
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Auth Section -->
+            <div id="authSection" class="auth-section">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <i class="fas fa-lock"></i>
+                        <h2>Acceso Restringido</h2>
+                        <p>Inicia sesión con tu cuenta autorizada</p>
+                    </div>
+                    
+                    <div class="auth-methods">
+                        <button onclick="signInWithGoogle()" class="btn-google">
+                            <i class="fab fa-google"></i>
+                            Continuar con Google
+                        </button>
+                        
+                        <div class="divider">
+                            <span>o</span>
+                        </div>
+                        
+                        <button onclick="toggleEmailSignIn()" class="btn-email">
+                            <i class="fas fa-envelope"></i>
+                            Continuar con Email
+                        </button>
+                        
+                        <div id="emailSignIn" class="email-signin" style="display: none;">
+                            <input type="email" id="emailInput" placeholder="tu@email.com">
+                            <button onclick="sendSignInLink()" class="btn-primary">
+                                Enviar enlace
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="authMessage" class="auth-message"></div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="admin-panel" style="display: none;">
+                <!-- Admin Header -->
+                <div class="admin-header">
+                    <div class="user-info">
+                        <img id="userAvatar" src="" alt="User">
+                        <div>
+                            <h3 id="userName"></h3>
+                            <p id="userEmail"></p>
+                        </div>
+                    </div>
+                    <div class="admin-actions">
+                        <button onclick="showHistory()" class="btn-secondary">
+                            <i class="fas fa-history"></i>
+                            Historial Completo
+                        </button>
+                        <button onclick="signOut()" class="btn-outline">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar sesión
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Create New Document -->
+                <div class="admin-section">
+                    <h2>
+                        <i class="fas fa-plus-circle"></i>
+                        Nuevo Documento
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Título</label>
+                            <input type="text" id="newTitle" placeholder="Título del documento">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="newType">
+                                <option value="boletin">Boletín Oficial</option>
+                                <option value="disposicion">Disposición</option>
+                                <option value="edicto">Edicto</option>
+                                <option value="noticia">Noticia</option>
+                                <option value="anexo">Anexo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="newCategory">
+                                <option value="general">General</option>
+                                <option value="records">Grouvex Records</option>
+                                <option value="designs">Grouvex Designs</option>
+                                <option value="comunidad">Comunidad</option>
+                                <option value="gco">Gestión GCO</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Referencia</label>
+                            <input type="text" id="newReference" placeholder="BOGS/2025/XXX">
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Descripción</label>
+                            <textarea id="newDescription" rows="3" placeholder="Breve descripción..."></textarea>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Contenido</label>
+                            <textarea id="newContent" rows="10" placeholder="Contenido del documento..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Tags (separados por coma)</label>
+                            <input type="text" id="newTags" placeholder="tag1, tag2, tag3">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button onclick="createDocument()" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                Publicar Documento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents List -->
+                <div class="admin-section">
+                    <h2>
+                        <i class="fas fa-file-alt"></i>
+                        Documentos Existentes
+                    </h2>
+                    <div class="admin-filters">
+                        <input type="text" id="adminSearch" placeholder="Buscar documentos..." class="search-input">
+                    </div>
+                    <div id="adminDocumentsList" class="admin-documents-list"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Editar Documento</h2>
+                <button class="close-btn" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalBody"></div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Historial de Cambios</h2>
+                <button class="close-btn" onclick="closeHistoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="historyModalBody"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="config.js"></script>
+</body>
+</html>
