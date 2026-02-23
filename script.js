@@ -5,7 +5,7 @@ let currentFilters = {
     search: '',
     type: '',
     year: '',
-    category: ''
+    organism: 'all'
 };
 
 // Inicialización
@@ -29,6 +29,7 @@ async function loadData() {
         filteredDocuments = [...documents];
         
         updateUI();
+        setupOrganismButtons();
         
     } catch (error) {
         console.error('Error loading data:', error);
@@ -87,9 +88,27 @@ function setupEventListeners() {
     }
 }
 
+// Configurar botones de organismo
+function setupOrganismButtons() {
+    const buttons = document.querySelectorAll('.organism-btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilters.organism = btn.dataset.organism;
+            applyFilters();
+        });
+    });
+}
+
 // Aplicar filtros
 function applyFilters() {
     filteredDocuments = documents.filter(doc => {
+        // Filtro de organismo
+        if (currentFilters.organism !== 'all' && doc.organism !== currentFilters.organism) {
+            return false;
+        }
+        
         // Filtro de búsqueda
         if (currentFilters.search) {
             const searchTerm = currentFilters.search.toLowerCase();
@@ -122,7 +141,6 @@ function applyFilters() {
     });
     
     updateDocumentsGrid();
-    updateActiveFilters();
 }
 
 // Actualizar UI completa
@@ -145,19 +163,19 @@ function updateStats() {
     const statsHtml = `
         <div class="stat-card">
             <div class="stat-value">${stats.total}</div>
-            <div class="stat-label"><i class="fas fa-file-alt"></i> Total Documentos</div>
+            <div class="stat-label"><i class="fas fa-file-alt"></i> Total DDOO</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">${stats.boletines}</div>
-            <div class="stat-label"><i class="fas fa-newspaper"></i> Boletines</div>
+            <div class="stat-value">${stats.grouvex}</div>
+            <div class="stat-label"><i class="fas fa-building"></i> Grouvex</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">${stats.disposiciones}</div>
-            <div class="stat-label"><i class="fas fa-gavel"></i> Disposiciones</div>
+            <div class="stat-value">${stats.records}</div>
+            <div class="stat-label"><i class="fas fa-music"></i> Records</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">${stats.anexos}</div>
-            <div class="stat-label"><i class="fas fa-paperclip"></i> Anexos</div>
+            <div class="stat-value">${stats.designs + stats.games}</div>
+            <div class="stat-label"><i class="fas fa-paint-brush"></i> Designs/Games</div>
         </div>
     `;
     
@@ -178,7 +196,7 @@ function updateYearFilter() {
     const currentValue = select.value;
     
     select.innerHTML = '<option value="">Todos los años</option>' +
-        years.map(year => `<option value="${year}" ${year.toString() === currentValue ? 'selected' : ''}>${year}</option>`).join('');
+        years.map(year => `<option value="${year}">${year}</option>`).join('');
 }
 
 // Actualizar grid de documentos
@@ -186,7 +204,7 @@ function updateDocumentsGrid() {
     const grid = document.getElementById('documentsGrid');
     if (!grid) return;
     
-    if (filteredDocuments.length === 0) {
+    if (!filteredDocuments.length) {
         grid.innerHTML = `
             <div class="loading">
                 <i class="fas fa-search"></i>
@@ -196,42 +214,24 @@ function updateDocumentsGrid() {
         return;
     }
     
+    // Ordenar por fecha (más reciente primero)
+    filteredDocuments.sort((a, b) => b.date - a.date);
+    
     grid.innerHTML = filteredDocuments.map(doc => `
         <div class="doc-card" onclick="showDocument('${doc.id}')">
-            <span class="doc-type ${doc.type}">${getTypeLabel(doc.type)}</span>
+            <div>
+                <span class="doc-organism ${doc.organism}">${getOrganismLabel(doc.organism)}</span>
+                <span class="doc-type ${doc.type}">${getTypeLabel(doc.type)}</span>
+            </div>
             <h3 class="doc-title">${escapeHtml(doc.title)}</h3>
             <div class="doc-reference">${escapeHtml(doc.reference || 'Sin referencia')}</div>
             <p class="doc-description">${escapeHtml(doc.description || 'Sin descripción')}</p>
             <div class="doc-meta">
                 <span><i class="fas fa-calendar"></i> ${formatDate(doc.date)}</span>
-                <span><i class="fas fa-tag"></i> ${escapeHtml(doc.category || 'general')}</span>
                 <span class="doc-version">v${doc.version || 1}</span>
             </div>
         </div>
     `).join('');
-}
-
-// Actualizar filtros activos
-function updateActiveFilters() {
-    const container = document.getElementById('activeFilters');
-    if (!container) return;
-    
-    const activeFilters = [];
-    
-    if (currentFilters.search) {
-        activeFilters.push(`<span class="filter-tag">Búsqueda: ${currentFilters.search} <i class="fas fa-times" onclick="clearFilter('search')"></i></span>`);
-    }
-    if (currentFilters.type) {
-        activeFilters.push(`<span class="filter-tag">Tipo: ${currentFilters.type} <i class="fas fa-times" onclick="clearFilter('type')"></i></span>`);
-    }
-    if (currentFilters.year) {
-        activeFilters.push(`<span class="filter-tag">Año: ${currentFilters.year} <i class="fas fa-times" onclick="clearFilter('year')"></i></span>`);
-    }
-    if (currentFilters.category) {
-        activeFilters.push(`<span class="filter-tag">Categoría: ${currentFilters.category} <i class="fas fa-times" onclick="clearFilter('category')"></i></span>`);
-    }
-    
-    container.innerHTML = activeFilters.join('');
 }
 
 // Actualizar footer
@@ -281,6 +281,22 @@ async function showDocument(docId) {
                     <pre>${escapeHtml(doc.content || 'Sin contenido')}</pre>
                 </div>
             </div>
+            <div class="doc-content">
+                <h3>Contenido</h3>
+                <pre>${escapeHtml(doc.content || 'Sin contenido')}</pre>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalBody').innerHTML = content;
+    
+    // Añadir botón de historial si hay versiones
+    if (doc.versions && doc.versions.length > 0) {
+        document.getElementById('modalFooter').innerHTML = `
+            <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
+                <i class="fas fa-history"></i>
+                Ver historial (${doc.versions.length} versiones)
+            </button>
         `;
         
         if (modalBody) modalBody.innerHTML = content;
@@ -305,6 +321,8 @@ async function showDocument(docId) {
         console.error('Error showing document:', error);
         alert('Error al cargar el documento');
     }
+    
+    document.getElementById('documentModal').classList.add('active');
 }
 
 // Mostrar historial de versiones
@@ -413,6 +431,16 @@ function showError(message) {
     }
 }
 
+function getOrganismLabel(organism) {
+    const labels = {
+        'grouvex': 'Grouvex Studios',
+        'records': 'Records',
+        'designs': 'Designs',
+        'games': 'Games'
+    };
+    return labels[organism] || organism;
+}
+
 function getTypeLabel(type) {
     const labels = {
         'boletin': 'Boletín Oficial',
@@ -455,4 +483,12 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function closeModal() {
+    document.getElementById('documentModal').classList.remove('active');
+}
+
+function closeVersionModal() {
+    document.getElementById('versionModal').classList.remove('active');
 }
