@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grouvex Studios - Boletín Oficial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://via.placeholder.com/48x48?text=GS" alt="Grouvex Studios">
+                    <div>
+                        <h1>Grouvex Studios</h1>
+                        <span class="badge">Boletín Oficial</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="config.html" class="btn-outline">
+                        <i class="fas fa-cog"></i>
+                        Administración
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Search and Filters -->
+            <div class="filters-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar en el boletín oficial...">
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label><i class="fas fa-tag"></i> Tipo</label>
+                        <select id="typeFilter">
+                            <option value="">Todos los tipos</option>
+                            <option value="boletin">Boletín Oficial</option>
+                            <option value="disposicion">Disposición</option>
+                            <option value="edicto">Edicto</option>
+                            <option value="noticia">Noticia</option>
+                            <option value="anexo">Anexo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-calendar"></i> Año</label>
+                        <select id="yearFilter">
+                            <option value="">Todos los años</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-layer-group"></i> Categoría</label>
+                        <select id="categoryFilter">
+                            <option value="">Todas las categorías</option>
+                            <option value="general">General</option>
+                            <option value="records">Grouvex Records</option>
+                            <option value="designs">Grouvex Designs</option>
+                            <option value="comunidad">Comunidad</option>
+                            <option value="gco">Gestión GCO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats"></div>
+
+            <!-- Documents Grid -->
+            <div id="documentsGrid" class="documents-grid">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Cargando boletín oficial...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Document Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="modalFooter"></div>
+        </div>
+    </div>
+
+    <!-- Version History Modal -->
+    <div id="versionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Historial de Versiones</h2>
+                <button class="close-btn" onclick="closeVersionModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="versionModalBody"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>© 2021 - 2025 Grouvex Studios. Todos los derechos reservados.</p>
+                    <p class="footer-contact">
+                        <i class="fas fa-envelope"></i>
+                        oficina@grouvex.com
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <span class="badge" id="issn">ISSN: BOGS/2025/001</span>
+                    <span class="badge" id="lastUpdate">Actualizado: -</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
