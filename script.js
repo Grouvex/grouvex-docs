@@ -11,30 +11,23 @@ let currentFilters = {
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
+    loadDocumentVersions(); // FALTA: Los paréntesis para ejecutar la función
     setupEventListeners();
-    setupRealtimeUpdates();
+    // setupRealtimeUpdates(); // ERROR: Esto requiere Firestore, pero solo usas Auth
 });
 
-// Cargar datos iniciales
+// Cargar datos iniciales DESDE JSON (no desde Firestore)
 async function loadData() {
     try {
         showLoading();
         
-        // Obtener documentos activos (última versión de cada uno)
-        const snapshot = await db.collection('documents')
-            .where('status', '==', 'active')
-            .orderBy('createdAt', 'desc')
-            .get();
+        // CORRECCIÓN: Cargar desde data.json, no desde Firestore
+        const response = await fetch('data.json?' + Date.now());
+        const data = await response.json();
         
-        documents = [];
-        snapshot.forEach(doc => {
-            documents.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
+        documents = data.documents || [];
         filteredDocuments = [...documents];
+        
         updateUI();
         
     } catch (error) {
@@ -43,41 +36,55 @@ async function loadData() {
     }
 }
 
-// Configurar actualizaciones en tiempo real
-function setupRealtimeUpdates() {
-    db.collection('documents')
-        .where('status', '==', 'active')
-        .onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added' || change.type === 'modified' || change.type === 'removed') {
-                    // Recargar datos cuando hay cambios
-                    loadData();
-                }
-            });
-        });
+// Cargar versiones desde versions.json
+async function loadDocumentVersions() {
+    try {
+        const response = await fetch('versions.json?' + Date.now());
+        const versionsData = await response.json();
+        console.log('Versions loaded:', versionsData);
+        
+        // Guardar en window para acceso global
+        window.versionsData = versionsData;
+        
+    } catch (error) {
+        console.log('No versions file found');
+        window.versionsData = { versions: [] };
+    }
 }
 
 // Configurar event listeners
 function setupEventListeners() {
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        currentFilters.search = e.target.value.toLowerCase();
-        applyFilters();
-    });
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentFilters.search = e.target.value.toLowerCase();
+            applyFilters();
+        });
+    }
 
-    document.getElementById('typeFilter').addEventListener('change', (e) => {
-        currentFilters.type = e.target.value;
-        applyFilters();
-    });
+    const typeFilter = document.getElementById('typeFilter');
+    if (typeFilter) {
+        typeFilter.addEventListener('change', (e) => {
+            currentFilters.type = e.target.value;
+            applyFilters();
+        });
+    }
 
-    document.getElementById('yearFilter').addEventListener('change', (e) => {
-        currentFilters.year = e.target.value;
-        applyFilters();
-    });
+    const yearFilter = document.getElementById('yearFilter');
+    if (yearFilter) {
+        yearFilter.addEventListener('change', (e) => {
+            currentFilters.year = e.target.value;
+            applyFilters();
+        });
+    }
 
-    document.getElementById('categoryFilter').addEventListener('change', (e) => {
-        currentFilters.category = e.target.value;
-        applyFilters();
-    });
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', (e) => {
+            currentFilters.category = e.target.value;
+            applyFilters();
+        });
+    }
 }
 
 // Aplicar filtros
@@ -87,10 +94,10 @@ function applyFilters() {
         if (currentFilters.search) {
             const searchTerm = currentFilters.search.toLowerCase();
             const matchesSearch = 
-                doc.title?.toLowerCase().includes(searchTerm) ||
-                doc.description?.toLowerCase().includes(searchTerm) ||
-                doc.reference?.toLowerCase().includes(searchTerm) ||
-                doc.tags?.some(tag => tag.toLowerCase().includes(searchTerm));
+                (doc.title || '').toLowerCase().includes(searchTerm) ||
+                (doc.description || '').toLowerCase().includes(searchTerm) ||
+                (doc.reference || '').toLowerCase().includes(searchTerm) ||
+                (doc.tags || []).some(tag => tag.toLowerCase().includes(searchTerm));
             
             if (!matchesSearch) return false;
         }
@@ -102,7 +109,7 @@ function applyFilters() {
         
         // Filtro de año
         if (currentFilters.year) {
-            const docYear = new Date(doc.date).getFullYear().toString();
+            const docYear = new Date(doc.date * 1000).getFullYear().toString();
             if (docYear !== currentFilters.year) return false;
         }
         
@@ -130,7 +137,7 @@ function updateUI() {
 function updateStats() {
     const stats = {
         total: documents.length,
-        boletines: documents.filter(d => d.type === 'boletin').length,
+        boletines: documents.filter(d => d.type === 'boletin' || d.type === 'bo').length,
         disposiciones: documents.filter(d => d.type === 'disposicion').length,
         anexos: documents.filter(d => d.type === 'anexo').length
     };
@@ -154,15 +161,20 @@ function updateStats() {
         </div>
     `;
     
-    document.getElementById('stats').innerHTML = statsHtml;
+    const statsElement = document.getElementById('stats');
+    if (statsElement) statsElement.innerHTML = statsHtml;
 }
 
 // Actualizar filtro de años
 function updateYearFilter() {
-    const years = [...new Set(documents.map(d => new Date(d.date).getFullYear()))];
+    const years = [...new Set(documents.map(d => {
+        return new Date(d.date * 1000).getFullYear();
+    }))];
     years.sort((a, b) => b - a);
     
     const select = document.getElementById('yearFilter');
+    if (!select) return;
+    
     const currentValue = select.value;
     
     select.innerHTML = '<option value="">Todos los años</option>' +
@@ -172,6 +184,7 @@ function updateYearFilter() {
 // Actualizar grid de documentos
 function updateDocumentsGrid() {
     const grid = document.getElementById('documentsGrid');
+    if (!grid) return;
     
     if (filteredDocuments.length === 0) {
         grid.innerHTML = `
@@ -223,9 +236,10 @@ function updateActiveFilters() {
 
 // Actualizar footer
 function updateFooter() {
-    const lastDoc = documents.sort((a, b) => b.createdAt - a.createdAt)[0];
-    if (lastDoc) {
-        document.getElementById('lastUpdate').textContent = `Actualizado: ${formatDate(lastDoc.createdAt)}`;
+    const lastDoc = documents.sort((a, b) => b.date - a.date)[0];
+    const lastUpdateElement = document.getElementById('lastUpdate');
+    if (lastUpdateElement && lastDoc) {
+        lastUpdateElement.textContent = `Actualizado: ${formatDate(lastDoc.date)}`;
     }
 }
 
@@ -235,17 +249,22 @@ async function showDocument(docId) {
         const doc = documents.find(d => d.id === docId);
         if (!doc) return;
         
-        // Obtener historial de versiones
-        const versionsSnapshot = await db.collection('documents')
-            .doc(docId)
-            .collection('versions')
-            .orderBy('version', 'desc')
-            .get();
-        
+        // Buscar versiones en versions.json
         const versions = [];
-        versionsSnapshot.forEach(v => versions.push(v.data()));
+        if (window.versionsData && window.versionsData.versions) {
+            // Filtrar versiones de este documento
+            window.versionsData.versions.forEach(v => {
+                if (v.data && v.data.id === docId) {
+                    versions.push(v);
+                }
+            });
+        }
         
-        document.getElementById('modalTitle').textContent = doc.title;
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalFooter = document.getElementById('modalFooter');
+        
+        if (modalTitle) modalTitle.textContent = doc.title;
         
         let content = `
             <div class="document-viewer">
@@ -264,20 +283,23 @@ async function showDocument(docId) {
             </div>
         `;
         
-        document.getElementById('modalBody').innerHTML = content;
+        if (modalBody) modalBody.innerHTML = content;
         
-        if (versions.length > 0) {
-            document.getElementById('modalFooter').innerHTML = `
-                <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
-                    <i class="fas fa-history"></i>
-                    Ver historial (${versions.length} versiones)
-                </button>
-            `;
-        } else {
-            document.getElementById('modalFooter').innerHTML = '';
+        if (modalFooter) {
+            if (versions.length > 0) {
+                modalFooter.innerHTML = `
+                    <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
+                        <i class="fas fa-history"></i>
+                        Ver historial (${versions.length} versiones)
+                    </button>
+                `;
+            } else {
+                modalFooter.innerHTML = '';
+            }
         }
         
-        document.getElementById('documentModal').classList.add('active');
+        const modal = document.getElementById('documentModal');
+        if (modal) modal.classList.add('active');
         
     } catch (error) {
         console.error('Error showing document:', error);
@@ -286,59 +308,58 @@ async function showDocument(docId) {
 }
 
 // Mostrar historial de versiones
-async function showVersionHistory(docId) {
-    try {
-        const versionsSnapshot = await db.collection('documents')
-            .doc(docId)
-            .collection('versions')
-            .orderBy('version', 'desc')
-            .get();
-        
-        const versions = [];
-        versionsSnapshot.forEach(v => versions.push(v.data()));
-        
-        const currentDoc = documents.find(d => d.id === docId);
-        
-        let html = '<div class="versions-list">';
-        
-        // Versión actual
+function showVersionHistory(docId) {
+    const doc = documents.find(d => d.id === docId);
+    if (!doc) return;
+    
+    // Obtener versiones de este documento desde versions.json
+    const versions = [];
+    if (window.versionsData && window.versionsData.versions) {
+        window.versionsData.versions.forEach(v => {
+            if (v.data && v.data.id === docId) {
+                versions.push(v);
+            }
+        });
+    }
+    
+    let html = '<div class="versions-list">';
+    
+    // Versión actual
+    html += `
+        <div class="version-item current">
+            <div class="version-header">
+                <span class="version-badge current">Actual v${doc.version}</span>
+                <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(doc.date)}</span>
+            </div>
+            <div class="version-changes">
+                <strong>Cambios:</strong> Versión actual
+            </div>
+        </div>
+    `;
+    
+    // Versiones anteriores
+    versions.forEach((version) => {
         html += `
-            <div class="version-item current">
+            <div class="version-item">
                 <div class="version-header">
-                    <span class="version-badge current">Actual v${currentDoc.version}</span>
-                    <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(currentDoc.updatedAt || currentDoc.createdAt)}</span>
+                    <span class="version-badge">v${version.data.version}</span>
+                    <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(version.date)}</span>
+                    <span class="version-author"><i class="fas fa-user"></i> ${escapeHtml(version.author || 'Sistema')}</span>
                 </div>
                 <div class="version-changes">
-                    <strong>Cambios:</strong> Versión actual
+                    <strong>Cambios:</strong> ${escapeHtml(version.changes || 'Sin descripción')}
                 </div>
             </div>
         `;
-        
-        // Versiones anteriores
-        versions.forEach((version, index) => {
-            html += `
-                <div class="version-item">
-                    <div class="version-header">
-                        <span class="version-badge">v${version.version}</span>
-                        <span class="version-date"><i class="fas fa-clock"></i> ${formatDateTime(version.createdAt)}</span>
-                        <span class="version-author"><i class="fas fa-user"></i> ${escapeHtml(version.createdBy || 'Sistema')}</span>
-                    </div>
-                    <div class="version-changes">
-                        <strong>Cambios:</strong> ${escapeHtml(version.changes || 'Sin descripción de cambios')}
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += '</div>';
-        
-        document.getElementById('versionModalBody').innerHTML = html;
-        document.getElementById('versionModal').classList.add('active');
-        
-    } catch (error) {
-        console.error('Error showing version history:', error);
-        alert('Error al cargar el historial');
-    }
+    });
+    
+    html += '</div>';
+    
+    const modalBody = document.getElementById('versionModalBody');
+    if (modalBody) modalBody.innerHTML = html;
+    
+    const modal = document.getElementById('versionModal');
+    if (modal) modal.classList.add('active');
 }
 
 // Limpiar filtro
@@ -346,9 +367,11 @@ function clearFilter(filterName) {
     currentFilters[filterName] = '';
     
     if (filterName === 'search') {
-        document.getElementById('searchInput').value = '';
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
     } else {
-        document.getElementById(filterName + 'Filter').value = '';
+        const filterElement = document.getElementById(filterName + 'Filter');
+        if (filterElement) filterElement.value = '';
     }
     
     applyFilters();
@@ -356,46 +379,58 @@ function clearFilter(filterName) {
 
 // Cerrar modales
 function closeModal() {
-    document.getElementById('documentModal').classList.remove('active');
+    const modal = document.getElementById('documentModal');
+    if (modal) modal.classList.remove('active');
 }
 
 function closeVersionModal() {
-    document.getElementById('versionModal').classList.remove('active');
+    const modal = document.getElementById('versionModal');
+    if (modal) modal.classList.remove('active');
 }
 
 // Utilidades
 function showLoading() {
-    document.getElementById('documentsGrid').innerHTML = `
-        <div class="loading">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>Cargando boletín oficial...</p>
-        </div>
-    `;
+    const grid = document.getElementById('documentsGrid');
+    if (grid) {
+        grid.innerHTML = `
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Cargando boletín oficial...</p>
+            </div>
+        `;
+    }
 }
 
 function showError(message) {
-    document.getElementById('documentsGrid').innerHTML = `
-        <div class="loading">
-            <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
-            <p>${message}</p>
-        </div>
-    `;
+    const grid = document.getElementById('documentsGrid');
+    if (grid) {
+        grid.innerHTML = `
+            <div class="loading">
+                <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                <p>${message}</p>
+            </div>
+        `;
+    }
 }
 
 function getTypeLabel(type) {
     const labels = {
         'boletin': 'Boletín Oficial',
+        'bo': 'B.O.',
         'disposicion': 'Disposición',
         'edicto': 'Edicto',
         'noticia': 'Noticia',
-        'anexo': 'Anexo'
+        'anexo': 'Anexo',
+        'miembros': 'Miembros',
+        'no': 'N.O.',
+        'tos': 'ToS&PP'
     };
     return labels[type] || type;
 }
 
 function formatDate(timestamp) {
     if (!timestamp) return 'Fecha desconocida';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp * 1000);
     return date.toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'long',
@@ -405,7 +440,7 @@ function formatDate(timestamp) {
 
 function formatDateTime(timestamp) {
     if (!timestamp) return 'Fecha desconocida';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = new Date(timestamp * 1000);
     return date.toLocaleString('es-ES', {
         year: 'numeric',
         month: 'long',
