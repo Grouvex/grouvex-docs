@@ -11,17 +11,15 @@ let currentFilters = {
 // Inicialización
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
-    loadDocumentVersions(); // FALTA: Los paréntesis para ejecutar la función
+    loadDocumentVersions();
     setupEventListeners();
-    // setupRealtimeUpdates(); // ERROR: Esto requiere Firestore, pero solo usas Auth
 });
 
-// Cargar datos iniciales DESDE JSON (no desde Firestore)
+// Cargar datos iniciales DESDE JSON
 async function loadData() {
     try {
         showLoading();
         
-        // CORRECCIÓN: Cargar desde data.json, no desde Firestore
         const response = await fetch('data.json?' + Date.now());
         const data = await response.json();
         
@@ -44,7 +42,6 @@ async function loadDocumentVersions() {
         const versionsData = await response.json();
         console.log('Versions loaded:', versionsData);
         
-        // Guardar en window para acceso global
         window.versionsData = versionsData;
         
     } catch (error) {
@@ -78,14 +75,6 @@ function setupEventListeners() {
             applyFilters();
         });
     }
-
-    const categoryFilter = document.getElementById('categoryFilter');
-    if (categoryFilter) {
-        categoryFilter.addEventListener('change', (e) => {
-            currentFilters.category = e.target.value;
-            applyFilters();
-        });
-    }
 }
 
 // Configurar botones de organismo
@@ -104,12 +93,10 @@ function setupOrganismButtons() {
 // Aplicar filtros
 function applyFilters() {
     filteredDocuments = documents.filter(doc => {
-        // Filtro de organismo
         if (currentFilters.organism !== 'all' && doc.organism !== currentFilters.organism) {
             return false;
         }
         
-        // Filtro de búsqueda
         if (currentFilters.search) {
             const searchTerm = currentFilters.search.toLowerCase();
             const matchesSearch = 
@@ -121,20 +108,13 @@ function applyFilters() {
             if (!matchesSearch) return false;
         }
         
-        // Filtro de tipo
         if (currentFilters.type && doc.type !== currentFilters.type) {
             return false;
         }
         
-        // Filtro de año
         if (currentFilters.year) {
             const docYear = new Date(doc.date * 1000).getFullYear().toString();
             if (docYear !== currentFilters.year) return false;
-        }
-        
-        // Filtro de categoría
-        if (currentFilters.category && doc.category !== currentFilters.category) {
-            return false;
         }
         
         return true;
@@ -155,9 +135,10 @@ function updateUI() {
 function updateStats() {
     const stats = {
         total: documents.length,
-        boletines: documents.filter(d => d.type === 'boletin' || d.type === 'bo').length,
-        disposiciones: documents.filter(d => d.type === 'disposicion').length,
-        anexos: documents.filter(d => d.type === 'anexo').length
+        grouvex: documents.filter(d => d.organism === 'grouvex').length,
+        records: documents.filter(d => d.organism === 'records').length,
+        designs: documents.filter(d => d.organism === 'designs').length,
+        games: documents.filter(d => d.organism === 'games').length
     };
     
     const statsHtml = `
@@ -197,6 +178,8 @@ function updateYearFilter() {
     
     select.innerHTML = '<option value="">Todos los años</option>' +
         years.map(year => `<option value="${year}">${year}</option>`).join('');
+    
+    if (currentValue) select.value = currentValue;
 }
 
 // Actualizar grid de documentos
@@ -214,14 +197,18 @@ function updateDocumentsGrid() {
         return;
     }
     
-    // Ordenar por fecha (más reciente primero)
     filteredDocuments.sort((a, b) => b.date - a.date);
     
-    grid.innerHTML = filteredDocuments.map(doc => `
+    grid.innerHTML = filteredDocuments.map(doc => {
+        // Detectar si el documento tiene SUMARIO
+        const hasSumario = doc.content && doc.content.includes('SUMARIO');
+        
+        return `
         <div class="doc-card" onclick="showDocument('${doc.id}')">
-            <div>
+            <div class="doc-badges">
                 <span class="doc-organism ${doc.organism}">${getOrganismLabel(doc.organism)}</span>
                 <span class="doc-type ${doc.type}">${getTypeLabel(doc.type)}</span>
+                ${hasSumario ? '<span class="doc-feature"><i class="fas fa-list"></i> Sumario</span>' : ''}
             </div>
             <h3 class="doc-title">${escapeHtml(doc.title)}</h3>
             <div class="doc-reference">${escapeHtml(doc.reference || 'Sin referencia')}</div>
@@ -231,15 +218,175 @@ function updateDocumentsGrid() {
                 <span class="doc-version">v${doc.version || 1}</span>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 // Actualizar footer
 function updateFooter() {
-    const lastDoc = documents.sort((a, b) => b.date - a.date)[0];
+    const lastDoc = [...documents].sort((a, b) => b.date - a.date)[0];
     const lastUpdateElement = document.getElementById('lastUpdate');
     if (lastUpdateElement && lastDoc) {
         lastUpdateElement.textContent = `Actualizado: ${formatDate(lastDoc.date)}`;
+    }
+}
+
+// Función para parsear el SUMARIO y generar enlaces
+function parseSumario(content) {
+    if (!content || !content.includes('SUMARIO')) {
+        return { tieneSumario: false, secciones: [], contenidoHTML: escapeHtml(content) };
+    }
+    
+    const lines = content.split('\n');
+    let secciones = [];
+    let currentSeccion = null;
+    let isSumario = false;
+    let sumarioEndIndex = -1;
+    
+    // Primero, identificar el bloque del SUMARIO
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        
+        if (line === 'SUMARIO') {
+            isSumario = true;
+            continue;
+        }
+        
+        if (isSumario) {
+            // Detectar patrones de secciones (TÍTULO, Capítulo, Artículo, Sección)
+            if (line.match(/^(TÍTULO|TITULO|Capítulo|SECCIÓN|SECCION|Artículo)/i)) {
+                // Extraer el texto completo de la línea
+                const match = line.match(/^([A-ZÁÉÍÓÚÑ\s]+\.?)\s*(.*)/i);
+                if (match) {
+                    const titulo = match[1].trim();
+                    const descripcion = match[2].trim();
+                    
+                    // Crear un ID para la sección
+                    const seccionId = 'seccion-' + i + '-' + Date.now();
+                    
+                    secciones.push({
+                        id: seccionId,
+                        titulo: titulo,
+                        descripcion: descripcion || titulo,
+                        linea: i
+                    });
+                }
+            }
+            
+            // Si encontramos una línea en blanco después de capturar secciones, termina el sumario
+            if (line === '' && secciones.length > 0) {
+                sumarioEndIndex = i;
+                break;
+            }
+        }
+    }
+    
+    // Si no se encontraron secciones con el patrón anterior, intentar con un enfoque más simple
+    if (secciones.length === 0 && isSumario) {
+        const sumarioLines = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes('SUMARIO')) {
+                for (let j = i + 1; j < Math.min(i + 20, lines.length); j++) {
+                    const line = lines[j].trim();
+                    if (line && !line.match(/^\s*$/)) {
+                        sumarioLines.push(line);
+                    }
+                    if (line === '' && sumarioLines.length > 0) break;
+                }
+                break;
+            }
+        }
+        
+        sumarioLines.forEach((line, index) => {
+            secciones.push({
+                id: 'seccion-simple-' + index,
+                titulo: line,
+                descripcion: line,
+                linea: index
+            });
+        });
+    }
+    
+    // Procesar el contenido para generar HTML con enlaces
+    let contenidoHTML = '';
+    let enProcesamientoSumario = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        if (line.includes('SUMARIO')) {
+            contenidoHTML += '<div class="sumario-header">📋 SUMARIO</div>\n';
+            contenidoHTML += '<div class="sumario-lista">\n';
+            
+            // Añadir enlaces a las secciones
+            secciones.forEach(seccion => {
+                const tituloCorto = seccion.titulo.length > 50 ? 
+                    seccion.titulo.substring(0, 50) + '...' : seccion.titulo;
+                
+                contenidoHTML += `<a href="#${seccion.id}" class="sumario-enlace" onclick="event.preventDefault(); navigateToSection('${seccion.id}')">
+                    <i class="fas fa-chevron-right"></i> ${escapeHtml(tituloCorto)}
+                </a>\n`;
+            });
+            
+            contenidoHTML += '</div>\n';
+            enProcesamientoSumario = true;
+            continue;
+        }
+        
+        // Saltar líneas en blanco después del sumario
+        if (enProcesamientoSumario && line.trim() === '' && secciones.length > 0) {
+            enProcesamientoSumario = false;
+            contenidoHTML += '<div class="sumario-separador"></div>\n';
+            continue;
+        }
+        
+        // Procesar el resto del contenido
+        if (!enProcesamientoSumario) {
+            // Verificar si esta línea es una sección del sumario
+            const seccionEncontrada = secciones.find(s => s.linea === i);
+            
+            if (seccionEncontrada) {
+                // Esta línea es un título de sección
+                contenidoHTML += `<div id="${seccionEncontrada.id}" class="seccion-titulo">`;
+                contenidoHTML += `<i class="fas fa-bookmark"></i> ${escapeHtml(line)}`;
+                contenidoHTML += ` <a href="#" onclick="scrollToTop()" class="volver-arriba" title="Volver arriba"><i class="fas fa-arrow-up"></i></a>`;
+                contenidoHTML += `</div>\n`;
+            } else if (line.match(/^(Artículo|DISPOSICIÓN|Capítulo)/i)) {
+                // Resaltar artículos y disposiciones
+                contenidoHTML += `<div class="articulo-destacado"><i class="fas fa-gavel"></i> ${escapeHtml(line)}</div>\n`;
+            } else if (line.trim() === '') {
+                contenidoHTML += '<br>\n';
+            } else {
+                contenidoHTML += escapeHtml(line) + '\n';
+            }
+        }
+    }
+    
+    return {
+        tieneSumario: secciones.length > 0,
+        secciones: secciones,
+        contenidoHTML: contenidoHTML
+    };
+}
+
+// Función para navegar a una sección
+function navigateToSection(seccionId) {
+    const element = document.getElementById(seccionId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Resaltar temporalmente la sección
+        element.classList.add('seccion-resaltada');
+        setTimeout(() => {
+            element.classList.remove('seccion-resaltada');
+        }, 2000);
+    }
+}
+
+// Función para volver arriba en el modal
+function scrollToTop() {
+    const modalBody = document.getElementById('modalBody');
+    if (modalBody) {
+        modalBody.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 
@@ -249,7 +396,7 @@ async function showDocument(docId) {
         const doc = documents.find(d => d.id === docId);
         if (!doc) return;
         
-        // Buscar versiones en versions.json
+        // Buscar versiones
         const versions = [];
         if (window.versionsData && window.versionsData.versions) {
             window.versionsData.versions.forEach(v => {
@@ -265,37 +412,95 @@ async function showDocument(docId) {
         
         if (modalTitle) modalTitle.textContent = doc.title;
         
-        let content = `
-            <div class="document-viewer">
-                <div class="doc-metadata">
-                    <p><strong>Referencia:</strong> ${escapeHtml(doc.reference || 'N/A')}</p>
-                    <p><strong>Tipo:</strong> ${getTypeLabel(doc.type)}</p>
-                    <p><strong>Categoría:</strong> ${escapeHtml(doc.category || 'general')}</p>
-                    <p><strong>Fecha:</strong> ${formatDate(doc.date)}</p>
-                    <p><strong>Versión:</strong> ${doc.version || 1}</p>
-                    <p><strong>Tags:</strong> ${doc.tags ? doc.tags.map(t => `<span class="badge">${t}</span>`).join(' ') : 'Ninguno'}</p>
-                </div>
-                <div class="doc-content">
-                    <h3>Contenido</h3>
-                    <pre>${escapeHtml(doc.content || 'Sin contenido')}</pre>
-                </div>
-            </div>
-        `;
-    
-        if (modalBody) modalBody.innerHTML = content;
+        // Parsear el contenido para manejar SUMARIO
+        const contenidoParseado = parseSumario(doc.content || '');
         
-        // Configurar el footer con el botón de historial si hay versiones
+        // Determinar si mostrar el contenido simple o con sumario
+        let contenidoHTML = '';
+        
+        if (contenidoParseado.tieneSumario) {
+            // Vista mejorada con sumario interactivo
+            contenidoHTML = `
+                <div class="document-viewer">
+                    <div class="doc-metadata tarjeta-info">
+                        <div class="metadata-grid">
+                            <div><strong>Referencia:</strong> ${escapeHtml(doc.reference || 'N/A')}</div>
+                            <div><strong>Tipo:</strong> ${getTypeLabel(doc.type)}</div>
+                            <div><strong>Organismo:</strong> ${getOrganismLabel(doc.organism)}</div>
+                            <div><strong>Fecha:</strong> ${formatDate(doc.date)}</div>
+                            <div><strong>Versión:</strong> ${doc.version || 1}</div>
+                        </div>
+                        ${doc.tags && doc.tags.length ? `
+                            <div class="tags-container">
+                                <strong>Tags:</strong> ${doc.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="doc-contenido-mejorado">
+                        <div class="contenido-header">
+                            <i class="fas fa-file-alt"></i> Contenido
+                        </div>
+                        <div class="contenido-body">
+                            ${contenidoParseado.contenidoHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Vista simple
+            contenidoHTML = `
+                <div class="document-viewer">
+                    <div class="doc-metadata tarjeta-info">
+                        <div class="metadata-grid">
+                            <div><strong>Referencia:</strong> ${escapeHtml(doc.reference || 'N/A')}</div>
+                            <div><strong>Tipo:</strong> ${getTypeLabel(doc.type)}</div>
+                            <div><strong>Organismo:</strong> ${getOrganismLabel(doc.organism)}</div>
+                            <div><strong>Fecha:</strong> ${formatDate(doc.date)}</div>
+                            <div><strong>Versión:</strong> ${doc.version || 1}</div>
+                        </div>
+                        ${doc.tags && doc.tags.length ? `
+                            <div class="tags-container">
+                                <strong>Tags:</strong> ${doc.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="doc-content">
+                        <div class="contenido-header">
+                            <i class="fas fa-file-alt"></i> Contenido
+                        </div>
+                        <pre class="contenido-pre">${escapeHtml(doc.content || 'Sin contenido')}</pre>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (modalBody) modalBody.innerHTML = contenidoHTML;
+        
+        // Configurar el footer
         if (modalFooter) {
-            if (versions.length > 0) {
-                modalFooter.innerHTML = `
-                    <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
-                        <i class="fas fa-history"></i>
-                        Ver historial (${versions.length} versiones)
+            let footerButtons = '';
+            
+            if (contenidoParseado.tieneSumario) {
+                footerButtons += `
+                    <button class="btn-secondary" onclick="scrollToTop()">
+                        <i class="fas fa-arrow-up"></i>
+                        Volver arriba
                     </button>
                 `;
-            } else {
-                modalFooter.innerHTML = '';
             }
+            
+            if (versions.length > 0) {
+                footerButtons += `
+                    <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
+                        <i class="fas fa-history"></i>
+                        Ver historial (${versions.length})
+                    </button>
+                `;
+            }
+            
+            modalFooter.innerHTML = footerButtons;
         }
         
         const modal = document.getElementById('documentModal');
@@ -312,7 +517,6 @@ function showVersionHistory(docId) {
     const doc = documents.find(d => d.id === docId);
     if (!doc) return;
     
-    // Obtener versiones de este documento desde versions.json
     const versions = [];
     if (window.versionsData && window.versionsData.versions) {
         window.versionsData.versions.forEach(v => {
@@ -324,7 +528,6 @@ function showVersionHistory(docId) {
     
     let html = '<div class="versions-list">';
     
-    // Versión actual
     html += `
         <div class="version-item current">
             <div class="version-header">
@@ -337,7 +540,6 @@ function showVersionHistory(docId) {
         </div>
     `;
     
-    // Versiones anteriores
     versions.forEach((version) => {
         html += `
             <div class="version-item">
@@ -360,21 +562,6 @@ function showVersionHistory(docId) {
     
     const modal = document.getElementById('versionModal');
     if (modal) modal.classList.add('active');
-}
-
-// Limpiar filtro
-function clearFilter(filterName) {
-    currentFilters[filterName] = '';
-    
-    if (filterName === 'search') {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.value = '';
-    } else {
-        const filterElement = document.getElementById(filterName + 'Filter');
-        if (filterElement) filterElement.value = '';
-    }
-    
-    applyFilters();
 }
 
 // Cerrar modales
@@ -425,12 +612,7 @@ function getOrganismLabel(organism) {
 
 function getTypeLabel(type) {
     const labels = {
-        'boletin': 'Boletín Oficial',
         'bo': 'B.O.',
-        'disposicion': 'Disposición',
-        'edicto': 'Edicto',
-        'noticia': 'Noticia',
-        'anexo': 'Anexo',
         'miembros': 'Miembros',
         'no': 'N.O.',
         'tos': 'ToS&PP'
@@ -467,10 +649,10 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function closeModal() {
-    document.getElementById('documentModal').classList.remove('active');
-}
-
-function closeVersionModal() {
-    document.getElementById('versionModal').classList.remove('active');
-}
+// Hacer funciones globales para los onclick
+window.showDocument = showDocument;
+window.closeModal = closeModal;
+window.closeVersionModal = closeVersionModal;
+window.showVersionHistory = showVersionHistory;
+window.navigateToSection = navigateToSection;
+window.scrollToTop = scrollToTop;
