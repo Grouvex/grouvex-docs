@@ -1,3 +1,13 @@
+// ============================================
+// CONFIGURACIÓN DE GITHUB - Usando DDOO_TOKEN
+// ============================================
+const GITHUB = {
+    owner: 'Grouvex',                    // ← TU USUARIO
+    repo: 'grouvex.github.io',            // ← TU REPOSITORIO
+    branch: 'main',                       // Rama principal
+    token: null
+};
+
 // Variables globales
 let currentUser = null;
 let currentData = null;
@@ -10,24 +20,252 @@ document.addEventListener('DOMContentLoaded', () => {
     loadVersions();
 });
 
-// Configurar listener de autenticación
-function setupAuthListener() {
-    auth.onAuthStateChanged(async (user) => {
-        if (user && isAuthorized(user.email)) {
-            currentUser = user;
-            showAdminPanel();
-            await loadCurrentData();
-        } else {
-            if (user) {
-                await auth.signOut();
-                showAuthMessage('error', 'No tienes permisos para acceder');
-            }
-            showAuthSection();
+// ============================================
+// FUNCIÓN PARA OBTENER EL TOKEN DEL SECRET
+// ============================================
+async function getGitHubToken() {
+    // Si ya tenemos token, lo devolvemos
+    if (GITHUB.token) return GITHUB.token;
+    
+    try {
+        // Intentar obtener el token mediante fetch a un endpoint que lea el secret
+        // En GitHub Pages, necesitamos usar un proxy o API
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(
+            `https://raw.githubusercontent.com/${GITHUB.owner}/${GITHUB.repo}/main/config/token.json?${Date.now()}`
+        )}`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            GITHUB.token = data.token;
+            return GITHUB.token;
         }
-    });
+    } catch (e) {
+        console.log('No se pudo obtener token vía proxy');
+    }
+    
+    // Si no funciona, mostrar instrucciones
+    throw new Error(`
+        ⚠️ CONFIGURACIÓN DEL TOKEN ⚠️
+        
+        Para que funcione el guardado automático:
+        
+        1. Crea una carpeta "config" en tu repositorio
+        2. Dentro, crea un archivo "token.json" con:
+           {
+             "token": "github_pat_TU_TOKEN_AQUI"
+           }
+        
+        O usa la opción manual por ahora.
+    `);
 }
 
-// Cargar datos actuales
+// ============================================
+// GUARDADO AUTOMÁTICO DIRECTO A GITHUB
+// ============================================
+
+// Función principal para guardar en GitHub
+async function saveToGitHub(filePath, content, commitMessage) {
+    try {
+        showEditorMessage('info', `📤 Subiendo ${filePath} a GitHub...`);
+        
+        // Intentar obtener token (si falla, continuamos con modo manual)
+        let token = null;
+        try {
+            token = await getGitHubToken();
+        } catch (e) {
+            console.log('Modo manual activado');
+            return false;
+        }
+        
+        // 1. Obtener el archivo actual para conocer su SHA
+        const getUrl = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${filePath}?ref=${GITHUB.branch}`;
+        
+        let sha = null;
+        try {
+            const getResponse = await fetch(getUrl, {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            
+            if (getResponse.status === 200) {
+                const fileData = await getResponse.json();
+                sha = fileData.sha;
+            }
+        } catch (error) {
+            console.log(`Archivo ${filePath} no encontrado, se creará`);
+        }
+        
+        // 2. Preparar el commit
+        const commitData = {
+            message: commitMessage,
+            content: btoa(unescape(encodeURIComponent(content))),
+            branch: GITHUB.branch
+        };
+        
+        if (sha) {
+            commitData.sha = sha;
+        }
+        
+        // 3. Hacer el commit
+        const putUrl = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${filePath}`;
+        const putResponse = await fetch(putUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(commitData)
+        });
+        
+        if (!putResponse.ok) {
+            const error = await putResponse.json();
+            throw new Error(error.message);
+        }
+        
+        return true;
+        
+    } catch (error) {
+        console.error('Error en saveToGitHub:', error);
+        return false;
+    }
+}
+
+// ============================================
+// GUARDADO PRINCIPAL
+// ============================================
+
+async function saveJSON() {
+    try {
+        const jsonText = document.getElementById('jsonEditor').value;
+        const changes = prompt('📝 Describe los cambios realizados:', 'Actualización de documentos');
+        
+        if (!changes) {
+            showEditorMessage('error', 'Debes describir los cambios');
+            return;
+        }
+        
+        // Validar JSON
+        const parsed = JSON.parse(jsonText);
+        
+        if (!parsed.documents || !Array.isArray(parsed.documents)) {
+            showEditorMessage('error', 'El JSON debe contener un array "documents"');
+            return;
+        }
+        
+        // Guardar versión en el historial
+        await saveVersion(parsed, changes);
+        
+        const timestamp = new Date().toLocaleString('es-ES', { 
+            year: 'numeric', month: '2-digit', day: '2-digit', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        });
+        
+        const commitMessage = `📝 ${changes} [${timestamp}] - ${currentUser?.email || 'Admin'}`;
+        
+        // INTENTAR SUBIR A GITHUB AUTOMÁTICAMENTE
+        const dataSuccess = await saveToGitHub('data.json', jsonText, commitMessage);
+        const versionsSuccess = await saveToGitHub('versions.json', JSON.stringify(versions, null, 2), 
+            `📚 Historial: ${changes} [${timestamp}]`);
+        
+        if (dataSuccess && versionsSuccess) {
+            currentData = parsed;
+            showEditorMessage('success', 
+                '✅✅ CAMBIOS GUARDADOS EN GITHUB AUTOMÁTICAMENTE ✅✅\n\n' +
+                '• data.json actualizado\n' +
+                '• versions.json actualizado\n' +
+                '• La web se actualizará en segundos'
+            );
+            renderDocumentsList();
+        } else {
+            // MODO MANUAL (fallback)
+            await manualSave(jsonText, changes);
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showEditorMessage('error', 'Error: ' + error.message);
+    }
+}
+
+// ============================================
+// MODO MANUAL (FALLBACK)
+// ============================================
+
+async function manualSave(jsonText, changes) {
+    // Guardar versión
+    await saveVersion(JSON.parse(jsonText), changes);
+    
+    // Crear archivos para descarga
+    const dataBlob = new Blob([jsonText], { type: 'application/json' });
+    const versionsBlob = new Blob([JSON.stringify(versions, null, 2)], { type: 'application/json' });
+    
+    const dataUrl = URL.createObjectURL(dataBlob);
+    const versionsUrl = URL.createObjectURL(versionsBlob);
+    
+    // Descargar archivos
+    const dataLink = document.createElement('a');
+    dataLink.href = dataUrl;
+    dataLink.download = 'data.json';
+    dataLink.click();
+    
+    setTimeout(() => {
+        const versionsLink = document.createElement('a');
+        versionsLink.href = versionsUrl;
+        versionsLink.download = 'versions.json';
+        versionsLink.click();
+        
+        URL.revokeObjectURL(dataUrl);
+        URL.revokeObjectURL(versionsUrl);
+    }, 100);
+    
+    const instructions = `
+        ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
+        
+        📥 ARCHIVOS DESCARGADOS
+        
+        Para PUBLICARLOS:
+        
+        1. Ve a: https://github.com/${GITHUB.owner}/${GITHUB.repo}/upload/main
+        2. Arrastra los 2 archivos que se descargaron:
+           • data.json
+           • versions.json
+        3. En "Commit changes" escribe:
+           "${changes}"
+        4. Haz clic en "Commit changes"
+        
+        ⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️⬆️
+    `;
+    
+    alert(instructions);
+    showEditorMessage('success', '✅ Archivos descargados. Súbelos a GitHub manualmente.');
+}
+
+// ============================================
+// GUARDAR VERSIÓN
+// ============================================
+
+async function saveVersion(data, changes) {
+    const version = {
+        id: Date.now().toString(),
+        date: Math.floor(Date.now() / 1000),
+        author: currentUser?.email || 'unknown',
+        changes: changes || 'Actualización de documentos',
+        data: data
+    };
+    
+    versions.versions = versions.versions || [];
+    versions.versions.unshift(version);
+    versions.versions = versions.versions.slice(0, 50);
+    
+    renderVersionHistory();
+}
+
+// ============================================
+// CARGA DE DATOS
+// ============================================
+
 async function loadCurrentData() {
     try {
         const response = await fetch('data.json?' + Date.now());
@@ -40,7 +278,6 @@ async function loadCurrentData() {
     }
 }
 
-// Cargar historial de versiones
 async function loadVersions() {
     try {
         const response = await fetch('versions.json?' + Date.now());
@@ -53,7 +290,10 @@ async function loadVersions() {
     }
 }
 
-// Renderizar lista de documentos
+// ============================================
+// INTERFAZ VISUAL
+// ============================================
+
 function renderDocumentsList() {
     const container = document.getElementById('documentsList');
     const organismFilter = document.getElementById('organismFilter')?.value || 'all';
@@ -68,7 +308,6 @@ function renderDocumentsList() {
         filteredDocs = filteredDocs.filter(doc => doc.organism === organismFilter);
     }
     
-    // Agrupar por organismo
     const grouped = {};
     filteredDocs.forEach(doc => {
         if (!grouped[doc.organism]) grouped[doc.organism] = [];
@@ -76,8 +315,6 @@ function renderDocumentsList() {
     });
     
     let html = '';
-    
-    // Orden de organismos
     const organismOrder = ['grouvex', 'records', 'designs', 'games'];
     
     organismOrder.forEach(org => {
@@ -116,12 +353,14 @@ function renderDocumentsList() {
     container.innerHTML = html;
 }
 
-// Filtrar documentos por organismo
 function filterDocumentsByOrganism() {
     renderDocumentsList();
 }
 
-// Mostrar formulario de nuevo documento
+// ============================================
+// FORMULARIOS DE DOCUMENTOS
+// ============================================
+
 function showNewDocumentForm() {
     currentEditingDoc = null;
     
@@ -202,13 +441,11 @@ function showNewDocumentForm() {
     document.getElementById('documentModal').classList.add('active');
 }
 
-// Editar documento existente
 function editDocument(docId) {
     const doc = currentData.documents.find(d => d.id === docId);
     if (!doc) return;
     
     currentEditingDoc = doc;
-    
     const tagsValue = doc.tags ? doc.tags.join(', ') : '';
     
     const formHtml = `
@@ -286,7 +523,6 @@ function editDocument(docId) {
     document.getElementById('documentModal').classList.add('active');
 }
 
-// Guardar documento (nuevo o editado)
 async function saveDocument(event) {
     event.preventDefault();
     
@@ -313,43 +549,57 @@ async function saveDocument(event) {
         };
         
         if (!currentEditingDoc) {
-            // Nuevo documento
             currentData.documents.push(docData);
         } else {
-            // Actualizar documento existente
             const index = currentData.documents.findIndex(d => d.id === currentEditingDoc.id);
             if (index !== -1) {
                 currentData.documents[index] = docData;
             }
         }
         
-        // Guardar versión en historial
         await saveVersion(currentData, changes);
-        
-        // Actualizar JSON editor
         document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 2);
         
-        // Crear archivo data.json para descarga
-        const dataBlob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
-        const dataUrl = URL.createObjectURL(dataBlob);
-        const dataLink = document.createElement('a');
-        dataLink.href = dataUrl;
-        dataLink.download = 'data.json';
-        dataLink.click();
-        URL.revokeObjectURL(dataUrl);
+        // Intentar guardar automáticamente
+        const timestamp = new Date().toLocaleString('es-ES', { 
+            year: 'numeric', month: '2-digit', day: '2-digit', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        });
+        
+        const commitMessage = `📝 ${changes} [${timestamp}] - ${currentUser?.email || 'Admin'}`;
+        
+        const dataSuccess = await saveToGitHub('data.json', JSON.stringify(currentData, null, 2), commitMessage);
+        const versionsSuccess = await saveToGitHub('versions.json', JSON.stringify(versions, null, 2), 
+            `📚 Historial: ${changes} [${timestamp}]`);
+        
+        if (dataSuccess && versionsSuccess) {
+            showEditorMessage('success', '✅ Documento guardado en GitHub');
+        } else {
+            // Fallback a manual
+            const dataBlob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
+            const dataUrl = URL.createObjectURL(dataBlob);
+            const dataLink = document.createElement('a');
+            dataLink.href = dataUrl;
+            dataLink.download = 'data.json';
+            dataLink.click();
+            URL.revokeObjectURL(dataUrl);
+            
+            showEditorMessage('success', '✅ Documento guardado localmente. Súbelo a GitHub.');
+        }
         
         closeDocumentModal();
         renderDocumentsList();
         
-        showEditorMessage('success', '✅ Documento guardado correctamente');
-        
     } catch (error) {
-        console.error('Error saving document:', error);
-        showEditorMessage('error', 'Error al guardar el documento');
+        console.error('Error:', error);
+        showEditorMessage('error', 'Error al guardar');
     }
 }
 
-// Eliminar documento
+// ============================================
+// ELIMINAR DOCUMENTO
+// ============================================
+
 async function deleteDocument(docId) {
     if (!confirm('¿Estás seguro de eliminar este documento?')) return;
     
@@ -357,35 +607,40 @@ async function deleteDocument(docId) {
         const changes = prompt('Describe el motivo de la eliminación:', 'Documento eliminado');
         if (!changes) return;
         
-        // Filtrar el documento
         currentData.documents = currentData.documents.filter(d => d.id !== docId);
         
-        // Guardar versión en historial
         await saveVersion(currentData, changes);
-        
-        // Actualizar JSON editor
         document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 2);
         
-        // Crear archivo data.json para descarga
-        const dataBlob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
-        const dataUrl = URL.createObjectURL(dataBlob);
-        const dataLink = document.createElement('a');
-        dataLink.href = dataUrl;
-        dataLink.download = 'data.json';
-        dataLink.click();
-        URL.revokeObjectURL(dataUrl);
+        const timestamp = new Date().toLocaleString('es-ES', { 
+            year: 'numeric', month: '2-digit', day: '2-digit', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        });
+        
+        const commitMessage = `🗑️ ${changes} [${timestamp}] - ${currentUser?.email || 'Admin'}`;
+        
+        const dataSuccess = await saveToGitHub('data.json', JSON.stringify(currentData, null, 2), commitMessage);
+        const versionsSuccess = await saveToGitHub('versions.json', JSON.stringify(versions, null, 2), 
+            `📚 Historial: ${changes} [${timestamp}]`);
+        
+        if (dataSuccess && versionsSuccess) {
+            showEditorMessage('success', '✅ Documento eliminado de GitHub');
+        } else {
+            showEditorMessage('success', '✅ Documento eliminado localmente');
+        }
         
         renderDocumentsList();
         
-        showEditorMessage('success', '✅ Documento eliminado correctamente');
-        
     } catch (error) {
-        console.error('Error deleting document:', error);
-        showEditorMessage('error', 'Error al eliminar el documento');
+        console.error('Error:', error);
+        showEditorMessage('error', 'Error al eliminar');
     }
 }
 
-// Ver versiones de un documento específico
+// ============================================
+// VERSIONES
+// ============================================
+
 function viewDocumentVersions(docId) {
     const doc = currentData.documents.find(d => d.id === docId);
     if (!doc) return;
@@ -438,38 +693,6 @@ function viewDocumentVersions(docId) {
     document.getElementById('documentModal').classList.add('active');
 }
 
-// Guardar versión
-async function saveVersion(data, changes) {
-    const version = {
-        id: Date.now().toString(),
-        date: Math.floor(Date.now() / 1000),
-        author: currentUser?.email || 'unknown',
-        changes: changes || 'Actualización de documentos',
-        data: data
-    };
-    
-    versions.versions = versions.versions || [];
-    versions.versions.unshift(version);
-    versions.versions = versions.versions.slice(0, 50);
-    
-    await saveVersionsFile();
-    renderVersionHistory();
-}
-
-// Guardar archivo de versiones
-async function saveVersionsFile() {
-    const versionsBlob = new Blob([JSON.stringify(versions, null, 2)], { type: 'application/json' });
-    const versionsUrl = URL.createObjectURL(versionsBlob);
-    const versionsLink = document.createElement('a');
-    versionsLink.href = versionsUrl;
-    versionsLink.download = 'versions.json';
-    versionsLink.click();
-    URL.revokeObjectURL(versionsUrl);
-    
-    showEditorMessage('success', 'Archivo versions.json generado. Súbelo al servidor.');
-}
-
-// Renderizar historial
 function renderVersionHistory() {
     const container = document.getElementById('versionHistory');
     const versionsList = versions.versions || [];
@@ -503,7 +726,6 @@ function renderVersionHistory() {
     `).join('');
 }
 
-// Previsualizar versión
 function previewVersion(versionId) {
     const version = versions.versions.find(v => v.id === versionId);
     if (!version) return;
@@ -529,7 +751,6 @@ function previewVersion(versionId) {
     document.getElementById('documentModal').classList.add('active');
 }
 
-// Restaurar versión
 function restoreVersion(versionId) {
     if (!confirm('¿Restaurar esta versión? Se perderán los cambios no guardados.')) return;
     
@@ -541,29 +762,13 @@ function restoreVersion(versionId) {
     renderDocumentsList();
     
     closeDocumentModal();
-    showEditorMessage('success', 'Versión restaurada. Haz clic en Guardar Cambios para aplicarla definitivamente.');
+    showEditorMessage('success', 'Versión cargada. Haz clic en Guardar Cambios para publicarla.');
 }
 
-// Cambiar de pestaña
-function switchTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
-    if (tabName === 'editor') {
-        document.querySelectorAll('.tab-btn')[0].classList.add('active');
-        document.getElementById('visualEditorTab').classList.add('active');
-        renderDocumentsList();
-    } else if (tabName === 'json') {
-        document.querySelectorAll('.tab-btn')[1].classList.add('active');
-        document.getElementById('jsonEditorTab').classList.add('active');
-    } else if (tabName === 'history') {
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-        document.getElementById('historyTab').classList.add('active');
-        renderVersionHistory();
-    }
-}
+// ============================================
+// FUNCIONES DEL EDITOR JSON
+// ============================================
 
-// Funciones del editor JSON (mantenidas del original)
 function formatJSON() {
     try {
         const editor = document.getElementById('jsonEditor');
@@ -572,42 +777,6 @@ function formatJSON() {
         showEditorMessage('success', 'JSON formateado');
     } catch (error) {
         showEditorMessage('error', 'Error al formatear: JSON inválido');
-    }
-}
-
-async function saveJSON() {
-    try {
-        const jsonText = document.getElementById('jsonEditor').value;
-        const changes = prompt('Describe los cambios realizados:', 'Actualización mediante editor JSON');
-        
-        if (!changes) {
-            showEditorMessage('error', 'Debes describir los cambios');
-            return;
-        }
-        
-        const parsed = JSON.parse(jsonText);
-        
-        if (!parsed.documents || !Array.isArray(parsed.documents)) {
-            showEditorMessage('error', 'El JSON debe contener un array "documents"');
-            return;
-        }
-        
-        currentData = parsed;
-        await saveVersion(parsed, changes);
-        
-        const dataBlob = new Blob([jsonText], { type: 'application/json' });
-        const dataUrl = URL.createObjectURL(dataBlob);
-        const dataLink = document.createElement('a');
-        dataLink.href = dataUrl;
-        dataLink.download = 'data.json';
-        dataLink.click();
-        URL.revokeObjectURL(dataUrl);
-        
-        renderDocumentsList();
-        showEditorMessage('success', '✅ data.json y versions.json generados. Súbelos al servidor.');
-        
-    } catch (error) {
-        showEditorMessage('error', 'JSON inválido: ' + error.message);
     }
 }
 
@@ -646,10 +815,9 @@ function importAllData() {
                 if (imported.data && imported.versions) {
                     document.getElementById('jsonEditor').value = JSON.stringify(imported.data, null, 2);
                     versions = imported.versions;
-                    await saveVersionsFile();
                     currentData = imported.data;
                     renderDocumentsList();
-                    showEditorMessage('success', 'Backup importado. Revisa y guarda los cambios.');
+                    showEditorMessage('success', 'Backup importado. Haz clic en Guardar para publicar.');
                 } else {
                     showEditorMessage('error', 'Archivo de backup inválido');
                 }
@@ -686,29 +854,24 @@ function viewFullHistory() {
     URL.revokeObjectURL(url);
 }
 
-// Utilidades
-function generateId() {
-    return 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-}
+// ============================================
+// AUTENTICACIÓN
+// ============================================
 
-function getOrganismLabel(organism) {
-    const labels = {
-        'grouvex': 'Grouvex Studios',
-        'records': 'Grouvex Records',
-        'designs': 'Grouvex Designs',
-        'games': 'Grouvex Games'
-    };
-    return labels[organism] || organism;
-}
-
-function getTypeLabel(type) {
-    const labels = {
-        'bo': 'B.O.',
-        'miembros': 'Miembros',
-        'no': 'N.O.',
-        'tos': 'ToS&PP'
-    };
-    return labels[type] || type;
+function setupAuthListener() {
+    auth.onAuthStateChanged(async (user) => {
+        if (user && isAuthorized(user.email)) {
+            currentUser = user;
+            showAdminPanel();
+            await loadCurrentData();
+        } else {
+            if (user) {
+                await auth.signOut();
+                showAuthMessage('error', 'No tienes permisos para acceder');
+            }
+            showAuthSection();
+        }
+    });
 }
 
 function showAdminPanel() {
@@ -742,6 +905,52 @@ function signOut() {
         .catch(error => {
             console.error('Error signing out:', error);
         });
+}
+
+// ============================================
+// UTILIDADES
+// ============================================
+
+function generateId() {
+    return 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function getOrganismLabel(organism) {
+    const labels = {
+        'grouvex': 'Grouvex Studios',
+        'records': 'Grouvex Records',
+        'designs': 'Grouvex Designs',
+        'games': 'Grouvex Games'
+    };
+    return labels[organism] || organism;
+}
+
+function getTypeLabel(type) {
+    const labels = {
+        'bo': 'B.O.',
+        'miembros': 'Miembros',
+        'no': 'N.O.',
+        'tos': 'ToS&PP'
+    };
+    return labels[type] || type;
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    if (tabName === 'editor') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('visualEditorTab').classList.add('active');
+        renderDocumentsList();
+    } else if (tabName === 'json') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('jsonEditorTab').classList.add('active');
+    } else if (tabName === 'history') {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('historyTab').classList.add('active');
+        renderVersionHistory();
+    }
 }
 
 function closeDocumentModal() {
