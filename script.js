@@ -200,15 +200,15 @@ function updateDocumentsGrid() {
     filteredDocuments.sort((a, b) => b.date - a.date);
     
     grid.innerHTML = filteredDocuments.map(doc => {
-        // Detectar si el documento tiene SUMARIO
-        const hasSumario = doc.content && doc.content.includes('SUMARIO');
+        // Detectar si el documento tiene estructura semántica
+        const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
         
         return `
         <div class="doc-card" onclick="showDocument('${doc.id}')">
             <div class="doc-badges">
                 <span class="doc-organism ${doc.organism}">${getOrganismLabel(doc.organism)}</span>
                 <span class="doc-type ${doc.type}">${getTypeLabel(doc.type)}</span>
-                ${hasSumario ? '<span class="doc-feature"><i class="fas fa-list"></i> Sumario</span>' : ''}
+                ${hasStructure ? '<span class="doc-feature"><i class="fas fa-code"></i> Estructurado</span>' : ''}
             </div>
             <h3 class="doc-title">${escapeHtml(doc.title)}</h3>
             <div class="doc-reference">${escapeHtml(doc.reference || 'Sin referencia')}</div>
@@ -231,257 +231,324 @@ function updateFooter() {
 }
 
 // ============================================
-// FUNCIONES DE RENDERIZADO HTML SEMÁNTICO
+// RENDERIZADO BASADO EN ESTRUCTURA SEMÁNTICA DEL JSON
 // ============================================
 
 /**
- * Convierte texto plano con estructura de documento legal a HTML semántico
+ * Renderiza el contenido del documento basado en su estructura semántica
+ * @param {Object} doc - El documento completo
+ * @returns {string} HTML renderizado
  */
-function renderDocumentContent(content) {
-    if (!content) return '<p class="empty-content">Sin contenido</p>';
+function renderStructuredDocument(doc) {
+    if (!doc.structure || !Array.isArray(doc.structure) || doc.structure.length === 0) {
+        // Si no hay estructura, usar el contenido tradicional
+        return renderLegacyContent(doc.content || '');
+    }
     
-    // Dividir el contenido en líneas
-    const lines = content.split('\n');
     let html = '';
-    let inSumario = false;
-    let inLista = false;
-    let listaItems = [];
     
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i].trim();
-        
-        if (line === '') {
-            // Línea vacía - cerrar listas si es necesario
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            html += '<br>';
-            continue;
+    // Procesar cada elemento de la estructura
+    doc.structure.forEach((element, index) => {
+        switch (element.type) {
+            case 'h1':
+            case 'titulo':
+            case 'title':
+                html += renderTitulo(element);
+                break;
+                
+            case 'h2':
+            case 'capitulo':
+            case 'chapter':
+                html += renderCapitulo(element);
+                break;
+                
+            case 'h3':
+            case 'seccion':
+            case 'section':
+                html += renderSeccion(element);
+                break;
+                
+            case 'h4':
+            case 'articulo':
+            case 'article':
+                html += renderArticulo(element);
+                break;
+                
+            case 'disposicion':
+            case 'disposition':
+                html += renderDisposicion(element);
+                break;
+                
+            case 'edicto':
+            case 'edict':
+                html += renderEdicto(element);
+                break;
+                
+            case 'sumario':
+            case 'summary':
+                html += renderSumario(element);
+                break;
+                
+            case 'lista':
+            case 'list':
+                html += renderLista(element);
+                break;
+                
+            case 'p':
+            case 'parrafo':
+            case 'paragraph':
+                html += renderParrafo(element);
+                break;
+                
+            case 'metadata':
+            case 'metadatos':
+                // No renderizar aquí, se maneja aparte
+                break;
+                
+            default:
+                // Tipo desconocido, tratar como párrafo
+                html += renderParrafo(element);
         }
-        
-        // Detectar SUMARIO
-        if (line === 'SUMARIO') {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            html += '<div class="sumario-header">📋 SUMARIO</div>';
-            inSumario = true;
-            continue;
-        }
-        
-        // Detectar TÍTULOS (TÍTULO I, TÍTULO II, etc.)
-        if (line.match(/^T[ÍI]TULO\s+[IVXLC]+\.?\s*(.*)/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            const tituloNum = line.match(/^T[ÍI]TULO\s+([IVXLC]+)/i);
-            const tituloTexto = line.replace(/^T[ÍI]TULO\s+[IVXLC]+\.?\s*/, '');
-            html += `<h1 class="documento-titulo-principal">`;
-            html += `<span class="titulo-numero">TÍTULO ${tituloNum ? tituloNum[1] : ''}</span>`;
-            if (tituloTexto) {
-                html += `<span class="titulo-texto">${escapeHtml(tituloTexto)}</span>`;
-            }
-            html += `</h1>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar CAPÍTULOS
-        if (line.match(/^Cap[íi]tulo\s+[IVXLC]+\.?\s*(.*)/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            const capNum = line.match(/^Cap[íi]tulo\s+([IVXLC]+)/i);
-            const capTexto = line.replace(/^Cap[íi]tulo\s+[IVXLC]+\.?\s*/, '');
-            html += `<h2 class="documento-capitulo">`;
-            html += `<span class="capitulo-numero">Capítulo ${capNum ? capNum[1] : ''}</span>`;
-            if (capTexto) {
-                html += `<span class="capitulo-texto">${escapeHtml(capTexto)}</span>`;
-            }
-            html += `</h2>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar SECCIONES
-        if (line.match(/^Secci[óo]n\s+[IVXLC]+\.?\s*(.*)/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            const secNum = line.match(/^Secci[óo]n\s+([IVXLC]+)/i);
-            const secTexto = line.replace(/^Secci[óo]n\s+[IVXLC]+\.?\s*/, '');
-            html += `<h3 class="documento-seccion">`;
-            html += `<span class="seccion-numero">Sección ${secNum ? secNum[1] : ''}</span>`;
-            if (secTexto) {
-                html += `<span class="seccion-texto">${escapeHtml(secTexto)}</span>`;
-            }
-            html += `</h3>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar ARTÍCULOS
-        if (line.match(/^Art[íi]culo\s+\d+\.?\s*(.*)/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            const artNum = line.match(/^Art[íi]culo\s+(\d+)/i);
-            const artTexto = line.replace(/^Art[íi]culo\s+\d+\.?\s*/, '');
-            html += `<div class="documento-articulo">`;
-            html += `<span class="articulo-numero">Artículo ${artNum ? artNum[1] : ''}</span>`;
-            if (artTexto) {
-                html += `<span class="articulo-texto">${escapeHtml(artTexto)}</span>`;
-            }
-            html += `</div>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar DISPOSICIONES
-        if (line.match(/^DISPOSICI[ÓO]N\s+BOGS\/\d{4}\/\d{3}/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            html += `<div class="documento-disposicion"><i class="fas fa-gavel"></i> ${escapeHtml(line)}</div>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar EDICTOS
-        if (line.match(/^Edicto\s+BOGS\/\d{4}\/\d{3}/i)) {
-            if (inLista) {
-                html += renderListaItems(listaItems);
-                listaItems = [];
-                inLista = false;
-            }
-            html += `<div class="documento-edicto"><i class="fas fa-scroll"></i> ${escapeHtml(line)}</div>`;
-            inSumario = false;
-            continue;
-        }
-        
-        // Detectar elementos del sumario (puntos con números romanos o números)
-        if (inSumario) {
-            if (line.match(/^[IVXLC]+\.\s+/) || line.match(/^\d+\.\s+/)) {
-                html += `<div class="sumario-item"><i class="fas fa-chevron-right"></i> ${escapeHtml(line)}</div>`;
-            } else {
-                html += `<div class="sumario-item-simple">${escapeHtml(line)}</div>`;
-            }
-            continue;
-        }
-        
-        // Detectar listas numeradas (I., II., III. o 1., 2., 3.)
-        if (line.match(/^[IVXLC]+\.\s+/) || line.match(/^\d+\.\s+/)) {
-            listaItems.push(line);
-            inLista = true;
-            continue;
-        }
-        
-        // Detectar puntos con letras (A., B., C.)
-        if (line.match(/^[A-Z]\.\s+/)) {
-            if (!inLista) {
-                listaItems = [];
-                inLista = true;
-            }
-            listaItems.push(line);
-            continue;
-        }
-        
-        // Si estábamos en una lista y la línea no es un item de lista, cerramos la lista
-        if (inLista) {
-            html += renderListaItems(listaItems);
-            listaItems = [];
-            inLista = false;
-        }
-        
-        // Línea normal (párrafo)
-        html += `<p class="documento-parrafo">${escapeHtml(line)}</p>`;
-    }
-    
-    // Cerrar lista si quedó abierta
-    if (inLista) {
-        html += renderListaItems(listaItems);
-    }
+    });
     
     return html;
 }
 
 /**
- * Renderiza una lista de items con formato adecuado
+ * Renderiza un título (h1)
  */
-function renderListaItems(items) {
-    if (!items.length) return '';
+function renderTitulo(element) {
+    const contenido = element.content || element.text || '';
+    const numero = element.numero || '';
+    const clase = element.class || '';
     
-    // Determinar el tipo de lista
-    const firstItem = items[0];
-    let listaHtml = '';
-    
-    if (firstItem.match(/^[IVXLC]+\.\s+/)) {
-        // Lista con números romanos
-        listaHtml = '<div class="lista-romana">';
-        items.forEach(item => {
-            const match = item.match(/^([IVXLC]+)\.\s+(.*)/);
-            if (match) {
-                listaHtml += `<div class="lista-item-romano"><span class="item-numero">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
-            } else {
-                listaHtml += `<div class="lista-item-romano">${escapeHtml(item)}</div>`;
-            }
-        });
-        listaHtml += '</div>';
-    }
-    else if (firstItem.match(/^\d+\.\s+/)) {
-        // Lista numerada
-        listaHtml = '<div class="lista-numerada">';
-        items.forEach(item => {
-            const match = item.match(/^(\d+)\.\s+(.*)/);
-            if (match) {
-                listaHtml += `<div class="lista-item-numerado"><span class="item-numero">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
-            } else {
-                listaHtml += `<div class="lista-item-numerado">${escapeHtml(item)}</div>`;
-            }
-        });
-        listaHtml += '</div>';
-    }
-    else if (firstItem.match(/^[A-Z]\.\s+/)) {
-        // Lista alfabética
-        listaHtml = '<div class="lista-alfabetica">';
-        items.forEach(item => {
-            const match = item.match(/^([A-Z])\.\s+(.*)/);
-            if (match) {
-                listaHtml += `<div class="lista-item-alfabetico"><span class="item-letra">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
-            } else {
-                listaHtml += `<div class="lista-item-alfabetico">${escapeHtml(item)}</div>`;
-            }
-        });
-        listaHtml += '</div>';
-    }
-    else {
-        // Lista simple
-        listaHtml = '<div class="lista-simple">';
-        items.forEach(item => {
-            listaHtml += `<div class="lista-item-simple"><i class="fas fa-circle bullet-point"></i> ${escapeHtml(item)}</div>`;
-        });
-        listaHtml += '</div>';
-    }
-    
-    return listaHtml;
+    return `
+        <h1 class="documento-titulo-principal ${clase}">
+            ${numero ? `<span class="titulo-numero">${escapeHtml(numero)}</span>` : ''}
+            <span class="titulo-texto">${escapeHtml(contenido)}</span>
+        </h1>
+    `;
 }
 
 /**
- * Función principal para mostrar documento con formato HTML
+ * Renderiza un capítulo (h2)
+ */
+function renderCapitulo(element) {
+    const contenido = element.content || element.text || '';
+    const numero = element.numero || '';
+    const clase = element.class || '';
+    
+    return `
+        <h2 class="documento-capitulo ${clase}">
+            ${numero ? `<span class="capitulo-numero">Capítulo ${escapeHtml(numero)}</span>` : ''}
+            ${contenido ? `<span class="capitulo-texto">${escapeHtml(contenido)}</span>` : ''}
+        </h2>
+    `;
+}
+
+/**
+ * Renderiza una sección (h3)
+ */
+function renderSeccion(element) {
+    const contenido = element.content || element.text || '';
+    const numero = element.numero || '';
+    const clase = element.class || '';
+    
+    return `
+        <h3 class="documento-seccion ${clase}">
+            ${numero ? `<span class="seccion-numero">Sección ${escapeHtml(numero)}</span>` : ''}
+            ${contenido ? `<span class="seccion-texto">${escapeHtml(contenido)}</span>` : ''}
+        </h3>
+    `;
+}
+
+/**
+ * Renderiza un artículo (h4)
+ */
+function renderArticulo(element) {
+    const contenido = element.content || element.text || '';
+    const numero = element.numero || '';
+    const clase = element.class || '';
+    
+    return `
+        <div class="documento-articulo ${clase}">
+            ${numero ? `<span class="articulo-numero">Artículo ${escapeHtml(numero)}</span>` : ''}
+            ${contenido ? `<span class="articulo-texto">${escapeHtml(contenido)}</span>` : ''}
+        </div>
+    `;
+}
+
+/**
+ * Renderiza una disposición
+ */
+function renderDisposicion(element) {
+    const contenido = element.content || element.text || '';
+    const referencia = element.referencia || element.reference || '';
+    const clase = element.class || '';
+    const icono = element.icon || 'fa-gavel';
+    
+    return `
+        <div class="documento-disposicion ${clase}">
+            <i class="fas ${icono}"></i>
+            ${referencia ? `<span class="disposicion-referencia">${escapeHtml(referencia)}</span>` : ''}
+            <span class="disposicion-texto">${escapeHtml(contenido)}</span>
+        </div>
+    `;
+}
+
+/**
+ * Renderiza un edicto
+ */
+function renderEdicto(element) {
+    const contenido = element.content || element.text || '';
+    const referencia = element.referencia || element.reference || '';
+    const clase = element.class || '';
+    const icono = element.icon || 'fa-scroll';
+    
+    return `
+        <div class="documento-edicto ${clase}">
+            <i class="fas ${icono}"></i>
+            ${referencia ? `<span class="edicto-referencia">${escapeHtml(referencia)}</span>` : ''}
+            <span class="edicto-texto">${escapeHtml(contenido)}</span>
+        </div>
+    `;
+}
+
+/**
+ * Renderiza un sumario con enlaces
+ */
+function renderSumario(element) {
+    const items = element.items || element.contenido || [];
+    const titulo = element.titulo || 'SUMARIO';
+    const clase = element.class || '';
+    
+    let itemsHtml = '';
+    
+    if (Array.isArray(items)) {
+        items.forEach((item, index) => {
+            const itemTexto = item.texto || item.content || item;
+            const itemId = item.id || `sumario-item-${index}`;
+            const itemRef = item.referencia || item.reference || '';
+            
+            itemsHtml += `
+                <a href="#${itemId}" class="sumario-enlace" onclick="event.preventDefault(); navigateToSection('${itemId}')">
+                    <i class="fas fa-chevron-right"></i>
+                    ${itemRef ? `<span class="item-referencia">${escapeHtml(itemRef)}</span>` : ''}
+                    <span class="item-texto">${escapeHtml(itemTexto)}</span>
+                </a>
+            `;
+        });
+    }
+    
+    return `
+        <div class="sumario-container ${clase}">
+            <div class="sumario-header">📋 ${escapeHtml(titulo)}</div>
+            <div class="sumario-lista">
+                ${itemsHtml || '<div class="sumario-item-simple">Sin elementos</div>'}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Renderiza una lista
+ */
+function renderLista(element) {
+    const items = element.items || element.contenido || [];
+    const tipo = element.tipo || element.type || 'simple';
+    const clase = element.class || '';
+    
+    let listaHtml = '';
+    let listaClass = '';
+    
+    switch (tipo) {
+        case 'romana':
+        case 'romano':
+        case 'roman':
+            listaClass = 'lista-romana';
+            break;
+        case 'numerada':
+        case 'numerico':
+        case 'numeric':
+            listaClass = 'lista-numerada';
+            break;
+        case 'alfabetica':
+        case 'alfabetico':
+        case 'alpha':
+            listaClass = 'lista-alfabetica';
+            break;
+        default:
+            listaClass = 'lista-simple';
+    }
+    
+    if (Array.isArray(items)) {
+        items.forEach((item, index) => {
+            const itemTexto = item.texto || item.content || item;
+            const itemNumero = item.numero || (tipo === 'romana' ? toRoman(index + 1) : (tipo === 'numerada' ? (index + 1) : (tipo === 'alfabetica' ? String.fromCharCode(65 + index) : '')));
+            
+            listaHtml += `
+                <div class="lista-item ${listaClass}-item">
+                    ${itemNumero ? `<span class="item-numero">${escapeHtml(itemNumero)}.</span>` : '<i class="fas fa-circle bullet-point"></i>'}
+                    <span class="item-texto">${escapeHtml(itemTexto)}</span>
+                </div>
+            `;
+        });
+    }
+    
+    return `
+        <div class="${listaClass} ${clase}">
+            ${element.titulo ? `<div class="lista-titulo">${escapeHtml(element.titulo)}</div>` : ''}
+            ${listaHtml}
+        </div>
+    `;
+}
+
+/**
+ * Renderiza un párrafo
+ */
+function renderParrafo(element) {
+    const contenido = element.content || element.text || '';
+    const clase = element.class || '';
+    const alineacion = element.alineacion || element.align || 'left';
+    
+    return `
+        <p class="documento-parrafo ${clase}" style="text-align: ${alineacion}">
+            ${escapeHtml(contenido)}
+        </p>
+    `;
+}
+
+/**
+ * Renderizado legacy para contenido sin estructura (mantenido por compatibilidad)
+ */
+function renderLegacyContent(content) {
+    if (!content) return '<p class="empty-content">Sin contenido</p>';
+    
+    const lines = content.split('\n');
+    let html = '';
+    
+    lines.forEach(line => {
+        line = line.trim();
+        if (line === '') {
+            html += '<br>';
+        } else {
+            html += `<p class="documento-parrafo">${escapeHtml(line)}</p>`;
+        }
+    });
+    
+    return html;
+}
+
+/**
+ * Convierte un número a números romanos
+ */
+function toRoman(num) {
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+    return romanNumerals[num - 1] || num.toString();
+}
+
+/**
+ * Función principal para mostrar documento con estructura semántica
  */
 function showDocument(docId) {
     try {
@@ -504,47 +571,66 @@ function showDocument(docId) {
         
         if (modalTitle) modalTitle.textContent = doc.title;
         
-        // Renderizar el contenido con formato HTML
-        const contenidoHTML = renderDocumentContent(doc.content || '');
+        // Renderizar el contenido basado en la estructura
+        const contenidoHTML = renderStructuredDocument(doc);
         
-        // Construir el HTML completo del documento
+        // Renderizar metadatos si existen en la estructura
+        let metadataHTML = '';
+        if (doc.structure) {
+            const metadataElement = doc.structure.find(el => el.type === 'metadata' || el.type === 'metadatos');
+            if (metadataElement && metadataElement.items) {
+                metadataHTML = renderMetadataGrid(metadataElement.items);
+            }
+        }
+        
+        // Si no hay metadatos en la estructura, usar los del documento
+        if (!metadataHTML) {
+            metadataHTML = `
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <span class="metadata-label"><i class="fas fa-hashtag"></i> Referencia:</span>
+                        <span class="metadata-value">${escapeHtml(doc.reference || 'N/A')}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label"><i class="fas fa-tag"></i> Tipo:</span>
+                        <span class="metadata-value">${getTypeLabel(doc.type)}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label"><i class="fas fa-building"></i> Organismo:</span>
+                        <span class="metadata-value">${getOrganismLabel(doc.organism)}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label"><i class="fas fa-calendar-alt"></i> Fecha:</span>
+                        <span class="metadata-value">${formatDate(doc.date)}</span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label"><i class="fas fa-code-branch"></i> Versión:</span>
+                        <span class="metadata-value">${doc.version || 1}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Tags
+        const tagsHTML = doc.tags && doc.tags.length ? `
+            <div class="tags-container">
+                <span class="metadata-label"><i class="fas fa-tags"></i> Tags:</span>
+                <div class="tags-list">
+                    ${doc.tags.map(t => `<span class="badge-tag">${escapeHtml(t)}</span>`).join(' ')}
+                </div>
+            </div>
+        ` : '';
+        
+        // Construir el HTML completo
         const documentoHTML = `
             <div class="documento-container">
                 <!-- Metadatos del documento -->
                 <div class="doc-metadata tarjeta-info">
-                    <div class="metadata-grid">
-                        <div class="metadata-item">
-                            <span class="metadata-label"><i class="fas fa-hashtag"></i> Referencia:</span>
-                            <span class="metadata-value">${escapeHtml(doc.reference || 'N/A')}</span>
-                        </div>
-                        <div class="metadata-item">
-                            <span class="metadata-label"><i class="fas fa-tag"></i> Tipo:</span>
-                            <span class="metadata-value">${getTypeLabel(doc.type)}</span>
-                        </div>
-                        <div class="metadata-item">
-                            <span class="metadata-label"><i class="fas fa-building"></i> Organismo:</span>
-                            <span class="metadata-value">${getOrganismLabel(doc.organism)}</span>
-                        </div>
-                        <div class="metadata-item">
-                            <span class="metadata-label"><i class="fas fa-calendar-alt"></i> Fecha:</span>
-                            <span class="metadata-value">${formatDate(doc.date)}</span>
-                        </div>
-                        <div class="metadata-item">
-                            <span class="metadata-label"><i class="fas fa-code-branch"></i> Versión:</span>
-                            <span class="metadata-value">${doc.version || 1}</span>
-                        </div>
-                    </div>
-                    ${doc.tags && doc.tags.length ? `
-                        <div class="tags-container">
-                            <span class="metadata-label"><i class="fas fa-tags"></i> Tags:</span>
-                            <div class="tags-list">
-                                ${doc.tags.map(t => `<span class="badge-tag">${escapeHtml(t)}</span>`).join(' ')}
-                            </div>
-                        </div>
-                    ` : ''}
+                    ${metadataHTML}
+                    ${tagsHTML}
                 </div>
                 
-                <!-- Contenido del documento con formato semántico -->
+                <!-- Contenido del documento con estructura semántica -->
                 <div class="documento-contenido">
                     <div class="contenido-header">
                         <i class="fas fa-file-alt"></i> Contenido
@@ -563,7 +649,7 @@ function showDocument(docId) {
             let footerButtons = '';
             
             footerButtons += `
-                <button class="btn-secondary" onclick="window.scrollToModalTop()">
+                <button class="btn-secondary" onclick="scrollToModalTop()">
                     <i class="fas fa-arrow-up"></i>
                     Volver arriba
                 </button>
@@ -590,6 +676,46 @@ function showDocument(docId) {
     }
 }
 
+/**
+ * Renderiza una cuadrícula de metadatos
+ */
+function renderMetadataGrid(items) {
+    if (!Array.isArray(items)) return '';
+    
+    let html = '<div class="metadata-grid">';
+    
+    items.forEach(item => {
+        const label = item.label || item.nombre || '';
+        const value = item.value || item.valor || '';
+        const icono = item.icon || item.icono || getIconForLabel(label);
+        
+        html += `
+            <div class="metadata-item">
+                <span class="metadata-label"><i class="fas ${icono}"></i> ${escapeHtml(label)}:</span>
+                <span class="metadata-value">${escapeHtml(value)}</span>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Obtiene un icono basado en la etiqueta del metadato
+ */
+function getIconForLabel(label) {
+    const labelLower = label.toLowerCase();
+    if (labelLower.includes('referencia')) return 'fa-hashtag';
+    if (labelLower.includes('tipo')) return 'fa-tag';
+    if (labelLower.includes('organismo')) return 'fa-building';
+    if (labelLower.includes('fecha')) return 'fa-calendar-alt';
+    if (labelLower.includes('versión') || labelLower.includes('version')) return 'fa-code-branch';
+    if (labelLower.includes('autor')) return 'fa-user';
+    if (labelLower.includes('email') || labelLower.includes('correo')) return 'fa-envelope';
+    return 'fa-info-circle';
+}
+
 // Función para scroll al inicio del modal
 function scrollToModalTop() {
     const modalBody = document.getElementById('modalBody');
@@ -598,12 +724,7 @@ function scrollToModalTop() {
     }
 }
 
-// Función para parsear el SUMARIO (mantenida por compatibilidad)
-function parseSumario(content) {
-    return { tieneSumario: content && content.includes('SUMARIO') };
-}
-
-// Función para navegar a una sección (mantenida por compatibilidad)
+// Función para navegar a una sección
 function navigateToSection(seccionId) {
     const element = document.getElementById(seccionId);
     if (element) {
