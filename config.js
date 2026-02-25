@@ -3,7 +3,7 @@
 // ============================================
 const GITHUB = {
     owner: 'Grouvex',                    // ← TU USUARIO
-    repo: 'grouvex.github.io',            // ← TU REPOSITORIO
+    repo: 'grouvex-docs',            // ← TU REPOSITORIO
     branch: 'main',                       // Rama principal
     token: null
 };
