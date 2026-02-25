@@ -1333,209 +1333,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* Media Queries para ajustes finos */
-@media (max-width: 1200px) {
-    :root {
-        --container-padding: 1.5rem;
-    }
-}
-
-@media (max-width: 992px) {
-    :root {
-        --container-padding: 1.25rem;
-    }
-}
-
-@media (max-width: 768px) {
-    :root {
-        --container-padding: 1rem;
-        --spacing-xl: 1.5rem;
-        --spacing-lg: 1.25rem;
-        --spacing-md: 1rem;
-        --spacing-sm: 0.75rem;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .logo {
-        justify-content: center;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .footer-links {
-        justify-content: center;
-    }
-    
-    .modal-footer {
-        justify-content: center;
-    }
-    
-    .form-actions {
-        justify-content: center;
-    }
-}
-
-@media (max-width: 480px) {
-    :root {
-        --spacing-xl: 1.25rem;
-        --spacing-lg: 1rem;
-        --spacing-md: 0.875rem;
-        --spacing-sm: 0.625rem;
-        --spacing-xs: 0.375rem;
-    }
-    
-    .doc-meta {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .doc-card {
-        padding: var(--spacing-md);
-    }
-    
-    .modal-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .modal-header h2 {
-        width: 100%;
-    }
-    
-    .admin-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .user-info {
-        justify-content: center;
-    }
-    
-    .admin-actions {
-        justify-content: center;
-    }
-    
-    .organism-filter {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .organism-filter label {
-        text-align: center;
-    }
-    
-    .doc-management-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .doc-actions {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .version-item {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .version-restore-btn {
-        width: 100%;
-    }
-}
-
-/* Utilidades de responsividad */
-.overflow-auto {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.text-wrap {
-    white-space: normal;
-    word-wrap: break-word;
-    word-break: break-word;
-}
-
-.hide-on-mobile {
-    display: inline-block;
-}
-
-@media (max-width: 480px) {
-    .hide-on-mobile {
-        display: none;
-    }
-}
-
-.show-on-mobile {
-    display: none;
-}
-
-@media (max-width: 480px) {
-    .show-on-mobile {
-        display: inline-block;
-    }
-}
-
-/* Ajustes para pantallas muy grandes */
-@media (min-width: 1920px) {
-    .container {
-        max-width: 1600px;
-    }
-    
-    :root {
-        --font-size-base: 1.1rem;
-    }
-}
-
-/* Ajustes para pantallas ultra-wide */
-@media (min-width: 2560px) {
-    .container {
-        max-width: 2000px;
-    }
-    
-    .documents-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
-
-/* Ajustes para orientación horizontal en móviles */
-@media (max-height: 500px) and (orientation: landscape) {
-    .modal-content {
-        max-height: 95vh;
-    }
-    
-    .json-editor {
-        min-height: 30vh;
-    }
-    
-    .version-history {
-        max-height: 30vh;
-    }
-}
-
-/* Soporte para pantallas plegables */
-@media (max-width: 280px) {
-    :root {
-        --font-size-base: 0.8rem;
-    }
-    
-    .organism-btn {
-        min-width: 100%;
-    }
-    
-    .badge {
-        white-space: normal;
-    }
-}
-
-
 /* ============================================
    MEJORAS PARA VISUALIZACIÓN DE DOCUMENTOS
    ============================================ */
@@ -1576,40 +1373,6 @@ body {
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.metadata-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.metadata-grid div {
-    padding: 0.5rem;
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.tags-container {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px dashed var(--border);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.badge-tag {
-    background: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 2rem;
-    font-size: 0.75rem;
-    color: var(--primary);
-    border: 1px solid var(--primary-light);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
 /* Contenido mejorado */
 .doc-contenido-mejorado {
     background: white;
@@ -1638,6 +1401,7 @@ body {
     padding: 2rem;
     line-height: 1.8;
     font-size: 0.95rem;
+    background: #ffffff;
 }
 
 .contenido-pre {
@@ -1654,23 +1418,270 @@ body {
     border: none;
 }
 
-/* Estilos para el sumario */
-.sumario-header {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--primary-light);
+/* ============================================
+   ESTILOS PARA DOCUMENTOS CON FORMATO SEMÁNTICO
+   ============================================ */
+
+/* Contenedor principal del documento */
+.documento-container {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 100%;
 }
 
-.sumario-header i {
+/* Metadatos mejorados */
+.metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.metadata-item {
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
+
+.metadata-item:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+}
+
+.metadata-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.5px;
+}
+
+.metadata-label i {
+    margin-right: 0.25rem;
     color: var(--primary-light);
 }
 
+.metadata-value {
+    font-weight: 600;
+    color: var(--dark);
+    word-break: break-word;
+}
+
+/* Tags mejorados */
+.tags-container {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.badge-tag {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary);
+    border: 1px solid var(--primary-light);
+    transition: all 0.2s ease;
+}
+
+.badge-tag:hover {
+    background: var(--primary-light);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Títulos principales */
+.documento-titulo-principal {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin: 2rem 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid var(--primary);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.titulo-numero {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.titulo-texto {
+    flex: 1;
+    color: var(--dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Capítulos */
+.documento-capitulo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 1.5rem 0 1rem 0;
+    padding-left: 1rem;
+    border-left: 4px solid var(--primary-light);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.capitulo-numero {
+    color: var(--primary-light);
+    font-weight: 600;
+}
+
+.capitulo-texto {
+    flex: 1;
+    color: var(--dark);
+}
+
+/* Secciones */
+.documento-seccion {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--secondary);
+    margin: 1.25rem 0 0.75rem 0;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--secondary);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.seccion-numero {
+    color: var(--secondary);
+    font-style: italic;
+}
+
+.seccion-texto {
+    flex: 1;
+    color: var(--dark);
+}
+
+/* Artículos */
+.documento-articulo {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 1rem 1.5rem;
+    margin: 1.25rem 0;
+    border-radius: 0.75rem;
+    border-left: 5px solid var(--success);
+    font-weight: 500;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.articulo-numero {
+    background: var(--success);
+    color: white;
+    padding: 0.2rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.articulo-texto {
+    flex: 1;
+    color: var(--dark);
+}
+
+/* Disposiciones y Edictos */
+.documento-disposicion,
+.documento-edicto {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0.75rem;
+    border: 1px solid #7dd3fc;
+    font-weight: 600;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+}
+
+.documento-disposicion i,
+.documento-edicto i {
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+
+/* Sumario */
+.sumario-header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 1rem 0 1.5rem 0;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #fef9c3, #fef08a);
+    border-radius: 0.5rem;
+    display: inline-block;
+    border: 1px solid #eab308;
+}
+
+.sumario-item {
+    padding: 0.5rem 1rem 0.5rem 2rem;
+    margin: 0.25rem 0;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--primary-light);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.sumario-item:hover {
+    background: white;
+    transform: translateX(5px);
+    border-left-color: var(--primary);
+}
+
+.sumario-item i {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-light);
+    font-size: 0.8rem;
+}
+
+.sumario-item-simple {
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    color: var(--gray);
+    font-style: italic;
+}
+
+/* Sumario con enlaces */
 .sumario-lista {
     background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     padding: 1.5rem;
@@ -1731,6 +1742,63 @@ body {
     background: white;
     padding: 0 1rem;
     font-size: 1.2rem;
+}
+
+/* Listas */
+.lista-romana,
+.lista-numerada,
+.lista-alfabetica,
+.lista-simple {
+    margin: 1rem 0 1rem 1.5rem;
+    padding-left: 0.5rem;
+}
+
+.lista-item-romano,
+.lista-item-numerado,
+.lista-item-alfabetico,
+.lista-item-simple {
+    padding: 0.3rem 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.item-numero,
+.item-letra {
+    font-weight: 600;
+    color: var(--primary);
+    min-width: 2rem;
+    font-family: 'Monaco', monospace;
+}
+
+.item-texto {
+    flex: 1;
+}
+
+.bullet-point {
+    font-size: 0.5rem;
+    color: var(--primary-light);
+    margin-top: 0.6rem;
+    margin-right: 0.5rem;
+}
+
+/* Párrafos */
+.documento-parrafo {
+    margin: 0.75rem 0;
+    line-height: 1.7;
+    color: var(--dark);
+    text-align: justify;
+}
+
+/* Elementos vacíos */
+.empty-content {
+    padding: 3rem;
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+    background: #f8fafc;
+    border-radius: 1rem;
+    border: 2px dashed var(--border);
 }
 
 /* Títulos de sección */
@@ -1900,8 +1968,54 @@ body {
     border: 1px dashed var(--border);
 }
 
-/* Mejoras responsivas */
+/* Media Queries para ajustes finos */
+@media (max-width: 1200px) {
+    :root {
+        --container-padding: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    :root {
+        --container-padding: 1.25rem;
+    }
+}
+
 @media (max-width: 768px) {
+    :root {
+        --container-padding: 1rem;
+        --spacing-xl: 1.5rem;
+        --spacing-lg: 1.25rem;
+        --spacing-md: 1rem;
+        --spacing-sm: 0.75rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .logo {
+        justify-content: center;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-links {
+        justify-content: center;
+    }
+    
+    .modal-footer {
+        justify-content: center;
+    }
+    
+    .form-actions {
+        justify-content: center;
+    }
+    
     .metadata-grid {
         grid-template-columns: 1fr;
     }
@@ -1920,9 +2034,96 @@ body {
         padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
     }
+    
+    .documento-titulo-principal {
+        font-size: 1.4rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .documento-capitulo {
+        font-size: 1.2rem;
+    }
+    
+    .documento-seccion {
+        font-size: 1.1rem;
+    }
+    
+    .documento-articulo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
 
 @media (max-width: 480px) {
+    :root {
+        --spacing-xl: 1.25rem;
+        --spacing-lg: 1rem;
+        --spacing-md: 0.875rem;
+        --spacing-sm: 0.625rem;
+        --spacing-xs: 0.375rem;
+    }
+    
+    .doc-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .doc-card {
+        padding: var(--spacing-md);
+    }
+    
+    .modal-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .modal-header h2 {
+        width: 100%;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .user-info {
+        justify-content: center;
+    }
+    
+    .admin-actions {
+        justify-content: center;
+    }
+    
+    .organism-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .organism-filter label {
+        text-align: center;
+    }
+    
+    .doc-management-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .doc-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .version-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .version-restore-btn {
+        width: 100%;
+    }
+    
     .modal-footer {
         flex-direction: column;
     }
@@ -1941,5 +2142,106 @@ body {
         margin-left: 0;
         width: 100%;
         text-align: center;
+    }
+    
+    .sumario-item {
+        padding: 0.5rem 0.5rem 0.5rem 1.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .lista-item-romano,
+    .lista-item-numerado,
+    .lista-item-alfabetico {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+    
+    .item-numero,
+    .item-letra {
+        min-width: auto;
+    }
+}
+
+/* Utilidades de responsividad */
+.overflow-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.text-wrap {
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.hide-on-mobile {
+    display: inline-block;
+}
+
+@media (max-width: 480px) {
+    .hide-on-mobile {
+        display: none;
+    }
+}
+
+.show-on-mobile {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .show-on-mobile {
+        display: inline-block;
+    }
+}
+
+/* Ajustes para pantallas muy grandes */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1600px;
+    }
+    
+    :root {
+        --font-size-base: 1.1rem;
+    }
+}
+
+/* Ajustes para pantallas ultra-wide */
+@media (min-width: 2560px) {
+    .container {
+        max-width: 2000px;
+    }
+    
+    .documents-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Ajustes para orientación horizontal en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .json-editor {
+        min-height: 30vh;
+    }
+    
+    .version-history {
+        max-height: 30vh;
+    }
+}
+
+/* Soporte para pantallas plegables */
+@media (max-width: 280px) {
+    :root {
+        --font-size-base: 0.8rem;
+    }
+    
+    .organism-btn {
+        min-width: 100%;
+    }
+    
+    .badge {
+        white-space: normal;
     }
 }
