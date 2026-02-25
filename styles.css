@@ -1534,3 +1534,412 @@ body {
         white-space: normal;
     }
 }
+
+
+/* ============================================
+   MEJORAS PARA VISUALIZACIÓN DE DOCUMENTOS
+   ============================================ */
+
+/* Badges de características */
+.doc-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.doc-feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    color: white;
+    border-radius: 1rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(109, 40, 217, 0.3);
+}
+
+.doc-feature i {
+    font-size: 0.65rem;
+}
+
+/* Tarjeta de metadatos mejorada */
+.tarjeta-info {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-left: 4px solid var(--primary-light);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.metadata-grid div {
+    padding: 0.5rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tags-container {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.badge-tag {
+    background: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    color: var(--primary);
+    border: 1px solid var(--primary-light);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Contenido mejorado */
+.doc-contenido-mejorado {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.contenido-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contenido-header i {
+    font-size: 1.2rem;
+}
+
+.contenido-body {
+    padding: 2rem;
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.contenido-pre {
+    background: #1e1e2e;
+    color: #e2e8f0;
+    padding: 2rem;
+    border-radius: 0;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+    border: none;
+}
+
+/* Estilos para el sumario */
+.sumario-header {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-light);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sumario-header i {
+    color: var(--primary-light);
+}
+
+.sumario-lista {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sumario-enlace {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.sumario-enlace:hover {
+    background: var(--primary-light);
+    color: white;
+    transform: translateX(5px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+.sumario-enlace i {
+    font-size: 0.8rem;
+    color: var(--primary-light);
+    transition: all 0.3s ease;
+}
+
+.sumario-enlace:hover i {
+    color: white;
+    transform: translateX(3px);
+}
+
+.sumario-separador {
+    margin: 1.5rem 0;
+    border-top: 2px dashed var(--border);
+    position: relative;
+}
+
+.sumario-separador::after {
+    content: '📄';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+}
+
+/* Títulos de sección */
+.seccion-titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 1.5rem 0 1rem 0;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    scroll-margin-top: 1rem;
+}
+
+.seccion-titulo i {
+    color: var(--primary-light);
+}
+
+.seccion-titulo .volver-arriba {
+    margin-left: auto;
+    color: var(--gray);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.seccion-titulo .volver-arriba:hover {
+    background: white;
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Artículos destacados */
+.articulo-destacado {
+    background: rgba(59, 130, 246, 0.05);
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--primary-light);
+    font-weight: 600;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.articulo-destacado i {
+    color: var(--primary-light);
+}
+
+/* Resaltado de sección al navegar */
+.seccion-resaltada {
+    animation: resaltar 2s ease;
+}
+
+@keyframes resaltar {
+    0% {
+        background: transparent;
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    20% {
+        background: rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.3);
+    }
+    100% {
+        background: transparent;
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+/* Botones en el footer del modal */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-top: 1px solid var(--border);
+}
+
+.modal-footer .btn-secondary {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--primary-light);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+}
+
+/* Versiones mejoradas */
+.version-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.version-item:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transform: translateX(5px);
+}
+
+.version-item.current {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    border-left: 4px solid var(--primary);
+}
+
+.version-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.version-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    background: var(--light);
+    color: var(--secondary);
+}
+
+.version-badge.current {
+    background: var(--primary);
+    color: white;
+}
+
+.version-date, .version-author {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--gray);
+}
+
+.version-date i, .version-author i {
+    font-size: 0.75rem;
+}
+
+.version-changes {
+    padding: 0.75rem;
+    background: white;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    border: 1px dashed var(--border);
+}
+
+/* Mejoras responsivas */
+@media (max-width: 768px) {
+    .metadata-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contenido-body {
+        padding: 1rem;
+    }
+    
+    .version-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .sumario-enlace {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .modal-footer .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .seccion-titulo {
+        font-size: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .seccion-titulo .volver-arriba {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+}
