@@ -68,9 +68,6 @@ body {
 .logo img {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
-    border: 2px solid var(--primary-light);
-    background: white;
 }
 
 .logo h1 {
