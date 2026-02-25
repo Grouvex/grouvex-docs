@@ -24,7 +24,10 @@ const authorizedEmails = [
     'admin@grouvex.com',
     'legal@grouvex.com',
     'grouvex.phoenix@grouvex.com',
-    'director@grouvex.com'
+    'director@grouvex.com',
+    'grouvex.studio@gmail.com',
+    'gco.gstudios@gmail.com'
+  
 ];
 
 // Función para verificar si un email está autorizado
