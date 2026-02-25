@@ -209,6 +209,18 @@
       "content": "DOCUMENTOS OFICIALES GROUVEX STUDIOS (DDOO)\n\nGrouvex Studios:\n- B.O.Grouvex Studios\n- Miembros de Grouvex Studios\n- N.O.Grouvex Studios\n- ToS&PP - Comunidad\n\nGrouvex Studios Records:\n- B.O.GS-Records\n- Miembros de GS-Records\n- N.O.GS-Records\n- ToS&PP - GSRecords\n\nGrouvex Studios Designs:\n- B.O.GS-Designs\n- Miembros de GS-Designs\n- N.O.GS-Designs\n- ToS&PP - Designs\n\nGrouvex Studios Games:\n- B.O.GS-Games\n- Miembros de GS-Games\n- N.O.GS-Games\n- ToS&PP - Games",
       "version": 1,
       "versions": []
+    },
+    {
+      "id": "doc_1772053448847_yaw7dd88h",
+      "organism": "games",
+      "type": "no",
+      "title": "Suspensión del Organismo",
+      "reference": "NOGSGames/2026/01",
+      "date": 1772053349,
+      "description": "Organismo Secundario sin Propietario",
+      "content": "El organismo GSGames tiene que suspender sus servicios hasta que se encuentre un nuevo propietario para dicho organismo.",
+      "tags": [],
+      "version": 1
     }
   ]
 }

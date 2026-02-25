@@ -4,5 +4,238 @@
     "lastUpdated": 1704067200,
     "totalVersions": 0
   },
-  "versions": []
+  "versions": [
+    {
+      "id": "1772053448848",
+      "date": 1772053448,
+      "author": "grouvex.studio@gmail.com",
+      "changes": "Nuevo documento",
+      "data": {
+        "metadata": {
+          "title": "Documentos Oficiales Grouvex Studios (DDOO)",
+          "lastUpdated": 1704067200,
+          "version": "1.0.0",
+          "issn": "BOGS/2025/001"
+        },
+        "documents": [
+          {
+            "id": "bogs-001-2025",
+            "organism": "grouvex",
+            "type": "bo",
+            "title": "B.O.Grouvex Studios",
+            "reference": "BOGS/2025/001",
+            "date": 1748649600,
+            "description": "Boletín Oficial de Grouvex Studios - Núm. 001/2025",
+            "content": "SUMARIO\nTÍTULO I. DISPOSICIONES GENERALES\nDISPOSICIÓN BOGS/2025/002\nCapítulo I. ORGANISMOS, DEFINICIONES Y NOMENCLATURAS ESENCIALES\nSección I. Organismo Principal y Secundarios\nArtículo 1. Nombre del Organismo Principal\nEl Organismo Principal ha sido denominado \"Grouvex Studios\".\nArtículo 2. Definición del Organismo Principal\nGrouvex Studios es un organismo enfocado principalmente en multiproyectos, que abarca la creación de diversos elementos, como la publicación de música y el diseño.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "miembros-grouvex-2025",
+            "organism": "grouvex",
+            "type": "miembros",
+            "title": "Miembros de Grouvex Studios",
+            "reference": "MIEMBROS/GS/2025",
+            "date": 1748649600,
+            "description": "Listado oficial de miembros de Grouvex Studios",
+            "content": "Miembros de Grouvex Studios\n\nGrouvex Studios - grouvex.studios@grouvex.com - Jefe\nGrouvex Phoenix - grouvex.phoenix@grouvex.com - Administrador\nTarlight Etherall - etarlight.etherall@grouvex.com - Moderador",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "nogs-001-2025",
+            "organism": "grouvex",
+            "type": "no",
+            "title": "N.O.Grouvex Studios",
+            "reference": "NOGS/2025/001",
+            "date": 1748649600,
+            "description": "Noticias Oficiales de Grouvex Studios",
+            "content": "Noticias Oficiales de Grouvex Studios\n\n22 nov 2025 - Activación Sistema GCO\nEl Sistema de Gestión de Continuidad Operacional (GCO) se activa por concurrencia de eventos críticos.\n\n1 ago 2025 - Vacaciones\nEl equipo de Grouvex Studios se toma un descanso del 1 de agosto al 1 de octubre.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "tos-comunidad-2025",
+            "organism": "grouvex",
+            "type": "tos",
+            "title": "ToS&PP - Comunidad",
+            "reference": "TOS/COMUNIDAD/2025",
+            "date": 1748649600,
+            "description": "Términos de Servicio y Políticas de Privacidad de la Comunidad",
+            "content": "TÉRMINOS DE SERVICIO Y POLÍTICAS DE PRIVACIDAD - COMUNIDAD\n\nArtículo 1. Objeto y Ámbito de Aplicación\nEl presente documento establece los Términos de Servicio (TOS) y las Políticas de Privacidad (PP) que regulan el acceso, uso y participación en la comunidad en línea de Grouvex Studios.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "bogs-records-2025",
+            "organism": "records",
+            "type": "bo",
+            "title": "B.O.GS-Records",
+            "reference": "BOGS/RECORDS/2025/002",
+            "date": 1748649600,
+            "description": "Boletín Oficial de Grouvex Studios Records",
+            "content": "B.O.Grouvex Studios Records\n\nCapítulo III. Planes de Distribución Musical\n\nPlan Gratis:\n- Costo: 0€ al mes\n- Cuentas Artísticas: 2 por usuario\n- Fecha de Lanzamiento: personalizada\n- Subida de Canciones: ilimitada\n- Copyright: Grouvex Studios Record\n\nPlan Estándar: 8,99€/mes\nPlan Premium: 26,99€/mes",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "miembros-records-2025",
+            "organism": "records",
+            "type": "miembros",
+            "title": "Miembros de GS-Records",
+            "reference": "MIEMBROS/RECORDS/2025",
+            "date": 1748649600,
+            "description": "Miembros del sello discográfico Grouvex Records",
+            "content": "Miembros de GSRecords\n\nGrouvex Studios - Soporte\nGrouvex Phoenix - Director Ejecutivo\nTarlight Etherall - Soporte",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "nogs-records-2025",
+            "organism": "records",
+            "type": "no",
+            "title": "N.O.GS-Records",
+            "reference": "NOGS/RECORDS/2025",
+            "date": 1748649600,
+            "description": "Noticias Oficiales de Grouvex Records",
+            "content": "Noticias Oficiales de GSRecords\n\n30 may 2025 - Modificación de Planes\nActualización de los Planes de Distribución Musical.\n\n27 may 2025 - Saturación del Equipo\nEl equipo está saturado, plazo de entrega extendido a 6 semanas.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "tos-records-2025",
+            "organism": "records",
+            "type": "tos",
+            "title": "ToS&PP - GSRecords",
+            "reference": "TOS/RECORDS/2025",
+            "date": 1748649600,
+            "description": "Términos de Servicio de Grouvex Records",
+            "content": "TÉRMINOS DE SERVICIO - GROUVEX STUDIOS RECORDS\n\nDerechos del Artista:\n- Acceso a la plataforma y contenidos\n- Derechos de propiedad intelectual\n- Protección de datos personales\n- Derechos económicos (regalías)\n\nCompromisos del Artista:\n- Garantía de originalidad\n- Respeto de exclusividad\n- Colaboración promocional",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "bogs-designs-2025",
+            "organism": "designs",
+            "type": "bo",
+            "title": "B.O.GS-Designs",
+            "reference": "BOGS/DESIGNS/2025",
+            "date": 1748649600,
+            "description": "Boletín Oficial de Grouvex Designs",
+            "content": "B.O.Grouvex Studios Designs\n\nGrouvex Studios Designs se especializa en la creación de diseños de imagen, abarcando la elaboración de portadas para libros y obras musicales.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "miembros-designs-2025",
+            "organism": "designs",
+            "type": "miembros",
+            "title": "Miembros de GS-Designs",
+            "reference": "MIEMBROS/DESIGNS/2025",
+            "date": 1748649600,
+            "description": "Equipo de diseño de Grouvex Studios",
+            "content": "Miembros de GSDesigns\n\nGrouvex Studios - Soporte\nGrouvex Phoenix - Diseñador Principal\nTarlight Etherall - Diseñador",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "nogs-designs-2025",
+            "organism": "designs",
+            "type": "no",
+            "title": "N.O.GS-Designs",
+            "reference": "NOGS/DESIGNS/2025",
+            "date": 1748649600,
+            "description": "Noticias de Grouvex Designs",
+            "content": "Noticias Oficiales de GSDesigns\n\nPróximamente: Nuevos servicios de diseño corporativo.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "tos-designs-2025",
+            "organism": "designs",
+            "type": "tos",
+            "title": "ToS&PP - Designs",
+            "reference": "TOS/DESIGNS/2025",
+            "date": 1748649600,
+            "description": "Términos de servicio de Grouvex Designs",
+            "content": "Términos de Servicio - Grouvex Designs\n\nServicios de diseño gráfico, ilustración y branding.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "bogs-games-2025",
+            "organism": "games",
+            "type": "bo",
+            "title": "B.O.GS-Games",
+            "reference": "BOGS/GAMES/2025",
+            "date": 1748649600,
+            "description": "Boletín Oficial de Grouvex Games",
+            "content": "B.O.Grouvex Studios Games\n\nDivisión de videojuegos de Grouvex Studios.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "miembros-games-2025",
+            "organism": "games",
+            "type": "miembros",
+            "title": "Miembros de GS-Games",
+            "reference": "MIEMBROS/GAMES/2025",
+            "date": 1748649600,
+            "description": "Equipo de desarrollo de videojuegos",
+            "content": "Miembros de GSGames\n\nPróximamente...",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "nogs-games-2025",
+            "organism": "games",
+            "type": "no",
+            "title": "N.O.GS-Games",
+            "reference": "NOGS/GAMES/2025",
+            "date": 1748649600,
+            "description": "Noticias de Grouvex Games",
+            "content": "Próximos lanzamientos y novedades de GSGames.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "tos-games-2025",
+            "organism": "games",
+            "type": "tos",
+            "title": "ToS&PP - Games",
+            "reference": "TOS/GAMES/2025",
+            "date": 1748649600,
+            "description": "Términos de servicio de Grouvex Games",
+            "content": "Términos y condiciones para el uso de los servicios de Grouvex Games.",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "ddoo-main-2025",
+            "organism": "grouvex",
+            "type": "bo",
+            "title": "DDOO - Grouvex Studios",
+            "reference": "DDOO/GS/2025",
+            "date": 1748649600,
+            "description": "Documentos Oficiales de Grouvex Studios (índice completo)",
+            "content": "DOCUMENTOS OFICIALES GROUVEX STUDIOS (DDOO)\n\nGrouvex Studios:\n- B.O.Grouvex Studios\n- Miembros de Grouvex Studios\n- N.O.Grouvex Studios\n- ToS&PP - Comunidad\n\nGrouvex Studios Records:\n- B.O.GS-Records\n- Miembros de GS-Records\n- N.O.GS-Records\n- ToS&PP - GSRecords\n\nGrouvex Studios Designs:\n- B.O.GS-Designs\n- Miembros de GS-Designs\n- N.O.GS-Designs\n- ToS&PP - Designs\n\nGrouvex Studios Games:\n- B.O.GS-Games\n- Miembros de GS-Games\n- N.O.GS-Games\n- ToS&PP - Games",
+            "version": 1,
+            "versions": []
+          },
+          {
+            "id": "doc_1772053448847_yaw7dd88h",
+            "organism": "games",
+            "type": "no",
+            "title": "Suspensión del Organismo",
+            "reference": "NOGSGames/2026/01",
+            "date": 1772053349,
+            "description": "Organismo Secundario sin Propietario",
+            "content": "El organismo GSGames tiene que suspender sus servicios hasta que se encuentre un nuevo propietario para dicho organismo.",
+            "tags": [],
+            "version": 1
+          }
+        ]
+      }
+    }
+  ]
 }
