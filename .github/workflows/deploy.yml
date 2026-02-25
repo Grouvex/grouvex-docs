@@ -1,0 +1,55 @@
+name: Publicar DDOO
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'data.json'
+      - 'versions.json'
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Validar JSON
+        run: |
+          echo "🔍 Validando archivos..."
+          
+          if ! jq empty data.json 2>/dev/null; then
+            echo "❌ ERROR: data.json es inválido"
+            exit 1
+          fi
+          
+          if [ -f versions.json ]; then
+            if ! jq empty versions.json 2>/dev/null; then
+              echo "❌ ERROR: versions.json es inválido"
+              exit 1
+            fi
+          fi
+          
+          echo "✅ Archivos válidos"
+          
+      - name: Configurar Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+      - name: Commit y push (si hay cambios)
+        run: |
+          git add data.json versions.json
+          
+          if git diff --staged --quiet; then
+            echo "📦 No hay cambios nuevos"
+          else
+            git commit -m "📝 Actualización automática DDOO [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git push
+            echo "✅ Cambios publicados"
+          fi
