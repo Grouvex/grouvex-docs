@@ -252,7 +252,6 @@ async function showDocument(docId) {
         // Buscar versiones en versions.json
         const versions = [];
         if (window.versionsData && window.versionsData.versions) {
-            // Filtrar versiones de este documento
             window.versionsData.versions.forEach(v => {
                 if (v.data && v.data.id === docId) {
                     versions.push(v);
@@ -281,26 +280,11 @@ async function showDocument(docId) {
                     <pre>${escapeHtml(doc.content || 'Sin contenido')}</pre>
                 </div>
             </div>
-            <div class="doc-content">
-                <h3>Contenido</h3>
-                <pre>${escapeHtml(doc.content || 'Sin contenido')}</pre>
-            </div>
-        </div>
-    `;
-    
-    document.getElementById('modalBody').innerHTML = content;
-    
-    // Añadir botón de historial si hay versiones
-    if (doc.versions && doc.versions.length > 0) {
-        document.getElementById('modalFooter').innerHTML = `
-            <button class="btn-secondary" onclick="showVersionHistory('${docId}')">
-                <i class="fas fa-history"></i>
-                Ver historial (${doc.versions.length} versiones)
-            </button>
         `;
-        
+    
         if (modalBody) modalBody.innerHTML = content;
         
+        // Configurar el footer con el botón de historial si hay versiones
         if (modalFooter) {
             if (versions.length > 0) {
                 modalFooter.innerHTML = `
@@ -321,8 +305,6 @@ async function showDocument(docId) {
         console.error('Error showing document:', error);
         alert('Error al cargar el documento');
     }
-    
-    document.getElementById('documentModal').classList.add('active');
 }
 
 // Mostrar historial de versiones
