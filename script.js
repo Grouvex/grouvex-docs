@@ -230,168 +230,260 @@ function updateFooter() {
     }
 }
 
-// Función para parsear el SUMARIO y generar enlaces
-function parseSumario(content) {
-    if (!content || !content.includes('SUMARIO')) {
-        return { tieneSumario: false, secciones: [], contenidoHTML: escapeHtml(content) };
-    }
+// ============================================
+// FUNCIONES DE RENDERIZADO HTML SEMÁNTICO
+// ============================================
+
+/**
+ * Convierte texto plano con estructura de documento legal a HTML semántico
+ */
+function renderDocumentContent(content) {
+    if (!content) return '<p class="empty-content">Sin contenido</p>';
     
+    // Dividir el contenido en líneas
     const lines = content.split('\n');
-    let secciones = [];
-    let currentSeccion = null;
-    let isSumario = false;
-    let sumarioEndIndex = -1;
+    let html = '';
+    let inSumario = false;
+    let inLista = false;
+    let listaItems = [];
     
-    // Primero, identificar el bloque del SUMARIO
     for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
+        let line = lines[i].trim();
         
+        if (line === '') {
+            // Línea vacía - cerrar listas si es necesario
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            html += '<br>';
+            continue;
+        }
+        
+        // Detectar SUMARIO
         if (line === 'SUMARIO') {
-            isSumario = true;
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            html += '<div class="sumario-header">📋 SUMARIO</div>';
+            inSumario = true;
             continue;
         }
         
-        if (isSumario) {
-            // Detectar patrones de secciones (TÍTULO, Capítulo, Artículo, Sección)
-            if (line.match(/^(TÍTULO|TITULO|Capítulo|SECCIÓN|SECCION|Artículo)/i)) {
-                // Extraer el texto completo de la línea
-                const match = line.match(/^([A-ZÁÉÍÓÚÑ\s]+\.?)\s*(.*)/i);
-                if (match) {
-                    const titulo = match[1].trim();
-                    const descripcion = match[2].trim();
-                    
-                    // Crear un ID para la sección
-                    const seccionId = 'seccion-' + i + '-' + Date.now();
-                    
-                    secciones.push({
-                        id: seccionId,
-                        titulo: titulo,
-                        descripcion: descripcion || titulo,
-                        linea: i
-                    });
-                }
+        // Detectar TÍTULOS (TÍTULO I, TÍTULO II, etc.)
+        if (line.match(/^T[ÍI]TULO\s+[IVXLC]+\.?\s*(.*)/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
             }
-            
-            // Si encontramos una línea en blanco después de capturar secciones, termina el sumario
-            if (line === '' && secciones.length > 0) {
-                sumarioEndIndex = i;
-                break;
+            const tituloNum = line.match(/^T[ÍI]TULO\s+([IVXLC]+)/i);
+            const tituloTexto = line.replace(/^T[ÍI]TULO\s+[IVXLC]+\.?\s*/, '');
+            html += `<h1 class="documento-titulo-principal">`;
+            html += `<span class="titulo-numero">TÍTULO ${tituloNum ? tituloNum[1] : ''}</span>`;
+            if (tituloTexto) {
+                html += `<span class="titulo-texto">${escapeHtml(tituloTexto)}</span>`;
             }
-        }
-    }
-    
-    // Si no se encontraron secciones con el patrón anterior, intentar con un enfoque más simple
-    if (secciones.length === 0 && isSumario) {
-        const sumarioLines = [];
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].includes('SUMARIO')) {
-                for (let j = i + 1; j < Math.min(i + 20, lines.length); j++) {
-                    const line = lines[j].trim();
-                    if (line && !line.match(/^\s*$/)) {
-                        sumarioLines.push(line);
-                    }
-                    if (line === '' && sumarioLines.length > 0) break;
-                }
-                break;
-            }
-        }
-        
-        sumarioLines.forEach((line, index) => {
-            secciones.push({
-                id: 'seccion-simple-' + index,
-                titulo: line,
-                descripcion: line,
-                linea: index
-            });
-        });
-    }
-    
-    // Procesar el contenido para generar HTML con enlaces
-    let contenidoHTML = '';
-    let enProcesamientoSumario = false;
-    
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        
-        if (line.includes('SUMARIO')) {
-            contenidoHTML += '<div class="sumario-header">📋 SUMARIO</div>\n';
-            contenidoHTML += '<div class="sumario-lista">\n';
-            
-            // Añadir enlaces a las secciones
-            secciones.forEach(seccion => {
-                const tituloCorto = seccion.titulo.length > 50 ? 
-                    seccion.titulo.substring(0, 50) + '...' : seccion.titulo;
-                
-                contenidoHTML += `<a href="#${seccion.id}" class="sumario-enlace" onclick="event.preventDefault(); navigateToSection('${seccion.id}')">
-                    <i class="fas fa-chevron-right"></i> ${escapeHtml(tituloCorto)}
-                </a>\n`;
-            });
-            
-            contenidoHTML += '</div>\n';
-            enProcesamientoSumario = true;
+            html += `</h1>`;
+            inSumario = false;
             continue;
         }
         
-        // Saltar líneas en blanco después del sumario
-        if (enProcesamientoSumario && line.trim() === '' && secciones.length > 0) {
-            enProcesamientoSumario = false;
-            contenidoHTML += '<div class="sumario-separador"></div>\n';
+        // Detectar CAPÍTULOS
+        if (line.match(/^Cap[íi]tulo\s+[IVXLC]+\.?\s*(.*)/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            const capNum = line.match(/^Cap[íi]tulo\s+([IVXLC]+)/i);
+            const capTexto = line.replace(/^Cap[íi]tulo\s+[IVXLC]+\.?\s*/, '');
+            html += `<h2 class="documento-capitulo">`;
+            html += `<span class="capitulo-numero">Capítulo ${capNum ? capNum[1] : ''}</span>`;
+            if (capTexto) {
+                html += `<span class="capitulo-texto">${escapeHtml(capTexto)}</span>`;
+            }
+            html += `</h2>`;
+            inSumario = false;
             continue;
         }
         
-        // Procesar el resto del contenido
-        if (!enProcesamientoSumario) {
-            // Verificar si esta línea es una sección del sumario
-            const seccionEncontrada = secciones.find(s => s.linea === i);
-            
-            if (seccionEncontrada) {
-                // Esta línea es un título de sección
-                contenidoHTML += `<div id="${seccionEncontrada.id}" class="seccion-titulo">`;
-                contenidoHTML += `<i class="fas fa-bookmark"></i> ${escapeHtml(line)}`;
-                contenidoHTML += ` <a href="#" onclick="scrollToTop()" class="volver-arriba" title="Volver arriba"><i class="fas fa-arrow-up"></i></a>`;
-                contenidoHTML += `</div>\n`;
-            } else if (line.match(/^(Artículo|DISPOSICIÓN|Capítulo)/i)) {
-                // Resaltar artículos y disposiciones
-                contenidoHTML += `<div class="articulo-destacado"><i class="fas fa-gavel"></i> ${escapeHtml(line)}</div>\n`;
-            } else if (line.trim() === '') {
-                contenidoHTML += '<br>\n';
+        // Detectar SECCIONES
+        if (line.match(/^Secci[óo]n\s+[IVXLC]+\.?\s*(.*)/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            const secNum = line.match(/^Secci[óo]n\s+([IVXLC]+)/i);
+            const secTexto = line.replace(/^Secci[óo]n\s+[IVXLC]+\.?\s*/, '');
+            html += `<h3 class="documento-seccion">`;
+            html += `<span class="seccion-numero">Sección ${secNum ? secNum[1] : ''}</span>`;
+            if (secTexto) {
+                html += `<span class="seccion-texto">${escapeHtml(secTexto)}</span>`;
+            }
+            html += `</h3>`;
+            inSumario = false;
+            continue;
+        }
+        
+        // Detectar ARTÍCULOS
+        if (line.match(/^Art[íi]culo\s+\d+\.?\s*(.*)/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            const artNum = line.match(/^Art[íi]culo\s+(\d+)/i);
+            const artTexto = line.replace(/^Art[íi]culo\s+\d+\.?\s*/, '');
+            html += `<div class="documento-articulo">`;
+            html += `<span class="articulo-numero">Artículo ${artNum ? artNum[1] : ''}</span>`;
+            if (artTexto) {
+                html += `<span class="articulo-texto">${escapeHtml(artTexto)}</span>`;
+            }
+            html += `</div>`;
+            inSumario = false;
+            continue;
+        }
+        
+        // Detectar DISPOSICIONES
+        if (line.match(/^DISPOSICI[ÓO]N\s+BOGS\/\d{4}\/\d{3}/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            html += `<div class="documento-disposicion"><i class="fas fa-gavel"></i> ${escapeHtml(line)}</div>`;
+            inSumario = false;
+            continue;
+        }
+        
+        // Detectar EDICTOS
+        if (line.match(/^Edicto\s+BOGS\/\d{4}\/\d{3}/i)) {
+            if (inLista) {
+                html += renderListaItems(listaItems);
+                listaItems = [];
+                inLista = false;
+            }
+            html += `<div class="documento-edicto"><i class="fas fa-scroll"></i> ${escapeHtml(line)}</div>`;
+            inSumario = false;
+            continue;
+        }
+        
+        // Detectar elementos del sumario (puntos con números romanos o números)
+        if (inSumario) {
+            if (line.match(/^[IVXLC]+\.\s+/) || line.match(/^\d+\.\s+/)) {
+                html += `<div class="sumario-item"><i class="fas fa-chevron-right"></i> ${escapeHtml(line)}</div>`;
             } else {
-                contenidoHTML += escapeHtml(line) + '\n';
+                html += `<div class="sumario-item-simple">${escapeHtml(line)}</div>`;
             }
+            continue;
         }
+        
+        // Detectar listas numeradas (I., II., III. o 1., 2., 3.)
+        if (line.match(/^[IVXLC]+\.\s+/) || line.match(/^\d+\.\s+/)) {
+            listaItems.push(line);
+            inLista = true;
+            continue;
+        }
+        
+        // Detectar puntos con letras (A., B., C.)
+        if (line.match(/^[A-Z]\.\s+/)) {
+            if (!inLista) {
+                listaItems = [];
+                inLista = true;
+            }
+            listaItems.push(line);
+            continue;
+        }
+        
+        // Si estábamos en una lista y la línea no es un item de lista, cerramos la lista
+        if (inLista) {
+            html += renderListaItems(listaItems);
+            listaItems = [];
+            inLista = false;
+        }
+        
+        // Línea normal (párrafo)
+        html += `<p class="documento-parrafo">${escapeHtml(line)}</p>`;
     }
     
-    return {
-        tieneSumario: secciones.length > 0,
-        secciones: secciones,
-        contenidoHTML: contenidoHTML
-    };
-}
-
-// Función para navegar a una sección
-function navigateToSection(seccionId) {
-    const element = document.getElementById(seccionId);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        // Resaltar temporalmente la sección
-        element.classList.add('seccion-resaltada');
-        setTimeout(() => {
-            element.classList.remove('seccion-resaltada');
-        }, 2000);
+    // Cerrar lista si quedó abierta
+    if (inLista) {
+        html += renderListaItems(listaItems);
     }
+    
+    return html;
 }
 
-// Función para volver arriba en el modal
-function scrollToTop() {
-    const modalBody = document.getElementById('modalBody');
-    if (modalBody) {
-        modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+/**
+ * Renderiza una lista de items con formato adecuado
+ */
+function renderListaItems(items) {
+    if (!items.length) return '';
+    
+    // Determinar el tipo de lista
+    const firstItem = items[0];
+    let listaHtml = '';
+    
+    if (firstItem.match(/^[IVXLC]+\.\s+/)) {
+        // Lista con números romanos
+        listaHtml = '<div class="lista-romana">';
+        items.forEach(item => {
+            const match = item.match(/^([IVXLC]+)\.\s+(.*)/);
+            if (match) {
+                listaHtml += `<div class="lista-item-romano"><span class="item-numero">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
+            } else {
+                listaHtml += `<div class="lista-item-romano">${escapeHtml(item)}</div>`;
+            }
+        });
+        listaHtml += '</div>';
     }
+    else if (firstItem.match(/^\d+\.\s+/)) {
+        // Lista numerada
+        listaHtml = '<div class="lista-numerada">';
+        items.forEach(item => {
+            const match = item.match(/^(\d+)\.\s+(.*)/);
+            if (match) {
+                listaHtml += `<div class="lista-item-numerado"><span class="item-numero">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
+            } else {
+                listaHtml += `<div class="lista-item-numerado">${escapeHtml(item)}</div>`;
+            }
+        });
+        listaHtml += '</div>';
+    }
+    else if (firstItem.match(/^[A-Z]\.\s+/)) {
+        // Lista alfabética
+        listaHtml = '<div class="lista-alfabetica">';
+        items.forEach(item => {
+            const match = item.match(/^([A-Z])\.\s+(.*)/);
+            if (match) {
+                listaHtml += `<div class="lista-item-alfabetico"><span class="item-letra">${match[1]}.</span> <span class="item-texto">${escapeHtml(match[2])}</span></div>`;
+            } else {
+                listaHtml += `<div class="lista-item-alfabetico">${escapeHtml(item)}</div>`;
+            }
+        });
+        listaHtml += '</div>';
+    }
+    else {
+        // Lista simple
+        listaHtml = '<div class="lista-simple">';
+        items.forEach(item => {
+            listaHtml += `<div class="lista-item-simple"><i class="fas fa-circle bullet-point"></i> ${escapeHtml(item)}</div>`;
+        });
+        listaHtml += '</div>';
+    }
+    
+    return listaHtml;
 }
 
-// Mostrar documento
-async function showDocument(docId) {
+/**
+ * Función principal para mostrar documento con formato HTML
+ */
+function showDocument(docId) {
     try {
         const doc = documents.find(d => d.id === docId);
         if (!doc) return;
@@ -412,84 +504,70 @@ async function showDocument(docId) {
         
         if (modalTitle) modalTitle.textContent = doc.title;
         
-        // Parsear el contenido para manejar SUMARIO
-        const contenidoParseado = parseSumario(doc.content || '');
+        // Renderizar el contenido con formato HTML
+        const contenidoHTML = renderDocumentContent(doc.content || '');
         
-        // Determinar si mostrar el contenido simple o con sumario
-        let contenidoHTML = '';
-        
-        if (contenidoParseado.tieneSumario) {
-            // Vista mejorada con sumario interactivo
-            contenidoHTML = `
-                <div class="document-viewer">
-                    <div class="doc-metadata tarjeta-info">
-                        <div class="metadata-grid">
-                            <div><strong>Referencia:</strong> ${escapeHtml(doc.reference || 'N/A')}</div>
-                            <div><strong>Tipo:</strong> ${getTypeLabel(doc.type)}</div>
-                            <div><strong>Organismo:</strong> ${getOrganismLabel(doc.organism)}</div>
-                            <div><strong>Fecha:</strong> ${formatDate(doc.date)}</div>
-                            <div><strong>Versión:</strong> ${doc.version || 1}</div>
+        // Construir el HTML completo del documento
+        const documentoHTML = `
+            <div class="documento-container">
+                <!-- Metadatos del documento -->
+                <div class="doc-metadata tarjeta-info">
+                    <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <span class="metadata-label"><i class="fas fa-hashtag"></i> Referencia:</span>
+                            <span class="metadata-value">${escapeHtml(doc.reference || 'N/A')}</span>
                         </div>
-                        ${doc.tags && doc.tags.length ? `
-                            <div class="tags-container">
-                                <strong>Tags:</strong> ${doc.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ')}
-                            </div>
-                        ` : ''}
+                        <div class="metadata-item">
+                            <span class="metadata-label"><i class="fas fa-tag"></i> Tipo:</span>
+                            <span class="metadata-value">${getTypeLabel(doc.type)}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label"><i class="fas fa-building"></i> Organismo:</span>
+                            <span class="metadata-value">${getOrganismLabel(doc.organism)}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label"><i class="fas fa-calendar-alt"></i> Fecha:</span>
+                            <span class="metadata-value">${formatDate(doc.date)}</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label"><i class="fas fa-code-branch"></i> Versión:</span>
+                            <span class="metadata-value">${doc.version || 1}</span>
+                        </div>
                     </div>
-                    
-                    <div class="doc-contenido-mejorado">
-                        <div class="contenido-header">
-                            <i class="fas fa-file-alt"></i> Contenido
+                    ${doc.tags && doc.tags.length ? `
+                        <div class="tags-container">
+                            <span class="metadata-label"><i class="fas fa-tags"></i> Tags:</span>
+                            <div class="tags-list">
+                                ${doc.tags.map(t => `<span class="badge-tag">${escapeHtml(t)}</span>`).join(' ')}
+                            </div>
                         </div>
-                        <div class="contenido-body">
-                            ${contenidoParseado.contenidoHTML}
-                        </div>
+                    ` : ''}
+                </div>
+                
+                <!-- Contenido del documento con formato semántico -->
+                <div class="documento-contenido">
+                    <div class="contenido-header">
+                        <i class="fas fa-file-alt"></i> Contenido
+                    </div>
+                    <div class="contenido-body">
+                        ${contenidoHTML}
                     </div>
                 </div>
-            `;
-        } else {
-            // Vista simple
-            contenidoHTML = `
-                <div class="document-viewer">
-                    <div class="doc-metadata tarjeta-info">
-                        <div class="metadata-grid">
-                            <div><strong>Referencia:</strong> ${escapeHtml(doc.reference || 'N/A')}</div>
-                            <div><strong>Tipo:</strong> ${getTypeLabel(doc.type)}</div>
-                            <div><strong>Organismo:</strong> ${getOrganismLabel(doc.organism)}</div>
-                            <div><strong>Fecha:</strong> ${formatDate(doc.date)}</div>
-                            <div><strong>Versión:</strong> ${doc.version || 1}</div>
-                        </div>
-                        ${doc.tags && doc.tags.length ? `
-                            <div class="tags-container">
-                                <strong>Tags:</strong> ${doc.tags.map(t => `<span class="badge-tag">${t}</span>`).join(' ')}
-                            </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div class="doc-content">
-                        <div class="contenido-header">
-                            <i class="fas fa-file-alt"></i> Contenido
-                        </div>
-                        <pre class="contenido-pre">${escapeHtml(doc.content || 'Sin contenido')}</pre>
-                    </div>
-                </div>
-            `;
-        }
+            </div>
+        `;
         
-        if (modalBody) modalBody.innerHTML = contenidoHTML;
+        if (modalBody) modalBody.innerHTML = documentoHTML;
         
         // Configurar el footer
         if (modalFooter) {
             let footerButtons = '';
             
-            if (contenidoParseado.tieneSumario) {
-                footerButtons += `
-                    <button class="btn-secondary" onclick="scrollToTop()">
-                        <i class="fas fa-arrow-up"></i>
-                        Volver arriba
-                    </button>
-                `;
-            }
+            footerButtons += `
+                <button class="btn-secondary" onclick="window.scrollToModalTop()">
+                    <i class="fas fa-arrow-up"></i>
+                    Volver arriba
+                </button>
+            `;
             
             if (versions.length > 0) {
                 footerButtons += `
@@ -509,6 +587,31 @@ async function showDocument(docId) {
     } catch (error) {
         console.error('Error showing document:', error);
         alert('Error al cargar el documento');
+    }
+}
+
+// Función para scroll al inicio del modal
+function scrollToModalTop() {
+    const modalBody = document.getElementById('modalBody');
+    if (modalBody) {
+        modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Función para parsear el SUMARIO (mantenida por compatibilidad)
+function parseSumario(content) {
+    return { tieneSumario: content && content.includes('SUMARIO') };
+}
+
+// Función para navegar a una sección (mantenida por compatibilidad)
+function navigateToSection(seccionId) {
+    const element = document.getElementById(seccionId);
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        element.classList.add('seccion-resaltada');
+        setTimeout(() => {
+            element.classList.remove('seccion-resaltada');
+        }, 2000);
     }
 }
 
@@ -655,4 +758,4 @@ window.closeModal = closeModal;
 window.closeVersionModal = closeVersionModal;
 window.showVersionHistory = showVersionHistory;
 window.navigateToSection = navigateToSection;
-window.scrollToTop = scrollToTop;
+window.scrollToModalTop = scrollToModalTop;
