@@ -2,9 +2,9 @@
 // CONFIGURACIÓN DE GITHUB - Usando DDOO_TOKEN
 // ============================================
 const GITHUB = {
-    owner: 'Grouvex',                    // ← TU USUARIO
-    repo: 'grouvex-docs',            // ← TU REPOSITORIO
-    branch: 'main',                       // Rama principal
+    owner: 'Grouvex',
+    repo: 'grouvex-docs',
+    branch: 'main',
     token: null
 };
 
@@ -24,12 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // FUNCIÓN PARA OBTENER EL TOKEN DEL SECRET
 // ============================================
 async function getGitHubToken() {
-    // Si ya tenemos token, lo devolvemos
     if (GITHUB.token) return GITHUB.token;
     
     try {
-        // Intentar obtener el token mediante fetch a un endpoint que lea el secret
-        // En GitHub Pages, necesitamos usar un proxy o API
         const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(
             `https://raw.githubusercontent.com/${GITHUB.owner}/${GITHUB.repo}/main/config/token.json?${Date.now()}`
         )}`);
@@ -43,7 +40,6 @@ async function getGitHubToken() {
         console.log('No se pudo obtener token vía proxy');
     }
     
-    // Si no funciona, mostrar instrucciones
     throw new Error(`
         ⚠️ CONFIGURACIÓN DEL TOKEN ⚠️
         
@@ -63,12 +59,10 @@ async function getGitHubToken() {
 // GUARDADO AUTOMÁTICO DIRECTO A GITHUB
 // ============================================
 
-// Función principal para guardar en GitHub
 async function saveToGitHub(filePath, content, commitMessage) {
     try {
         showEditorMessage('info', `📤 Subiendo ${filePath} a GitHub...`);
         
-        // Intentar obtener token (si falla, continuamos con modo manual)
         let token = null;
         try {
             token = await getGitHubToken();
@@ -77,7 +71,6 @@ async function saveToGitHub(filePath, content, commitMessage) {
             return false;
         }
         
-        // 1. Obtener el archivo actual para conocer su SHA
         const getUrl = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${filePath}?ref=${GITHUB.branch}`;
         
         let sha = null;
@@ -97,7 +90,6 @@ async function saveToGitHub(filePath, content, commitMessage) {
             console.log(`Archivo ${filePath} no encontrado, se creará`);
         }
         
-        // 2. Preparar el commit
         const commitData = {
             message: commitMessage,
             content: btoa(unescape(encodeURIComponent(content))),
@@ -108,7 +100,6 @@ async function saveToGitHub(filePath, content, commitMessage) {
             commitData.sha = sha;
         }
         
-        // 3. Hacer el commit
         const putUrl = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${filePath}`;
         const putResponse = await fetch(putUrl, {
             method: 'PUT',
@@ -146,7 +137,6 @@ async function saveJSON() {
             return;
         }
         
-        // Validar JSON
         const parsed = JSON.parse(jsonText);
         
         if (!parsed.documents || !Array.isArray(parsed.documents)) {
@@ -154,7 +144,6 @@ async function saveJSON() {
             return;
         }
         
-        // Guardar versión en el historial
         await saveVersion(parsed, changes);
         
         const timestamp = new Date().toLocaleString('es-ES', { 
@@ -164,7 +153,6 @@ async function saveJSON() {
         
         const commitMessage = `📝 ${changes} [${timestamp}] - ${currentUser?.email || 'Admin'}`;
         
-        // INTENTAR SUBIR A GITHUB AUTOMÁTICAMENTE
         const dataSuccess = await saveToGitHub('data.json', jsonText, commitMessage);
         const versionsSuccess = await saveToGitHub('versions.json', JSON.stringify(versions, null, 2), 
             `📚 Historial: ${changes} [${timestamp}]`);
@@ -179,7 +167,6 @@ async function saveJSON() {
             );
             renderDocumentsList();
         } else {
-            // MODO MANUAL (fallback)
             await manualSave(jsonText, changes);
         }
         
@@ -194,17 +181,14 @@ async function saveJSON() {
 // ============================================
 
 async function manualSave(jsonText, changes) {
-    // Guardar versión
     await saveVersion(JSON.parse(jsonText), changes);
     
-    // Crear archivos para descarga
     const dataBlob = new Blob([jsonText], { type: 'application/json' });
     const versionsBlob = new Blob([JSON.stringify(versions, null, 2)], { type: 'application/json' });
     
     const dataUrl = URL.createObjectURL(dataBlob);
     const versionsUrl = URL.createObjectURL(versionsBlob);
     
-    // Descargar archivos
     const dataLink = document.createElement('a');
     dataLink.href = dataUrl;
     dataLink.download = 'data.json';
@@ -324,16 +308,25 @@ function renderDocumentsList() {
             html += `<div class="organism-documents">`;
             
             grouped[org].forEach(doc => {
+                // Detectar si tiene estructura semántica
+                const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
+                
                 html += `
                     <div class="doc-management-card">
                         <div class="doc-info">
-                            <span class="doc-type-badge ${doc.type}">${getTypeLabel(doc.type)}</span>
+                            <div class="doc-badges-mini">
+                                <span class="doc-type-badge ${doc.type}">${getTypeLabel(doc.type)}</span>
+                                ${hasStructure ? '<span class="doc-structure-badge"><i class="fas fa-code"></i> Estructurado</span>' : ''}
+                            </div>
                             <h5>${escapeHtml(doc.title)}</h5>
                             <p class="doc-ref">${escapeHtml(doc.reference || 'Sin referencia')}</p>
                         </div>
                         <div class="doc-actions">
                             <button class="icon-btn" onclick="editDocument('${doc.id}')" title="Editar">
                                 <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-btn" onclick="viewDocumentStructure('${doc.id}')" title="Ver estructura">
+                                <i class="fas fa-sitemap"></i>
                             </button>
                             <button class="icon-btn" onclick="viewDocumentVersions('${doc.id}')" title="Versiones">
                                 <i class="fas fa-history"></i>
@@ -358,7 +351,82 @@ function filterDocumentsByOrganism() {
 }
 
 // ============================================
-// FORMULARIOS DE DOCUMENTOS
+// VISUALIZAR ESTRUCTURA DEL DOCUMENTO
+// ============================================
+
+function viewDocumentStructure(docId) {
+    const doc = currentData.documents.find(d => d.id === docId);
+    if (!doc) return;
+    
+    let html = `
+        <div class="structure-viewer">
+            <h3>Estructura del Documento: ${escapeHtml(doc.title)}</h3>
+            <p class="structure-description">Vista previa de la estructura semántica del documento.</p>
+    `;
+    
+    if (doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0) {
+        html += '<div class="structure-tree">';
+        doc.structure.forEach((element, index) => {
+            const icon = getStructureIcon(element.type);
+            const preview = getStructurePreview(element);
+            html += `
+                <div class="structure-item">
+                    <div class="structure-item-header">
+                        <i class="fas ${icon}"></i>
+                        <span class="structure-type">${element.type}</span>
+                        ${element.numero ? `<span class="structure-number">${escapeHtml(element.numero)}</span>` : ''}
+                    </div>
+                    <div class="structure-preview">${preview}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+    } else {
+        html += '<p class="no-structure">Este documento no tiene estructura semántica definida.</p>';
+    }
+    
+    html += '</div>';
+    
+    document.getElementById('modalTitle').textContent = 'Estructura del Documento';
+    document.getElementById('documentModalBody').innerHTML = html;
+    document.getElementById('documentModal').classList.add('active');
+}
+
+function getStructureIcon(type) {
+    const icons = {
+        'metadata': 'fa-table',
+        'sumario': 'fa-list',
+        'titulo': 'fa-heading',
+        'h1': 'fa-heading',
+        'capitulo': 'fa-book',
+        'h2': 'fa-book',
+        'seccion': 'fa-columns',
+        'h3': 'fa-columns',
+        'articulo': 'fa-gavel',
+        'h4': 'fa-gavel',
+        'disposicion': 'fa-file-signature',
+        'edicto': 'fa-scroll',
+        'lista': 'fa-list-ul',
+        'parrafo': 'fa-paragraph',
+        'p': 'fa-paragraph',
+        'subtitulo': 'fa-heading'
+    };
+    return icons[type] || 'fa-file';
+}
+
+function getStructurePreview(element) {
+    if (element.content) {
+        return escapeHtml(element.content.substring(0, 50)) + (element.content.length > 50 ? '...' : '');
+    } else if (element.items && Array.isArray(element.items)) {
+        return `${element.items.length} elementos`;
+    } else if (element.text) {
+        return escapeHtml(element.text.substring(0, 50)) + (element.text.length > 50 ? '...' : '');
+    }
+    return 'Sin contenido';
+}
+
+// ============================================
+// FORMULARIOS DE DOCUMENTOS (ACTUALIZADOS)
 // ============================================
 
 function showNewDocumentForm() {
@@ -366,62 +434,99 @@ function showNewDocumentForm() {
     
     const formHtml = `
         <form id="documentForm" class="document-form" onsubmit="saveDocument(event)">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Organismo *</label>
-                    <select id="docOrganism" required>
-                        <option value="">Seleccionar...</option>
-                        <option value="grouvex">Grouvex Studios</option>
-                        <option value="records">Grouvex Records</option>
-                        <option value="designs">Grouvex Designs</option>
-                        <option value="games">Grouvex Games</option>
+            <div class="form-tabs">
+                <button type="button" class="form-tab-btn active" onclick="switchFormTab('basic')">Básico</button>
+                <button type="button" class="form-tab-btn" onclick="switchFormTab('structure')">Estructura</button>
+            </div>
+            
+            <div id="basicTab" class="form-tab-content active">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Organismo *</label>
+                        <select id="docOrganism" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="grouvex">Grouvex Studios</option>
+                            <option value="records">Grouvex Records</option>
+                            <option value="designs">Grouvex Designs</option>
+                            <option value="games">Grouvex Games</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo *</label>
+                        <select id="docType" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="bo">B.O. (Boletín Oficial)</option>
+                            <option value="miembros">Miembros</option>
+                            <option value="no">N.O. (Noticias)</option>
+                            <option value="tos">ToS&PP</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Título *</label>
+                        <input type="text" id="docTitle" required placeholder="Título del documento">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Referencia</label>
+                        <input type="text" id="docReference" placeholder="Ej: BOGS/2025/001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Fecha (Unix timestamp)</label>
+                        <input type="number" id="docDate" value="${Math.floor(Date.now() / 1000)}">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Descripción</label>
+                        <textarea id="docDescription" rows="2" placeholder="Breve descripción"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tags (separados por coma)</label>
+                        <input type="text" id="docTags" placeholder="tag1, tag2, tag3">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Versión</label>
+                        <input type="number" id="docVersion" value="1" min="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="structureTab" class="form-tab-content">
+                <div class="structure-editor-info">
+                    <p><i class="fas fa-info-circle"></i> Define la estructura semántica del documento usando el editor JSON.</p>
+                    <p>Puedes usar el editor JSON en la pestaña "Editor JSON" para una edición más avanzada.</p>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label>¿Tiene estructura semántica?</label>
+                    <select id="docHasStructure" onchange="toggleStructureEditor()">
+                        <option value="no">No (solo contenido de texto)</option>
+                        <option value="yes">Sí (estructura semántica)</option>
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label>Tipo *</label>
-                    <select id="docType" required>
-                        <option value="">Seleccionar...</option>
-                        <option value="bo">B.O. (Boletín Oficial)</option>
-                        <option value="miembros">Miembros</option>
-                        <option value="no">N.O. (Noticias)</option>
-                        <option value="tos">ToS&PP</option>
-                    </select>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Título *</label>
-                    <input type="text" id="docTitle" required placeholder="Título del documento">
-                </div>
-                
-                <div class="form-group">
-                    <label>Referencia</label>
-                    <input type="text" id="docReference" placeholder="Ej: BOGS/2025/001">
-                </div>
-                
-                <div class="form-group">
-                    <label>Fecha (Unix timestamp)</label>
-                    <input type="number" id="docDate" value="${Math.floor(Date.now() / 1000)}">
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Descripción</label>
-                    <textarea id="docDescription" rows="2" placeholder="Breve descripción"></textarea>
-                </div>
-                
-                <div class="form-group full-width">
+                <div id="contentEditor" class="form-group full-width">
                     <label>Contenido *</label>
-                    <textarea id="docContent" rows="10" required placeholder="Contenido del documento..."></textarea>
+                    <textarea id="docContent" rows="10" placeholder="Contenido del documento en texto plano..."></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label>Tags (separados por coma)</label>
-                    <input type="text" id="docTags" placeholder="tag1, tag2, tag3">
-                </div>
-                
-                <div class="form-group">
-                    <label>Versión</label>
-                    <input type="number" id="docVersion" value="1" min="1">
+                <div id="structureEditor" style="display: none;" class="form-group full-width">
+                    <label>Estructura Semántica (JSON) *</label>
+                    <textarea id="docStructure" rows="15" class="json-editor-small" placeholder='[
+  {
+    "type": "titulo",
+    "numero": "I",
+    "content": "TÍTULO EJEMPLO"
+  }
+]'></textarea>
+                    <p class="help-text">
+                        <i class="fas fa-question-circle"></i>
+                        Tipos disponibles: metadata, sumario, titulo, capitulo, seccion, articulo, disposicion, edicto, lista, parrafo, subtitulo
+                    </p>
                 </div>
             </div>
             
@@ -447,63 +552,95 @@ function editDocument(docId) {
     
     currentEditingDoc = doc;
     const tagsValue = doc.tags ? doc.tags.join(', ') : '';
+    const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
+    const structureValue = hasStructure ? JSON.stringify(doc.structure, null, 2) : '';
     
     const formHtml = `
         <form id="documentForm" class="document-form" onsubmit="saveDocument(event)">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Organismo *</label>
-                    <select id="docOrganism" required>
-                        <option value="grouvex" ${doc.organism === 'grouvex' ? 'selected' : ''}>Grouvex Studios</option>
-                        <option value="records" ${doc.organism === 'records' ? 'selected' : ''}>Grouvex Records</option>
-                        <option value="designs" ${doc.organism === 'designs' ? 'selected' : ''}>Grouvex Designs</option>
-                        <option value="games" ${doc.organism === 'games' ? 'selected' : ''}>Grouvex Games</option>
+            <div class="form-tabs">
+                <button type="button" class="form-tab-btn active" onclick="switchFormTab('basic')">Básico</button>
+                <button type="button" class="form-tab-btn" onclick="switchFormTab('structure')">Estructura</button>
+            </div>
+            
+            <div id="basicTab" class="form-tab-content active">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Organismo *</label>
+                        <select id="docOrganism" required>
+                            <option value="grouvex" ${doc.organism === 'grouvex' ? 'selected' : ''}>Grouvex Studios</option>
+                            <option value="records" ${doc.organism === 'records' ? 'selected' : ''}>Grouvex Records</option>
+                            <option value="designs" ${doc.organism === 'designs' ? 'selected' : ''}>Grouvex Designs</option>
+                            <option value="games" ${doc.organism === 'games' ? 'selected' : ''}>Grouvex Games</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo *</label>
+                        <select id="docType" required>
+                            <option value="bo" ${doc.type === 'bo' ? 'selected' : ''}>B.O. (Boletín Oficial)</option>
+                            <option value="miembros" ${doc.type === 'miembros' ? 'selected' : ''}>Miembros</option>
+                            <option value="no" ${doc.type === 'no' ? 'selected' : ''}>N.O. (Noticias)</option>
+                            <option value="tos" ${doc.type === 'tos' ? 'selected' : ''}>ToS&PP</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Título *</label>
+                        <input type="text" id="docTitle" required value="${escapeHtml(doc.title || '')}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Referencia</label>
+                        <input type="text" id="docReference" value="${escapeHtml(doc.reference || '')}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Fecha (Unix timestamp)</label>
+                        <input type="number" id="docDate" value="${doc.date || Math.floor(Date.now() / 1000)}">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Descripción</label>
+                        <textarea id="docDescription" rows="2">${escapeHtml(doc.description || '')}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tags (separados por coma)</label>
+                        <input type="text" id="docTags" value="${escapeHtml(tagsValue)}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Versión</label>
+                        <input type="number" id="docVersion" value="${doc.version || 1}" min="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="structureTab" class="form-tab-content">
+                <div class="structure-editor-info">
+                    <p><i class="fas fa-info-circle"></i> Define la estructura semántica del documento.</p>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label>¿Tiene estructura semántica?</label>
+                    <select id="docHasStructure" onchange="toggleStructureEditor()">
+                        <option value="no" ${!hasStructure ? 'selected' : ''}>No (solo contenido de texto)</option>
+                        <option value="yes" ${hasStructure ? 'selected' : ''}>Sí (estructura semántica)</option>
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label>Tipo *</label>
-                    <select id="docType" required>
-                        <option value="bo" ${doc.type === 'bo' ? 'selected' : ''}>B.O. (Boletín Oficial)</option>
-                        <option value="miembros" ${doc.type === 'miembros' ? 'selected' : ''}>Miembros</option>
-                        <option value="no" ${doc.type === 'no' ? 'selected' : ''}>N.O. (Noticias)</option>
-                        <option value="tos" ${doc.type === 'tos' ? 'selected' : ''}>ToS&PP</option>
-                    </select>
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Título *</label>
-                    <input type="text" id="docTitle" required value="${escapeHtml(doc.title || '')}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Referencia</label>
-                    <input type="text" id="docReference" value="${escapeHtml(doc.reference || '')}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Fecha (Unix timestamp)</label>
-                    <input type="number" id="docDate" value="${doc.date || Math.floor(Date.now() / 1000)}">
-                </div>
-                
-                <div class="form-group full-width">
-                    <label>Descripción</label>
-                    <textarea id="docDescription" rows="2">${escapeHtml(doc.description || '')}</textarea>
-                </div>
-                
-                <div class="form-group full-width">
+                <div id="contentEditor" class="form-group full-width" ${hasStructure ? 'style="display:none;"' : ''}>
                     <label>Contenido *</label>
-                    <textarea id="docContent" rows="10" required>${escapeHtml(doc.content || '')}</textarea>
+                    <textarea id="docContent" rows="10">${escapeHtml(doc.content || '')}</textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label>Tags (separados por coma)</label>
-                    <input type="text" id="docTags" value="${escapeHtml(tagsValue)}">
-                </div>
-                
-                <div class="form-group">
-                    <label>Versión</label>
-                    <input type="number" id="docVersion" value="${doc.version || 1}" min="1">
+                <div id="structureEditor" class="form-group full-width" ${hasStructure ? '' : 'style="display:none;"'}>
+                    <label>Estructura Semántica (JSON) *</label>
+                    <textarea id="docStructure" rows="15" class="json-editor-small">${escapeHtml(structureValue)}</textarea>
+                    <p class="help-text">
+                        <i class="fas fa-question-circle"></i>
+                        Tipos disponibles: metadata, sumario, titulo, capitulo, seccion, articulo, disposicion, edicto, lista, parrafo, subtitulo
+                    </p>
                 </div>
             </div>
             
@@ -523,6 +660,25 @@ function editDocument(docId) {
     document.getElementById('documentModal').classList.add('active');
 }
 
+function toggleStructureEditor() {
+    const hasStructure = document.getElementById('docHasStructure').value === 'yes';
+    document.getElementById('contentEditor').style.display = hasStructure ? 'none' : 'block';
+    document.getElementById('structureEditor').style.display = hasStructure ? 'block' : 'none';
+}
+
+function switchFormTab(tabName) {
+    document.querySelectorAll('.form-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-tab-content').forEach(content => content.classList.remove('active'));
+    
+    if (tabName === 'basic') {
+        document.querySelectorAll('.form-tab-btn')[0].classList.add('active');
+        document.getElementById('basicTab').classList.add('active');
+    } else {
+        document.querySelectorAll('.form-tab-btn')[1].classList.add('active');
+        document.getElementById('structureTab').classList.add('active');
+    }
+}
+
 async function saveDocument(event) {
     event.preventDefault();
     
@@ -535,6 +691,8 @@ async function saveDocument(event) {
             return;
         }
         
+        const hasStructure = document.getElementById('docHasStructure').value === 'yes';
+        
         const docData = {
             id: currentEditingDoc?.id || generateId(),
             organism: document.getElementById('docOrganism').value,
@@ -543,10 +701,25 @@ async function saveDocument(event) {
             reference: document.getElementById('docReference').value,
             date: parseInt(document.getElementById('docDate').value),
             description: document.getElementById('docDescription').value,
-            content: document.getElementById('docContent').value,
             tags: document.getElementById('docTags').value.split(',').map(t => t.trim()).filter(t => t),
             version: parseInt(document.getElementById('docVersion').value) || 1
         };
+        
+        if (hasStructure) {
+            // Guardar estructura semántica
+            try {
+                const structureText = document.getElementById('docStructure').value;
+                docData.structure = JSON.parse(structureText);
+                docData.content = ''; // No usar content cuando hay estructura
+            } catch (e) {
+                showEditorMessage('error', 'Error: La estructura JSON no es válida');
+                return;
+            }
+        } else {
+            // Guardar contenido tradicional
+            docData.content = document.getElementById('docContent').value;
+            docData.structure = []; // Vaciar estructura si existe
+        }
         
         if (!currentEditingDoc) {
             currentData.documents.push(docData);
@@ -560,7 +733,6 @@ async function saveDocument(event) {
         await saveVersion(currentData, changes);
         document.getElementById('jsonEditor').value = JSON.stringify(currentData, null, 2);
         
-        // Intentar guardar automáticamente
         const timestamp = new Date().toLocaleString('es-ES', { 
             year: 'numeric', month: '2-digit', day: '2-digit', 
             hour: '2-digit', minute: '2-digit', second: '2-digit' 
@@ -575,7 +747,6 @@ async function saveDocument(event) {
         if (dataSuccess && versionsSuccess) {
             showEditorMessage('success', '✅ Documento guardado en GitHub');
         } else {
-            // Fallback a manual
             const dataBlob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
             const dataUrl = URL.createObjectURL(dataBlob);
             const dataLink = document.createElement('a');
@@ -665,6 +836,7 @@ function viewDocumentVersions(docId) {
             <div class="doc-metadata">
                 <p><strong>Documento:</strong> ${escapeHtml(doc.title)}</p>
                 <p><strong>Versión actual:</strong> v${doc.version}</p>
+                ${doc.structure ? '<p><span class="badge"><i class="fas fa-code"></i> Estructurado</span></p>' : ''}
             </div>
             <div class="versions-list">
     `;
@@ -907,6 +1079,10 @@ function signOut() {
         });
 }
 
+function isAuthorized(email) {
+    return email && email.endsWith('@grouvex.com');
+}
+
 // ============================================
 // UTILIDADES
 // ============================================
@@ -982,6 +1158,7 @@ function showEditorMessage(type, message) {
 }
 
 function formatDate(timestamp) {
+    if (!timestamp) return 'Fecha desconocida';
     const date = new Date(timestamp * 1000);
     return date.toLocaleString('es-ES', {
         year: 'numeric',
@@ -998,3 +1175,25 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// Hacer funciones globales para los onclick
+window.switchTab = switchTab;
+window.showNewDocumentForm = showNewDocumentForm;
+window.editDocument = editDocument;
+window.deleteDocument = deleteDocument;
+window.viewDocumentVersions = viewDocumentVersions;
+window.viewDocumentStructure = viewDocumentStructure;
+window.closeDocumentModal = closeDocumentModal;
+window.saveDocument = saveDocument;
+window.formatJSON = formatJSON;
+window.exportAllData = exportAllData;
+window.importAllData = importAllData;
+window.saveJSON = saveJSON;
+window.viewFullHistory = viewFullHistory;
+window.previewVersion = previewVersion;
+window.restoreVersion = restoreVersion;
+window.filterDocumentsByOrganism = filterDocumentsByOrganism;
+window.signInWithGoogle = signInWithGoogle;
+window.signOut = signOut;
+window.switchFormTab = switchFormTab;
+window.toggleStructureEditor = toggleStructureEditor;
