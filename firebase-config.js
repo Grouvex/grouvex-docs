@@ -15,7 +15,6 @@ firebase.initializeApp(firebaseConfig);
 
 // Inicializar servicios
 const auth = firebase.auth();
-const db = firebase.firestore();
 
 // Configurar persistencia de autenticación
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
