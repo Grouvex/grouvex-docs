@@ -1079,8 +1079,17 @@ function signOut() {
         });
 }
 
+const authorizedEmails = [
+    'admin@grouvex.com',
+    'legal@grouvex.com',
+    'grouvex.phoenix@grouvex.com',
+    'director@grouvex.com',
+    'grouvex.studio@gmail.com',
+    'gco.gstudios@gmail.com'
+];
+
 function isAuthorized(email) {
-    return email && email.endsWith('@grouvex.com');
+    return authorizedEmails.includes(email);
 }
 
 // ============================================
