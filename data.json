@@ -1,8 +1,8 @@
 {
   "metadata": {
     "title": "Documentos Oficiales Grouvex Studios (DDOO)",
-    "lastUpdated": 1748649600,
-    "version": "1.0.0",
+    "lastUpdated": 1766261700,
+    "version": "1.2.0",
     "issn": "BOGS/2025/001"
   },
   "documents": [
@@ -10,89 +10,370 @@
       "id": "bogs-001-2025",
       "organism": "grouvex",
       "type": "bo",
-      "title": "B.O.Grouvex Studios",
+      "title": "B.O. Grouvex Studios",
       "reference": "BOGS/2025/001",
       "date": 1748649600,
-      "description": "Boletín Oficial de Grouvex Studios - Núm. 001/2025. Contiene disposiciones generales, términos de servicio, sistema de continuidad operacional y anexos.",
-      "version": 1,
-      "tags": ["boletín oficial", "disposiciones generales", "términos de servicio", "privacidad", "GCO"],
+      "description": "Boletín Oficial de Grouvex Studios - Núm. 001/2025. Contiene disposiciones generales, términos de servicio, sistema de continuidad operacional, anexos y plantilla oficial.",
+      "version": 4,
+      "tags": [
+        "boletín oficial",
+        "disposiciones generales",
+        "términos de servicio",
+        "privacidad",
+        "GCO",
+        "TIGS",
+        "insignias"
+      ],
       "structure": [
         {
           "type": "metadata",
           "items": [
-            {"label": "Referencia", "value": "BOGS/2025/001", "icon": "fa-hashtag"},
-            {"label": "Tipo", "value": "Boletín Oficial", "icon": "fa-tag"},
-            {"label": "Organismo", "value": "Grouvex Studios", "icon": "fa-building"},
-            {"label": "Fecha", "value": "31 de mayo de 2025", "icon": "fa-calendar-alt"},
-            {"label": "Versión", "value": "1", "icon": "fa-code-branch"},
-            {"label": "ISSN", "value": "BOGS/2025/001", "icon": "fa-barcode"}
+            {
+              "label": "Referencia",
+              "value": "BOGS/2025/001",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Boletín Oficial",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios",
+              "icon": "fa-building"
+            },
+            {
+              "label": "Fecha de Emisión",
+              "value": "31 may 2025 12:00 UTC",
+              "icon": "fa-calendar-alt"
+            },
+            {
+              "label": "Última Actualización",
+              "value": "22 nov 2025 20:15 UTC",
+              "icon": "fa-clock"
+            },
+            {
+              "label": "Fecha de Entrada en Vigor",
+              "value": "8 ago 2025 0:00 UTC",
+              "icon": "fa-gavel"
+            },
+            {
+              "label": "Fecha de Revisión",
+              "value": "20 dic 2025 18:00 UTC",
+              "icon": "fa-calendar-check"
+            },
+            {
+              "label": "Versión",
+              "value": "4",
+              "icon": "fa-code-branch"
+            },
+            {
+              "label": "ISSN",
+              "value": "BOGS/2025/001",
+              "icon": "fa-barcode"
+            }
           ]
+        },
+        {
+          "type": "aviso-legal",
+          "content": "El presente boletín forma parte del archivo oficial de Documentos Oficiales de Grouvex Studios y debe conservarse según lo establecido en el Artículo 20 del Reglamento de Documentación Corporativa."
         },
         {
           "type": "sumario",
           "titulo": "SUMARIO",
           "items": [
-            {"texto": "TÍTULO I. DISPOSICIONES GENERALES", "id": "titulo-1"},
-            {"texto": "DISPOSICIÓN BOGS/2025/002", "id": "disposicion-002"},
-            {"texto": "Capítulo I. ORGANISMOS, DEFINICIONES Y NOMENCLATURAS ESENCIALES", "id": "capitulo-1"},
-            {"texto": "Sección I. Organismo Principal y Secundarios", "id": "seccion-1-1"},
-            {"texto": "Artículo 1. Nombre del Organismo Principal", "id": "articulo-1"},
-            {"texto": "Artículo 2. Definición del Organismo Principal", "id": "articulo-2"},
-            {"texto": "Artículo 3. Miembros del Organismo, Funciones y Contactos", "id": "articulo-3"},
-            {"texto": "Artículo 4. Organización del equipo de los Organismos y Contactos", "id": "articulo-4"},
-            {"texto": "Artículo 5. Nombres de los Organismos Secundarios", "id": "articulo-5"},
-            {"texto": "Artículo 6. Definiciones de los Organismos Secundarios", "id": "articulo-6"},
-            {"texto": "Artículo 7. Organización del equipo de los Sub-Organismos y Contactos", "id": "articulo-7"},
-            {"texto": "Artículo 8. Definición de Boletín Oficial y Función", "id": "articulo-8"},
-            {"texto": "Artículo 9. Definición de Noticias Oficiales y Función", "id": "articulo-9"},
-            {"texto": "Artículo 10. Nomenclaturas Principales", "id": "articulo-10"},
-            {"texto": "Capítulo II. TÉRMINOS DE SERVICIO Y POLÍTICAS DE PRIVACIDAD GENERALES", "id": "capitulo-2"},
-            {"texto": "Sección I. Definiciones y Principios Rectores", "id": "seccion-2-1"},
-            {"texto": "Artículo 11. Objeto", "id": "articulo-11"},
-            {"texto": "Artículo 12. Ámbito de Aplicación", "id": "articulo-12"},
-            {"texto": "Artículo 13. Principios Fundamentales", "id": "articulo-13"},
-            {"texto": "Artículo 14. Relación con las Normas Generales", "id": "articulo-14"},
-            {"texto": "Artículo 15. Referencia Integral", "id": "articulo-15"},
-            {"texto": "Artículo 16. Uso de los todos los servicios de Grouvex Studios", "id": "articulo-16"},
-            {"texto": "Artículo 17. Confidencialidad y Protección de Datos", "id": "articulo-17"},
-            {"texto": "Capítulo III. Disposiciones técnicas", "id": "capitulo-3"},
-            {"texto": "Sección I. Regulaciones", "id": "seccion-3-1"},
-            {"texto": "Artículo 18. Suspensión de Artículos, Secciones, Capítulos, Títulos, Documentos", "id": "articulo-18"},
-            {"texto": "Artículo 19. Denominación de Versiones y Restauración", "id": "articulo-19"},
-            {"texto": "Sección II. Reglamento de Documentación Corporativa", "id": "seccion-3-2"},
-            {"texto": "Artículo 20. Gestión, Renovación y Conservación de Documentos", "id": "articulo-20"},
-            {"texto": "Capítulo IV. Recursos humanos", "id": "capitulo-4"},
-            {"texto": "Sección I. Equipos", "id": "seccion-4-1"},
-            {"texto": "Artículo 21. Proceso de Selección y Acceso al Equipo", "id": "articulo-21"},
-            {"texto": "Sección II. Insignias y Reconocimientos de Perfil", "id": "seccion-4-2"},
-            {"texto": "Artículo 22. Insignias comunes de perfil", "id": "articulo-22"},
-            {"texto": "Artículo 23. Insignias del Equipo", "id": "articulo-23"},
-            {"texto": "Sección III. Tarjeta de Identidad de Grouvex Studios (TIGS)", "id": "seccion-4-3"},
-            {"texto": "Artículo 24. Definición de TIGS", "id": "articulo-24"},
-            {"texto": "Artículo 25. Uso de TIGS en todo Grouvex Studios", "id": "articulo-25"},
-            {"texto": "Artículo 26. Modelos y Elementos de la TIGS", "id": "articulo-26"},
-            {"texto": "Artículo 27. Oposición a la Revelación de Datos Personales", "id": "articulo-27"},
-            {"texto": "Capítulo V. DISPOSICIONES FINALES", "id": "capitulo-5"},
-            {"texto": "TÍTULO II. DE LA GESTIÓN DE LA CONTINUIDAD OPERACIONAL", "id": "titulo-2"},
-            {"texto": "Capítulo VI. DEL SISTEMA DE GESTIÓN DE CONTINUIDAD OPERACIONAL (GCO)", "id": "capitulo-6"},
-            {"texto": "Artículo 28. Definición y Objeto del Sistema", "id": "articulo-28"},
-            {"texto": "Artículo 29. Potestades Extraordinarias del Sistema GCO", "id": "articulo-29"},
-            {"texto": "Artículo 30. Niveles de Alerta y Respuesta del Sistema GCO", "id": "articulo-30"},
-            {"texto": "Artículo 31. Causas de Activación y Detalle", "id": "articulo-31"},
-            {"texto": "Artículo 32. De la Implementación de Sistemas Automáticos y Tecnológicos", "id": "articulo-32"},
-            {"texto": "Artículo 33. Disposiciones Generales y Retorno a la Normalidad", "id": "articulo-33"},
-            {"texto": "TÍTULO III. Comunicados Transitorios", "id": "titulo-3"},
-            {"texto": "Edicto BOGS/2025/001. Suspensión del Boletín Oficial de Grouvex Studios", "id": "edicto-001"},
-            {"texto": "Edicto BOGS/2025/002. Suspensión del Boletín Oficial de GSRecords", "id": "edicto-002"},
-            {"texto": "TÍTULO IV. GROUVEX STUDIOS", "id": "titulo-4"},
-            {"texto": "DISPOSICIÓN BOGS/2025/004", "id": "disposicion-004"},
-            {"texto": "Anexo I: Términos de Servicio y Políticas de Privacidad Generales", "id": "anexo-1"}
+            {
+              "texto": "TÍTULO I. DISPOSICIONES GENERALES",
+              "id": "titulo-I"
+            },
+            {
+              "texto": "DISPOSICIÓN BOGS/2025/002",
+              "referencia": "BOGS/2025/002",
+              "id": "disposicion-002"
+            },
+            {
+              "texto": "Capítulo I. ORGANISMOS, DEFINICIONES Y NOMENCLATURAS ESENCIALES",
+              "id": "capitulo-I"
+            },
+            {
+              "texto": "Sección I. Organismo Principal y Secundarios",
+              "id": "seccion-I-1"
+            },
+            {
+              "texto": "Artículo 1. Nombre del Organismo Principal",
+              "id": "articulo-1"
+            },
+            {
+              "texto": "Artículo 2. Definición del Organismo Principal",
+              "id": "articulo-2"
+            },
+            {
+              "texto": "Artículo 3. Miembros del Organismo, Funciones y Contactos",
+              "id": "articulo-3"
+            },
+            {
+              "texto": "Artículo 4. Organización del equipo de los Organismos y Contactos",
+              "id": "articulo-4"
+            },
+            {
+              "texto": "Artículo 5. Nombres de los Organismos Secundarios",
+              "id": "articulo-5"
+            },
+            {
+              "texto": "Artículo 6. Definiciones de los Organismos Secundarios",
+              "id": "articulo-6"
+            },
+            {
+              "texto": "Artículo 7. Organización del equipo de los Sub-Organismos y Contactos",
+              "id": "articulo-7"
+            },
+            {
+              "texto": "Artículo 8. Definición de Boletín Oficial y Función",
+              "id": "articulo-8"
+            },
+            {
+              "texto": "Artículo 9. Definición de Noticias Oficiales y Función",
+              "id": "articulo-9"
+            },
+            {
+              "texto": "Artículo 10. Nomenclaturas Principales",
+              "id": "articulo-10"
+            },
+            {
+              "texto": "Capítulo II. TÉRMINOS DE SERVICIO Y POLÍTICAS DE PRIVACIDAD GENERALES",
+              "id": "capitulo-II"
+            },
+            {
+              "texto": "Sección I. Definiciones y Principios Rectores",
+              "id": "seccion-II-1"
+            },
+            {
+              "texto": "Artículo 11. Objeto",
+              "id": "articulo-11"
+            },
+            {
+              "texto": "Artículo 12. Ámbito de Aplicación",
+              "id": "articulo-12"
+            },
+            {
+              "texto": "Artículo 13. Principios Fundamentales",
+              "id": "articulo-13"
+            },
+            {
+              "texto": "Artículo 14. Relación con las Normas Generales",
+              "id": "articulo-14"
+            },
+            {
+              "texto": "Artículo 15. Referencia Integral",
+              "id": "articulo-15"
+            },
+            {
+              "texto": "Artículo 16. Uso de los todos los servicios de Grouvex Studios",
+              "id": "articulo-16"
+            },
+            {
+              "texto": "Artículo 17. Confidencialidad y Protección de Datos",
+              "id": "articulo-17"
+            },
+            {
+              "texto": "Capítulo III. Disposiciones técnicas",
+              "id": "capitulo-III"
+            },
+            {
+              "texto": "Sección I. Regulaciones",
+              "id": "seccion-III-1"
+            },
+            {
+              "texto": "Artículo 18. Suspensión de Artículos, Secciones, Capítulos, Títulos, Documentos",
+              "id": "articulo-18"
+            },
+            {
+              "texto": "Artículo 19. Denominación de Versiones y Restauración",
+              "id": "articulo-19"
+            },
+            {
+              "texto": "Sección II. Reglamento de Documentación Corporativa - Normativa General de Modificación de los Términos",
+              "id": "seccion-III-2"
+            },
+            {
+              "texto": "Artículo 20. Gestión, Renovación y Conservación de Documentos Oficiales de Grouvex Studios",
+              "id": "articulo-20"
+            },
+            {
+              "texto": "Art. 20.1. Objeto y Ámbito de Aplicación",
+              "id": "articulo-20-1"
+            },
+            {
+              "texto": "Art. 20.2. Proceso de Revisión y Renovación Periódica",
+              "id": "articulo-20-2"
+            },
+            {
+              "texto": "Art. 20.3. Conservación y Archivo Documental",
+              "id": "articulo-20-3"
+            },
+            {
+              "texto": "Art. 20.4. Modificaciones Documentales y Notificación",
+              "id": "articulo-20-4"
+            },
+            {
+              "texto": "Capítulo IV. Recursos humanos",
+              "id": "capitulo-IV"
+            },
+            {
+              "texto": "Sección I. Equipos",
+              "id": "seccion-IV-1"
+            },
+            {
+              "texto": "Artículo 21. Proceso de Selección y Acceso al Equipo",
+              "id": "articulo-21"
+            },
+            {
+              "texto": "Sección II. Insignias y Reconocimientos de Perfil",
+              "id": "seccion-IV-2"
+            },
+            {
+              "texto": "Artículo 22. Insignias comunes de perfil",
+              "id": "articulo-22"
+            },
+            {
+              "texto": "22.1. Insignias de Cazador de Errores",
+              "id": "articulo-22-1"
+            },
+            {
+              "texto": "22.2. Insignias de Desarrolladores o Programadores",
+              "id": "articulo-22-2"
+            },
+            {
+              "texto": "22.3. Insignias de Socios (Partners)",
+              "id": "articulo-22-3"
+            },
+            {
+              "texto": "Artículo 23. Insignias del Equipo",
+              "id": "articulo-23"
+            },
+            {
+              "texto": "23.1. Insignias del Equipo de Moderación",
+              "id": "articulo-23-1"
+            },
+            {
+              "texto": "23.2. Insignias del Equipo de Administradores/Jefe",
+              "id": "articulo-23-2"
+            },
+            {
+              "texto": "23.3. Insignias del Equipo de Propietarios",
+              "id": "articulo-23-3"
+            },
+            {
+              "texto": "Sección III. Tarjeta de Identidad de Grouvex Studios (TIGS)",
+              "id": "seccion-IV-3"
+            },
+            {
+              "texto": "Artículo 24. Definición de TIGS",
+              "id": "articulo-24"
+            },
+            {
+              "texto": "Artículo 25. Uso de TIGS en todo Grouvex Studios",
+              "id": "articulo-25"
+            },
+            {
+              "texto": "25.1. Nivel de Acceso y Uso Interno (Información Completa)",
+              "id": "articulo-25-1"
+            },
+            {
+              "texto": "Artículo 26. Modelos y Elementos de la TIGS",
+              "id": "articulo-26"
+            },
+            {
+              "texto": "26.1. Modelo del TIGS - Versión 1 (Emisión y Entrada en Vigor: 8 ago 2025 0:00 UTC)",
+              "id": "articulo-26-1"
+            },
+            {
+              "texto": "Artículo 27. Oposición a la Revelación de Datos Personales",
+              "id": "articulo-27"
+            },
+            {
+              "texto": "Capítulo V. DISPOSICIONES FINALES",
+              "id": "capitulo-V"
+            },
+            {
+              "texto": "Historial de Modificaciones",
+              "id": "historial-bogs"
+            },
+            {
+              "texto": "TÍTULO II. DE LA GESTIÓN DE LA CONTINUIDAD OPERACIONAL",
+              "id": "titulo-II"
+            },
+            {
+              "texto": "Capítulo VI. DEL SISTEMA DE GESTIÓN DE CONTINUIDAD OPERACIONAL (GCO)",
+              "id": "capitulo-VI"
+            },
+            {
+              "texto": "Artículo 28. Definición y Objeto del Sistema",
+              "id": "articulo-28"
+            },
+            {
+              "texto": "Artículo 29. Potestades Extraordinarias del Sistema GCO",
+              "id": "articulo-29"
+            },
+            {
+              "texto": "Artículo 30. Niveles de Alerta y Respuesta del Sistema GCO",
+              "id": "articulo-30"
+            },
+            {
+              "texto": "Artículo 31. Causas de Activación y Detalle",
+              "id": "articulo-31"
+            },
+            {
+              "texto": "Artículo 32. De la Implementación de Sistemas Automáticos y Tecnológicos",
+              "id": "articulo-32"
+            },
+            {
+              "texto": "Artículo 33. Disposiciones Generales y Retorno a la Normalidad",
+              "id": "articulo-33"
+            },
+            {
+              "texto": "TÍTULO III. Comunicados Transitorios",
+              "id": "titulo-III"
+            },
+            {
+              "texto": "Edicto BOGS/2025/002. Suspensión del Boletín Oficial de Grouvex Studios Records temporalmente",
+              "id": "edicto-002"
+            },
+            {
+              "texto": "Edicto BOGS/2025/001. Suspensión del Boletín Oficial de Grouvex Studios temporalmente",
+              "id": "edicto-001"
+            },
+            {
+              "texto": "TÍTULO IV. ANEXOS",
+              "id": "titulo-IV"
+            },
+            {
+              "texto": "DISPOSICIÓN BOGS/2025/004",
+              "id": "disposicion-004"
+            },
+            {
+              "texto": "Anexo I: Términos de Servicio y Políticas de Privacidad Generales",
+              "id": "anexo-I"
+            },
+            {
+              "texto": "CIERRE",
+              "id": "cierre-bogs"
+            }
           ]
+        },
+        {
+          "type": "nota",
+          "content": "En caso de que al presionar en uno de los contenidos del sumario no funcione, si se encuentra en un ordenador o pc, use Ctrl + F. En caso de estar en un dispositivo móvil, seleccione los tres puntos que aparecen arriba en la parte derecha y ahí podrá encontrar Buscar en la Página."
         },
         {
           "type": "titulo",
           "numero": "I",
           "content": "DISPOSICIONES GENERALES"
+        },
+        {
+          "type": "descripcion-seccion",
+          "content": "Esta sección incluye normativas internas, políticas, reglamentos y acuerdos corporativos. Aquí se establecen o modifican las reglas de la empresa."
         },
         {
           "type": "disposicion",
@@ -195,6 +476,10 @@
           ]
         },
         {
+          "type": "parrafo",
+          "content": "Para una explicación más exhaustiva de las funciones y responsabilidades del Sistema y el Equipo, se remitirá al Anexo III del presente documento."
+        },
+        {
           "type": "articulo",
           "numero": "8",
           "content": "Definición de Boletín Oficial y Función"
@@ -291,6 +576,29 @@
           ]
         },
         {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Uso ilegal o fraudulento de la plataforma.",
+            "Suplantación de identidad o difusión de información falsa."
+          ]
+        },
+        {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Moderación de contenido.",
+            "Aplicación de sanciones progresivas (advertencia, suspensión, expulsión)."
+          ]
+        },
+        {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Según el Estatuto de los Trabajadores, se establece un mínimo de 30 días naturales de vacaciones anuales retribuidas por año trabajado. (Artículo 38 del Estatuto de los Trabajadores)"
+          ]
+        },
+        {
           "type": "articulo",
           "numero": "14",
           "content": "Relación con las Normas Generales"
@@ -300,7 +608,7 @@
           "tipo": "numerada",
           "items": [
             "Las presentes normas específicas de los Sub Organismos desarrollan lo establecido en el Capítulo I. En caso de conflicto, prevalecen los Términos y Políticas Generales (Capítulo II).",
-            "Excepciones: Solo aplican si se mencionan explícitamente."
+            "Excepciones: Solo aplican si se mencionan explícitamente (ej: \"El Artículo 5.3 deroga el Artículo 2.2 para Records\")."
           ]
         },
         {
@@ -327,13 +635,18 @@
           "content": "Todo usuario que desee participar en cualquier sección de Grouvex Studios ha de estar registrado en Grouvex Studios o tener Grouvex Studios Usuario Documento de Identidad (en adelante Tarjeta de Identidad o TIGS) para realizar todo aquello que desea en la sección."
         },
         {
+          "type": "nota-pie",
+          "referencia": "3",
+          "content": "Sección: se denomina sección a todas las subcategorías de Grouvex Studios, como por ejemplo Grouvex Studios Records."
+        },
+        {
           "type": "articulo",
           "numero": "17",
           "content": "Confidencialidad y Protección de Datos"
         },
         {
           "type": "parrafo",
-          "content": "Grouvex Studios se compromete a garantizar la máxima confidencialidad y la protección de los datos personales y la información sensible de sus artistas, empleados, colaboradores y socios. Toda la información obtenida en el marco de las actividades de la compañía, incluyendo, pero no limitado a, datos personales, información técnica, proyectos musicales, estrategias comerciales y cualquier otro dato considerado confidencial, será tratada con la debida diligencia y conforme a la legislación vigente en materia de protección de datos."
+          "content": "Grouvex Studios se compromete a garantizar la máxima confidencialidad y la protección de los datos personales y la información sensible de sus artistas, empleados, colaboradores y socios. Toda la información obtenida en el marco de las actividades de la compañía, incluyendo, pero no limitado a, datos personales, información técnica, proyectos musicales, estrategias comerciales y cualquier otro dato considerado confidencial, será tratada con la debida diligencia y conforme a la legislación vigente en materia de protección de datos. Se implementarán las medidas técnicas y organizativas necesarias para prevenir el acceso no autorizado, la divulgación, alteración o destrucción de dicha información. La violación de esta política de confidencialidad por parte de cualquier miembro o tercero asociado a Grouvex Studios será motivo de las acciones legales y disciplinarias que correspondan. El compromiso con la privacidad y la seguridad de la información es un pilar fundamental en la relación de confianza entre Grouvex Studios y todas las partes involucradas."
         },
         {
           "type": "capitulo",
@@ -361,7 +674,7 @@
         },
         {
           "type": "parrafo",
-          "content": "Las versiones se denominan de la siguiente manera: TÍTULO X + X BOGS/YYYY/YYYY + Capítulo X + Sección X + Artículo Y + Anexo X. En orden, y en caso de que alguna parte no se modifique, no se menciona."
+          "content": "Las versiones se denominan de la siguiente manera: TÍTULO X + X BOGS/YYYY/YYYY + Capítulo X + Sección X + Artículo Y + Anexo X. En orden, y en caso de que alguna parte no se modifique, no se menciona. Tal que quedaría así: TÍTULO I + DISPOSICIÓN BOGS/2025/002 + Capítulo I + Sección I + Artículo 1. Siendo Y un valor numérico, y X un valor numérico romano."
         },
         {
           "type": "seccion",
@@ -380,7 +693,7 @@
         },
         {
           "type": "parrafo",
-          "content": "El presente artículo establece las directrices y procedimientos obligatorios para la gestión integral de todos los documentos de carácter oficial emitidos por Grouvex Studios. Esto incluye, a título enunciativo y no limitativo, boletines internos, actas de reuniones, reglamentos internos, políticas, procedimientos operativos, y cualquier otra documentación que genere obligaciones o establezca derechos para la compañía o sus miembros."
+          "content": "El presente artículo establece las directrices y procedimientos obligatorios para la gestión integral de todos los documentos de carácter oficial emitidos por Grouvex Studios. Esto incluye, a título enunciativo y no limitativo, boletines internos, actas de reuniones, reglamentos internos, políticas, procedimientos operativos, y cualquier otra documentación que genere obligaciones o establezca derechos para la compañía o sus miembros. El objetivo primordial es garantizar la vigencia, relevancia, exactitud e integridad de la información contenida en dichos documentos, así como su accesibilidad y disponibilidad permanente para fines operativos, de auditoría interna o externa, y para el estricto cumplimiento de las normativas legales y regulatorias aplicables."
         },
         {
           "type": "articulo",
@@ -389,7 +702,7 @@
         },
         {
           "type": "parrafo",
-          "content": "Todos los documentos oficiales descritos en el apartado 20.1 serán sometidos a un proceso de revisión sistemática y, en su caso, de renovación o actualización, con una periodicidad máxima de veintiséis (26) semanas."
+          "content": "Todos los documentos oficiales descritos en el apartado 20.1 serán sometidos a un proceso de revisión sistemática y, en su caso, de renovación o actualización, con una periodicidad máxima de veintiséis (26) semanas. Este ciclo periódico asegura que la documentación de Grouvex Studios refleje en todo momento los procedimientos, políticas y requisitos legales y operativos más actuales. La responsabilidad de la ejecución de este proceso recaerá en el departamento o la unidad funcional que ostente la titularidad del documento, bajo la supervisión de la Dirección."
         },
         {
           "type": "articulo",
@@ -398,7 +711,7 @@
         },
         {
           "type": "parrafo",
-          "content": "La conservación de los documentos oficiales se realizará en estricta conformidad con los protocolos internos de archivo y gestión documental de Grouvex Studios, los cuales garantizarán su integridad, autenticidad, confidencialidad y disponibilidad a lo largo de su ciclo de vida."
+          "content": "La conservación de los documentos oficiales se realizará en estricta conformidad con los protocolos internos de archivo y gestión documental de Grouvex Studios, los cuales garantizarán su integridad, autenticidad, confidencialidad y disponibilidad a lo largo de su ciclo de vida. Se establecerán períodos de retención específicos para cada tipo de documento, fundamentados en su valor operacional, histórico y en las obligaciones legales o regulatorias que le sean aplicables. El almacenamiento se efectuará en medios seguros que impidan cualquier alteración no autorizada, pérdida o acceso indebido. La disposición final de los documentos (eliminación segura o archivo permanente) se realizará de acuerdo con la legislación vigente y las políticas internas de la compañía, conservando un registro de su histórico y versiones anteriores."
         },
         {
           "type": "articulo",
@@ -409,8 +722,8 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Modificaciones de Importancia Crítica: Se notificará a los miembros afectados mediante un preaviso no inferior a veinticuatro (24) horas antes de la entrada en vigor.",
-            "Decisiones de Gestión y Liderazgo: Las decisiones bajo responsabilidad directa de gestores o jefes de equipo podrán ser comunicadas con un preaviso no inferior a doce (12) horas."
+            "Modificaciones de Importancia Crítica: En aquellos casos donde se requiera la modificación de documentos oficiales por razones de importancia crítica o urgencia que afecten sustancialmente la operación o la estructura de Grouvex Studios, la compañía se reserva el derecho de implementar dichas modificaciones. Se notificará a los miembros afectados mediante un preaviso no inferior a veinticuatro (24) horas antes de la entrada en vigor de la modificación.",
+            "Decisiones de Gestión y Liderazgo: Las decisiones que impliquen modificaciones a documentos o procedimientos bajo la esfera de responsabilidad directa de gestores o jefes de equipo podrán ser comunicadas con un preaviso no inferior a doce (12) horas a los miembros directamente involucrados."
           ]
         },
         {
@@ -432,11 +745,11 @@
           "type": "lista",
           "tipo": "simple",
           "items": [
-            "Objeto y Ámbito: El acceso a los equipos y organismos de Grouvex Studios se realizará exclusivamente a través de un proceso de selección formal y estandarizado.",
-            "Metodología: El proceso de selección podrá comprender formularios de solicitud, entrevistas y pruebas de habilidades.",
-            "Libertad de Selección: Cada organismo secundario gozará de autonomía para la selección final de sus miembros.",
-            "Finalidad: Evaluar la idoneidad, capacidad técnica y alineación con los valores corporativos.",
-            "Protección de Datos: La recopilación y tratamiento de datos se regirá por las políticas de privacidad."
+            "Objeto y Ámbito. El acceso a los equipos y organismos de Grouvex Studios, incluidos sus organismos secundarios (definido en Artículo 5 del presente reglamento), se realizará exclusivamente a través de un proceso de selección formal y estandarizado. Este artículo establece la base legal de dicho procedimiento.",
+            "Metodología. El proceso de selección podrá comprender, sin limitarse a ello, la presentación y análisis de formularios de solicitud, la realización de entrevistas personales u online, técnicas o grupales, y la ejecución de pruebas de habilidades y aptitudes específicas para el puesto. Grouvex Studios se reserva el derecho de adaptar las fases del proceso según las particularidades de cada posición vacante.",
+            "Libertad de Selección de Organismos Secundarios. No obstante lo dispuesto en el punto 1, cada organismo secundario (definido en Artículo 5 del presente reglamento) gozará de autonomía para la selección final de sus miembros, siempre y cuando el proceso se adhiera a los criterios de acceso estipulados en el Artículo 22 del presente reglamento.",
+            "Finalidad. La finalidad primordial del proceso de selección es evaluar la idoneidad, la capacidad técnica y la alineación del candidato con los valores corporativos de Grouvex Studios. La decisión final se basará en la valoración de estos elementos, en concordancia con las necesidades operativas y estratégicas del puesto y del organismo al que el aspirante desee acceder.",
+            "Protección de Datos. La recopilación, el almacenamiento y el tratamiento de los datos personales proporcionados por los solicitantes se regirán por las políticas de privacidad de Grouvex Studios y se llevarán a cabo en estricto cumplimiento de lo establecido en el Anexo I del presente documento."
           ]
         },
         {
@@ -454,6 +767,14 @@
           "content": "Insignias comunes de perfil"
         },
         {
+          "type": "parrafo",
+          "content": "Cuando un usuario está registrado en la Base de Datos y el estado sea aprobado (Solo se obtiene 1 vez por usuario)."
+        },
+        {
+          "type": "parrafo",
+          "content": "Si el usuario tiene el Plan Estándar o superior"
+        },
+        {
           "type": "articulo",
           "numero": "22.1",
           "content": "Insignias de Cazador de Errores"
@@ -463,7 +784,7 @@
           "tipo": "simple",
           "items": [
             "Debes identificar errores de código, y reportarlo en GitHub Grouvex Studios",
-            "Los mismos requisitos, pero ayudando y siendo más activo. Actividad constante.",
+            "Los mismos requisitos que , pero ayudando a y siendo más activo. Actividad constante.",
             "Cazador de Errores Experto."
           ]
         },
@@ -477,7 +798,7 @@
           "tipo": "simple",
           "items": [
             "Se otorga a las personas que modifican o crean un código para mejorar página web",
-            "Los mismos requisitos, pero estos además de tener más experiencia, realizan más cosas de código fuera de la página web"
+            "Los mismos requisitos que , pero estos además de tener más experiencia, realizan más cosas de código fuera de la página web"
           ]
         },
         {
@@ -489,14 +810,18 @@
           "type": "lista",
           "tipo": "simple",
           "items": [
-            "Por lo que se ve, eres socio de Grouvex Studios desde hace 1 año, y eso ha tenido que implicar que apoyes a Grouvex Studios, así como todos sus proyectos y miembros.",
-            "Por lo que se ve, eres socio de Grouvex Studios desde hace tiempo (1 año mínimo), y eso ha tenido que implicar que apoyes a Grouvex Studios, así como todos sus proyectos y miembros."
+            "Por lo que se ve, eres socio de Grouvex Studios desde hace 1 año, y eso ha tenido que implicar que apoyes a Grouvex Studios, así como todos sus proyectos y miembros. Esto te puede traer buena suerte en el futuro, para ciertas cosas como descuentos.",
+            "Por lo que se ve, eres socio de Grouvex Studios desde hace tiempo (1 año mínimo como ), y eso ha tenido que implicar que apoyes a Grouvex Studios, así como todos sus proyectos y miembros. Esto te va a traer buena suerte en el futuro, para ciertas cosas como descuentos mayores, regalos y otras cosas. ¡No te vayas por favor!"
           ]
         },
         {
           "type": "articulo",
           "numero": "23",
           "content": "Insignias del Equipo"
+        },
+        {
+          "type": "parrafo",
+          "content": "Cuando un usuario está registrado en la Página Web y el equipo de Grouvex Studios aprueba al miembro"
         },
         {
           "type": "articulo",
@@ -508,8 +833,8 @@
           "tipo": "simple",
           "items": [
             "A parte de realizar un test para entrar a moderador. Colabora con en lo que necesiten así como atender a los miembros como Soporte.",
-            "Velar por la seguridad de los miembros, así como satisfacer a los miembros con asuntos de Grouvex Studios.",
-            "Los mismos requisitos, realizar algún tema de administración y ser más activo. Actividad constante."
+            "Velar por la seguridad de los miembros, así como satisfacer a los miembros con asuntos de Grouvex Studios (Y sus derivadas). (Está insignia se puede otorgar por voto (aprobación de 2/5) de aquellos miembros que tengan , , o . El voto es de un 50%, / un 30% y / un 20%)",
+            "Los mismos requisitos que , realizar algún tema de administración y ser más activo. Actividad constante. (Está insignia se puede otorgar por voto (aprobación de 3/5) de aquellos miembros que tengan o"
           ]
         },
         {
@@ -521,9 +846,9 @@
           "type": "lista",
           "tipo": "simple",
           "items": [
-            "Tener la insignia.",
-            "Los mismos requisitos, tener experiencia en Grouvex Studios.",
-            "Todos los requisitos anteriores. Estos son los jefes de un equipo. También es el símbolo del sistema."
+            "Tener la insignia . (Está insignia se puede otorgar por voto (aprobación de 4/5) de aquellos miembros que tengan o . El voto de un 40% y el de un 60%)",
+            "Los mismos requisitos que , tener experiencia en Grouvex Studios (Y sus derivadas).",
+            "Todos los requisitos anteriores. Estos son los jefes de un equipo. También es el símbolo del sistema. (Así como portavoces de los equipos)"
           ]
         },
         {
@@ -563,10 +888,10 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Naturaleza y Objeto: La Tarjeta de Identidad de Grouvex Studios (TIGS) es el documento oficial e intransferible emitido por la Dirección General de Grouvex Studios.",
-            "Validez: La TIGS goza de plena validez y reconocimiento oficial en todos los organismos, suborganismos, departamentos y proyectos.",
-            "Titulares: Será titular de la TIGS todo miembro que posea un cargo o una posición acreditada.",
-            "Estado: La TIGS mantendrá su validez mientras el estado del titular en el Registro de Miembros se encuentre como \"Aprobado\"."
+            "Naturaleza y Objeto: La Tarjeta de Identidad de Grouvex Studios (TIGS) es el documento oficial e intransferible emitido por la Dirección General de Grouvex Studios o el organismo delegado, cuyo objeto es acreditar de forma fehaciente la identidad del titular y su pertenencia a la estructura corporativa.",
+            "Validez: La TIGS goza de plena validez y reconocimiento oficial en todos los organismos, suborganismos, departamentos y proyectos que componen la estructura de Grouvex Studios.",
+            "Titulares: Será titular de la TIGS todo miembro que posea un cargo o una posición acreditada dentro del organigrama de Grouvex Studios, incluyendo a Directores, Administradores, Moderadores y personal con acceso privilegiado a sistemas y documentación.",
+            "Estado: La TIGS mantendrá su validez mientras el estado del titular en el Registro de Miembros se encuentre como \"Aprobado\", quedando automáticamente suspendida en caso de \"Denegada\", \"Modificar\", \"Suspendido\", \"En Espera\" o \"Pendiente\"."
           ]
         },
         {
@@ -578,10 +903,10 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Uso Obligatorio: El uso de la TIGS es obligatorio para todos los titulares acreditados.",
-            "Acreditación de Acceso: La TIGS constituye un requisito indispensable para el acceso a instalaciones físicas, sistemas de información internos, etc.",
-            "Interacción Oficial: El titular deberá presentar su TIGS al interactuar con otros miembros del equipo o con usuarios externos.",
-            "Denegación de Servicio: La negativa a presentar la TIGS puede dar lugar a la denegación inmediata del acceso."
+            "Uso Obligatorio: El uso de la TIGS es obligatorio para todos los titulares acreditados y debe ser presentada siempre que se requiera acreditar la identidad, posición o autoridad dentro del marco operativo de Grouvex Studios.",
+            "Acreditación de Acceso: La TIGS constituye un requisito indispensable para el acceso a instalaciones físicas, sistemas de información internos, plataformas de gestión, bases de datos confidenciales y cualquier otra herramienta exclusiva de la organización.",
+            "Interacción Oficial: El titular deberá presentar su TIGS al interactuar con otros miembros del equipo o con usuarios externos en nombre de Grouvex Studios para validar su posición y la autoridad delegada en el desempeño de sus funciones.",
+            "Denegación de Servicio: La negativa a presentar la TIGS o la presentación de una tarjeta cuyo estado figure como \"Denegada\", \"Modificar\", \"Suspendido\", \"En Espera\" o \"Pendiente\" puede dar lugar a la denegación inmediata del acceso a sistemas o de la acreditación de la posición, sin perjuicio de las responsabilidades disciplinarias que pudieran corresponder."
           ]
         },
         {
@@ -590,13 +915,17 @@
           "content": "Nivel de Acceso y Uso Interno (Información Completa)"
         },
         {
+          "type": "parrafo",
+          "content": "Este nivel contiene todos los datos para la gestión interna y acceso a sistemas, y solo es visible por los sistemas de gestión y la Dirección General."
+        },
+        {
           "type": "lista",
           "tipo": "numerada",
           "items": [
             "Identificación Completa: Nombre y Apellidos (Dato Sensible).",
-            "Posición y Organismo: Posición Principal y suborganismo.",
-            "Fechas de Inscripción/Revisión (Dato Sensible).",
-            "Código Único y Estado: Código de Identificación Único y Estado."
+            "Posición y Organismo: Posición Principal (ej. Administrador, Director Ejecutivo) y suborganismo (ej. GSRecords).",
+            "Fechas de Inscripción/Revisión (Dato Sensible): Fecha de Inscripción y última revisión del estado.",
+            "Código Único y Estado: Código de Identificación Único y Estado (Activo, Suspendido)."
           ]
         },
         {
@@ -613,16 +942,22 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Logo Oficial de todo Grouvex Studios.",
+            "Logo Oficial de todo Grouvex Studios. Este símbolo define que este documento es oficial en cualquier parte del mundo.",
             "Logotipo y texto para identificar qué es la tarjeta de identidad.",
             "Logo Oficial de Grouvex Studios y sus organismos secundarios.",
             "El valor de identificación del usuario.",
-            "La verificación de que el usuario es un usuario o un miembro.",
-            "Imagen del usuario.",
-            "Datos del Usuario (Apellidos, Nombre, Emisión, Caducidad, Nacimiento).",
-            "Las insignias que el usuario tiene.",
-            "La firma del usuario.",
-            "Logo Oficial del servicio de AidWorks."
+            "La verificación de que el usuario es un usuario o un miembro según lo estipulado en el Artículo 22.",
+            "Imagen del usuario (No se requiere que sea una imagen oficial)",
+            "Datos del Usuario.",
+            "a. Apellidos (No requiere que sea oficial, en cambio, el equipo debe saber los datos reales)",
+            "b. Nombre (No requiere que sea oficial, en cambio, el equipo debe saber los datos reales)",
+            "c. Emisión: Fecha en la que el usuario se verificó.",
+            "d. Caducidad: Fecha en la que su TIGS no tiene validez y deberá renovarlo desde el portal de miembros.",
+            "e. Nacimiento (No requiere que sea oficial, en cambio, el equipo debe saber los datos reales)",
+            "Las insignias que el usuario tiene. Por cada insignia que se añada o se retire, el usuario recibirá por correo electrónico su nueva TIGS. Podrá ver también su TIGS en el portal de miembros.",
+            "a. Las insignias que se ven por completo y no tienen ningún reborde, son las que el usuario tiene actualmente.",
+            "La firma del usuario, donde acredita que es el usuario y por tanto se hace responsable de todo.",
+            "Logo Oficial del servicio de AidWorks, el organismo principal que ha dado nombre a Grouvex Studios."
           ]
         },
         {
@@ -634,10 +969,10 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Derecho de Oposición (Derecho ARCO): El miembro tiene derecho a oponerse a la revelación pública de su nombre y apellidos.",
-            "Mecanismo de Acreditación: Deberá utilizar siempre el Nivel de Acreditación Pública de la TIGS.",
-            "Deber del Solicitante: El tercero está obligado a aceptar el Nivel de Acreditación Pública como prueba suficiente.",
-            "Sanciones por Incumplimiento: Cualquier miembro o tercero que insista en la revelación podrá ser sancionado."
+            "Derecho de Oposición (Derecho ARCO): En virtud de los derechos de protección de datos personales establecidos en el Art. III de los Términos de Servicio y el RGPD, el miembro de Grouvex Studios tiene el derecho fundamental a oponerse a la revelación pública de su nombre y apellidos y fechas específicas (ej. fecha de inscripción) contenidos en la TIGS.",
+            "Mecanismo de Acreditación: Cuando un miembro ejerza su derecho de oposición, deberá utilizar siempre el Nivel de Acreditación Pública (Art. 25.2) de la TIGS. Este modo permite la validación de su posición y autoridad a través del Alias/Nombre Artístico y el Código de Verificación, sin revelar información que el miembro haya solicitado mantener privada.",
+            "Deber del Solicitante: El tercero que solicite la acreditación está obligado a aceptar el Nivel de Acreditación Pública como prueba suficiente de la posición del miembro. Solo el Departamento Legal (legal@grouvex.com) o la Dirección General podrán requerir el Nivel de Acceso Interno, y solo en casos de auditoría o investigación formal.",
+            "Sanciones por Incumplimiento: Cualquier miembro o tercero que insista en la revelación de datos personales sensibles de la TIGS sin la autorización explícita del titular o de una autoridad formal de Grouvex Studios, podrá ser sancionado por violación de la Política de Privacidad de la organización."
           ]
         },
         {
@@ -655,8 +990,14 @@
           ]
         },
         {
-          "type": "parrafo",
-          "content": "Firmado: Maiki Dran, Director Legal, Grouvex Studios"
+          "type": "firma",
+          "nombre": "Maiki Dran",
+          "cargo": "Director Legal",
+          "organismo": "Grouvex Studios"
+        },
+        {
+          "type": "historial-modificaciones",
+          "tabla": true
         },
         {
           "type": "titulo",
@@ -677,7 +1018,7 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "El Sistema de Gestión de Continuidad Operacional (GCO) es la potestad ejecutiva delegada en el Equipo de Gestión de Grouvex Studios para garantizar la estabilidad, funcionalidad y sostenibilidad del Organismo Principal y todos sus Organismos Secundarios ante cualquier evento extraordinario.",
+            "El Sistema de Gestión de Continuidad Operacional (GCO) es la potestad ejecutiva delegada en el Equipo de Gestión de Grouvex Studios para garantizar la estabilidad, funcionalidad y sostenibilidad del Organismo Principal y todos sus Organismos Secundarios ante cualquier evento extraordinario, previsible o imprevisible.",
             "El objeto principal del Sistema GCO es minimizar el impacto operativo y reputacional de los eventos desencadenantes y asegurar, en la medida de lo posible, la continuidad de los servicios esenciales ofrecidos."
           ]
         },
@@ -687,14 +1028,18 @@
           "content": "Potestades Extraordinarias del Sistema GCO"
         },
         {
+          "type": "parrafo",
+          "content": "En caso de activación, el Sistema GCO otorga al Equipo de Gestión las siguientes potestades extraordinarias, prevaleciendo sobre las Disposiciones y Reglamentos operativos ordinarios:"
+        },
+        {
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Actuar e Intervenir: Iniciar procedimientos especiales para la asignación inmediata de recursos.",
-            "Suspender Normativa Interna: Declarar la suspensión temporal de cualquier Artículo, Sección, Capítulo o Anexo.",
-            "Suspender Servicios y Proyectos: Declarar la suspensión temporal total o parcial de cualquier servicio.",
-            "Priorización y Reducción de Tiempos (TAT): Ordenar la implementación inmediata de procedimientos de emergencia.",
-            "Modificar Operaciones y Plazos (SLA): Alterar temporalmente los flujos de trabajo y los plazos de entrega."
+            "Actuar e Intervenir: Iniciar de oficio o a solicitud procedimientos especiales para la asignación o reasignación inmediata de recursos humanos, técnicos y financieros entre los distintos Organismos.",
+            "Suspender Normativa Interna: Declarar la suspensión temporal de la aplicación de cualquier Artículo, Sección, Capítulo o Anexo de los Boletines Oficiales (B.O.), Noticias Oficiales (N.O.), o Documentos de Dominio Operacional (DDOO) de Grouvex Studios y sus Organismos Secundarios, si dicha normativa obstaculiza la rápida y eficiente gestión de la crisis.",
+            "Suspender Servicios y Proyectos: Declarar la suspensión temporal total o parcial de cualquier servicio, plan, proyecto o proceso interno/externo, estableciendo la fecha y hora de inicio, así como la estimación de duración de la suspensión.",
+            "Priorización y Reducción de Tiempos (TAT): Ordenar la implementación inmediata de procedimientos de emergencia que busquen la reducción del tiempo de respuesta (Turnaround Time - TAT) o de cualquier proceso crítico, mediante la eliminación temporal de etapas no esenciales o la focalización de recursos en la entrega mínima viable, sin comprometer la calidad fundamental.",
+            "Modificar Operaciones y Plazos (SLA): Alterar temporalmente los flujos de trabajo y los plazos de entrega (Service Level Agreements - SLA) para adaptarlos a la capacidad operativa residual."
           ]
         },
         {
@@ -703,12 +1048,16 @@
           "content": "Niveles de Alerta y Respuesta del Sistema GCO"
         },
         {
+          "type": "parrafo",
+          "content": "Para una gestión escalonada y proporcionada de los incidentes, el Sistema GCO se activará bajo uno de los siguientes tres niveles de alerta:"
+        },
+        {
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Nivel I: Alerta Operacional (Color Amarillo): Activación preventiva ante eventos planificados.",
-            "Nivel II: Emergencia Parcial (Color Naranja): Activación reactiva ante eventos emergentes con impacto confirmado.",
-            "Nivel III: Emergencia Crítica (Color Rojo): Activación ante eventos catastróficos o de Fuerza Mayor."
+            "Nivel I: Alerta Operacional (Color Amarillo): Activación preventiva ante eventos planificados (I.A, I.B) o riesgo incipiente no confirmado de eventos emergentes: El impacto operativo es bajo o mitigable con recursos internos ordinarios. Se activan las potestades de Modificar Operaciones y Plazos (SLA) y Priorización y Reducción de Tiempos (TAT).",
+            "Nivel II: Emergencia Parcial (Color Naranja): Activación reactiva ante eventos emergentes con impacto confirmado (II.C, II.F) que afecta a un Organismo Secundario (p.ej., solo GSDesigns o solo GSRecords). El impacto es moderado y requiere la reasignación de recursos entre organismos. Se activan las potestades de Actuar e Intervenir, Suspender Servicios y Proyectos, y las potestades de Nivel I.",
+            "Nivel III: Emergencia Crítica (Color Rojo): Activación ante eventos catastróficos o de Fuerza Mayor (II.D, II.E) que comprometen la infraestructura central o afectan a todos los Organismos simultáneamente. El impacto es alto y requiere una suspensión generalizada de servicios. Se activan TODAS las potestades del Artículo 29, incluyendo la Suspensión de Normativa Interna y las potestades de Nivel I y II."
           ]
         },
         {
@@ -718,14 +1067,22 @@
         },
         {
           "type": "parrafo",
+          "content": "El Sistema GCO podrá ser activado por el Equipo de Gestión ante dos categorías de eventos:"
+        },
+        {
+          "type": "parrafo",
           "content": "I. Eventos de Carácter No Emergente (Planificado)"
+        },
+        {
+          "type": "parrafo",
+          "content": "Son situaciones previsibles y planificadas que requieren una adecuación operativa coordinada y centralizada:"
         },
         {
           "type": "lista",
           "tipo": "alfabetica",
           "items": [
-            "Vacaciones y Descansos Colectivos (Nivel I)",
-            "Mantenimiento y Actualizaciones Mayores (Nivel I)"
+            "A) Vacaciones y Descansos Colectivos (Nivel I): Pausa programada de las actividades de los Organismos. El GCO supervisará que los servicios mínimos esenciales, como la Comunidad o el contacto oficial, permanezcan operativos según lo planificado.",
+            "B) Mantenimiento y Actualizaciones Mayores (Nivel I): Tareas técnicas programadas que, por su naturaleza, requieran la interrupción o modificación temporal de servicios clave (p.ej., la suspensión temporal de cuentas por mantenimiento interno para la actualización de los Planes de Distribución Musical de GSRecords)."
           ]
         },
         {
@@ -733,13 +1090,17 @@
           "content": "II. Eventos de Carácter Emergente (Imprevisible)"
         },
         {
+          "type": "parrafo",
+          "content": "Son situaciones extraordinarias que amenazan la capacidad operativa, exigiendo una respuesta inmediata:"
+        },
+        {
           "type": "lista",
           "tipo": "alfabetica",
           "items": [
-            "Falta Crítica de Personal, Ausencias o Saturación de Equipo (Nivel II)",
-            "Fuerza Mayor o Caso Fortuito (Nivel III)",
-            "Fallo de Infraestructura Crítica y Seguridad (Nivel III)",
-            "Crisis Reputacional o Legal Inminente (Nivel II)"
+            "C) Falta Crítica de Personal, Ausencias o Saturación de Equipo (Nivel II): Se activará cuando la baja, incapacidad o ausencia inesperada de un número crítico de Miembros (definido como el 50% o más de un Organismo, o la totalidad del personal clave en una función) o una sobrecarga de trabajo grave (saturación) impida el cumplimiento de los plazos y la calidad de servicio. Este punto faculta al GCO a extender plazos, reasignar equipos de otros Organismos o pausar la captación de nuevos proyectos.",
+            "D) Fuerza Mayor o Caso Fortuito (Nivel III): Eventos externos e incontrolables que afecten al funcionamiento de la infraestructura global o regional de Grouvex Studios. Ejemplo 1: Interrupción general del suministro eléctrico o de servicios de telecomunicaciones esenciales. Ejemplo 2: Desastres naturales, emergencias sanitarias globales o disposiciones gubernamentales restrictivas.",
+            "E) Fallo de Infraestructura Crítica y Seguridad (Nivel III): Fallos masivos y no previstos de sistemas informáticos, bases de datos o servicios en la nube. Se incluye aquí cualquier incidente de ciberseguridad, ataque o violación de datos que ponga en riesgo la continuidad del servicio o la confidencialidad de la información.",
+            "F) Crisis Reputacional o Legal Inminente (Nivel II): Situaciones no previstas que, de no gestionarse de inmediato, podrían causar un daño irreparable a la imagen corporativa o conllevar graves consecuencias legales o financieras para Grouvex Studios o sus Organismos."
           ]
         },
         {
@@ -751,8 +1112,8 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Prioridad a la Automatización: El GCO establecerá la prioridad de utilizar o desarrollar sistemas automáticos.",
-            "Activación de Sistemas de Contingencia: En caso de activación por fallo de infraestructura, se autorizará la activación inmediata de los sistemas automáticos de redundancia."
+            "Prioridad a la Automatización: El GCO establecerá la prioridad de utilizar o desarrollar sistemas automáticos (bots, scripts, procesos de IA) para asumir, compensar o mitigar la carga de trabajo en situaciones de crisis, especialmente en tareas repetitivas o de alto volumen (p.ej., notificaciones automáticas de retrasos, gestión de colas de proyectos, respuesta inicial de soporte).",
+            "Activación de Sistemas de Contingencia: En caso de activación por fallo de infraestructura, el Equipo de Gestión autorizará la activación inmediata de los sistemas automáticos de redundancia y failover definidos en el Plan de Recuperación de Desastres."
           ]
         },
         {
@@ -764,9 +1125,9 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Comunicación: Toda activación del Sistema GCO deberá ser notificada de inmediato.",
-            "Retorno a la Normalidad: Las medidas adoptadas serán temporales y quedarán sin efecto una vez que la causa haya cesado.",
-            "Registro y Auditoría: Las decisiones se registrarán en el Archivo de Documentación Corporativa."
+            "Comunicación: Toda activación del Sistema GCO, así como las medidas adoptadas y su posterior desactivación, deberá ser notificada de inmediato y de forma clara a los Miembros, Clientes y, si procede, a la Comunidad a través de los canales oficiales.",
+            "Retorno a la Normalidad (Fin del Efecto): Las medidas adoptadas por el Sistema GCO serán temporales. Quedarán sin efecto de manera automática una vez que la causa de activación haya cesado y el Equipo de Gestión lo haya notificado oficialmente. En ese momento, todos los Artículos, Secciones, Capítulos o Normativas que hayan sido suspendidos por el GCO, recobrarán automáticamente su plena vigencia y aplicabilidad sin necesidad de una nueva publicación formal.",
+            "Registro y Auditoría: Las decisiones tomadas bajo la activación del Sistema GCO se registrarán en el Archivo de Documentación Corporativa y serán auditadas internamente para mejorar futuros protocolos de continuidad operacional."
           ]
         },
         {
@@ -783,7 +1144,7 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Motivo: el documento actual se está modificando y por lo tanto, no tendrá validez hasta que entre en vigor las normas.",
+            "Motivo: el documento actual se está modificando y por lo tanto, no tendrá validez hasta que entre en vigor las normas. Por lo tanto, el DDOO concede a la página oficial de Grouvex Studios el derecho a aplicar las normas que se reflejan ahí.",
             "Impacto: afecta a todos los miembros de Grouvex Studios.",
             "Vigencia: 1 de junio de 2025."
           ]
@@ -797,7 +1158,7 @@
           "type": "lista",
           "tipo": "numerada",
           "items": [
-            "Motivo: el documento actual se está modificando.",
+            "Motivo: el documento actual se está modificando y por lo tanto, no tendrá validez hasta que entre en vigor las normas. Por lo tanto, el DDOO concede a la página oficial de Grouvex Studios el derecho a aplicar las normas que se reflejan ahí.",
             "Impacto: afecta a todos los miembros de Grouvex Studios.",
             "Vigencia: 31 de mayo de 2025."
           ]
@@ -805,7 +1166,7 @@
         {
           "type": "titulo",
           "numero": "IV",
-          "content": "GROUVEX STUDIOS"
+          "content": "ANEXOS"
         },
         {
           "type": "disposicion",
@@ -813,35 +1174,36 @@
           "content": ""
         },
         {
-          "type": "capitulo",
-          "content": "Anexo I: Términos de Servicio y Políticas de Privacidad Generales"
+          "type": "anexo",
+          "numero": "I",
+          "titulo": "Términos de Servicio y Políticas de Privacidad Generales"
         },
         {
-          "type": "titulo",
+          "type": "titulo-secundario",
           "content": "TÉRMINOS DE SERVICIO"
         },
         {
-          "type": "titulo",
+          "type": "subtitulo",
           "content": "Derechos y Compromisos del Usuario"
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Derechos del Usuario"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Acceder a la comunidad y al contenido disponible en ella, siempre y cuando respete los derechos de autor.",
-            "En caso de crear, subir, compartir y difundir sus propios contenidos, debe tener los correspondientes derechos de autor.",
-            "Comentar, calificar y participar en actividades sociales y comunitarias con respeto y educación.",
-            "Solicitar a los Administradores que modifiquen o eliminen sus datos personales (Derechos ARCO).",
-            "Todos los miembros tienen derecho a ser tratados con respeto y dignidad.",
-            "Todos los miembros tienen derecho a ser tratados de manera equitativa, sin discriminación."
+            "Acceder a la comunidad y al contenido disponible en ella, siempre y cuando respete los derechos de autor y las licencias de uso de dicho contenido.",
+            "En caso de crear, subir, compartir y difundir sus propios contenidos en la Plataforma (o comunidad), debe tener los correspondientes derechos de autor y licencias de uso, y que no infringe ninguna norma legal o moral.",
+            "Comentar, calificar y participar en actividades sociales y comunitarias que se desarrollen en la comunidad, siempre y cuando lo haga con respeto y educación hacia los demás Usuarios y Administradores.",
+            "Solicitar a los Administradores que modifiquen o eliminen sus datos personales, así como ejercer sus derechos de acceso, rectificación, cancelación y oposición (Derechos ARCO), de acuerdo con la política de privacidad de la comunidad.",
+            "Todos los miembros tienen derecho a ser tratados con respeto y dignidad, independientemente de su rol o experiencia.",
+            "Todos los miembros tienen derecho a ser tratados de manera equitativa, sin discriminación por motivos de raza, género, orientación sexual, religión u otros factores."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Compromisos del Usuario"
         },
         {
@@ -849,146 +1211,153 @@
           "tipo": "romana",
           "items": [
             "No utilizar la comunidad para fines ilegales, fraudulentos, contrarios a la buena fe o al orden público.",
-            "No utilizar la comunidad para fines publicitarios.",
-            "Intentar mantener la conversación en los temas que estén con relación a Grouvex Studios.",
-            "Toda la información que se comparta deberá ser cierta.",
-            "Seguir las instrucciones de los equipos y lo definido en el DDOO."
+            "No utilizar la comunidad para fines publicitarios. En tal caso, un administrador podrá realizar dicha publicidad si esta se ajusta al tema.",
+            "Intentar mantener la conversación en los temas que estén con relación a Grouvex Studios y sus organismos secundarios.",
+            "Toda la información que se comparta con Grouvex Studios y sus organismos secundarios, deberá ser cierta y por lo tanto que no esté suplantando la identidad de otro (estipulado en el Artículo 13 del presente reglamento).",
+            "Seguir las instrucciones de los equipos, así como las que ya están definidas en el DDOO (Documentos Oficiales de Grouvex Studios)."
           ]
         },
         {
-          "type": "titulo",
+          "type": "subtitulo",
           "content": "Derechos y Compromisos de los Equipos"
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Derechos de los Equipos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Establecer las condiciones de acceso, registro y uso de la comunidad.",
-            "Supervisar y moderar los contenidos y las actividades sociales.",
-            "Bloquear o cancelar el acceso de aquellos Usuarios que violen estos Términos.",
-            "Proteger los datos personales de los Usuarios.",
-            "Resolver cualquier duda, queja o reclamación.",
-            "Expulsar temporalmente o definitivamente al usuario en caso de violar los términos.",
-            "Los miembros tienen derecho a que se respete su tiempo personal y profesional.",
-            "En caso de consultas reiterativas, el miembro tiene derecho a establecer límites.",
-            "Los miembros tienen derecho a recibir comunicaciones claras y transparentes.",
-            "Los miembros tienen derecho a solicitar ayuda y apoyo cuando lo necesiten.",
-            "Todos los miembros tienen derecho a recibir formación y recursos necesarios.",
-            "Los miembros tienen derecho a recibir retroalimentación constructiva.",
-            "Los miembros tienen derecho a que se respete su privacidad.",
-            "Los miembros tienen derecho a participar en decisiones que afecten a su trabajo.",
-            "Los miembros tienen derecho a trabajar en un ambiente seguro.",
-            "Los miembros tienen derecho a dejar de ayudar a un usuario en caso de incumplimiento."
+            "Establecer las condiciones de acceso, registro y uso de la comunidad, así como modificarlas en cualquier momento, respetando la normativa general de modificación de las normas.",
+            "Supervisar y moderar los contenidos y las actividades sociales y comunitarias que se lleven a cabo en la comunidad, así como eliminar aquellos que considere inapropiados o contrarios a estos Términos.",
+            "Bloquear o cancelar el acceso o registro de aquellos Usuarios que violen estos Términos o que hagan un uso indebido o abusivo de la comunidad.",
+            "Proteger los datos personales de los Usuarios de acuerdo con la política de privacidad de la comunidad y la normativa vigente en materia de protección de datos.",
+            "Resolver cualquier duda, queja o reclamación que pueda surgir en relación con el uso de la comunidad.",
+            "Expulsar temporalmente o definitivamente al usuario en caso de violar los términos, incluso si es un artista, diseñador o con cualquier otro título, llegar a la terminación del contrato del usuario siguiendo el procedimiento de terminación de dicho contrato.",
+            "Los miembros tienen derecho a que se respete su tiempo personal y profesional, evitando demandas excesivas, reuniones innecesarias.",
+            "En caso de que un usuario esté constantemente pidiendo ayuda sobre el mismo tema, sin permitir que el miembro del equipo responda con los datos que se le pidió o si las solicitudes, son iguales o del mismo tema, son reiterativas, el miembro tiene derecho a establecer límites y comunicar la necesidad de esperar una respuesta antes de hacer más preguntas. Esto incluye:",
+            "A. Establecer un límite de tiempo razonable para la resolución de consultas.",
+            "B. Informar al usuario que es importante permitir un tiempo de respuesta adecuado antes de reiterar la solicitud.",
+            "C. Definir claramente cuándo una consulta se considera reiterativa y cómo manejarla de manera efectiva.",
+            "Los miembros tienen derecho a recibir comunicaciones claras y transparentes sobre expectativas, cambios y procedimientos.",
+            "Los miembros tienen derecho a solicitar ayuda y apoyo cuando lo necesiten, ya sea en tareas específicas o en el manejo de conflictos.",
+            "Todos los miembros tienen derecho a recibir formación y recursos necesarios para desempeñar sus funciones de manera efectiva.",
+            "Los miembros tienen derecho a recibir retroalimentación constructiva sobre su desempeño, con el fin de mejorar y crecer profesionalmente.",
+            "Los miembros tienen derecho a que se respete su privacidad, tanto en su información personal como en sus comunicaciones. Teniendo en cuenta que al ser usuarios también, deben regirse al Artículo 13 del presente reglamento.",
+            "Los miembros tienen derecho a participar en decisiones que afecten a su trabajo y al equipo, promoviendo un ambiente colaborativo.",
+            "Los miembros tienen derecho a trabajar en un ambiente seguro, donde se minimicen los riesgos y se promueva el bienestar.",
+            "Los miembros tienen derecho a dejar de ayudar a un usuario, en caso de incumplimiento de los términos o políticas de privacidad, con previa advertencia al usuario."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Compromisos de los Equipos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Garantizar el correcto funcionamiento y disponibilidad de la comunidad.",
-            "Respetar los derechos de propiedad intelectual e industrial.",
-            "No utilizar los datos personales para fines ajenos a los establecidos.",
-            "No divulgar ni transferir los datos personales a terceros sin consentimiento."
+            "Garantizar el correcto funcionamiento y disponibilidad de la comunidad, salvo por causas ajenas a su control o por razones técnicas o de mantenimiento.",
+            "Respetar los derechos de propiedad intelectual e industrial de los Usuarios y terceros sobre los contenidos que se publiquen en la comunidad.",
+            "No utilizar los datos personales de los Usuarios para fines ajenos a los establecidos en la política de privacidad de la comunidad.",
+            "No divulgar ni transferir los datos personales de los Usuarios a terceros sin su consentimiento expreso ni el de su supervisor."
           ]
         },
         {
-          "type": "titulo",
+          "type": "titulo-secundario",
           "content": "POLÍTICAS DE PRIVACIDAD"
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Información que recopilamos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Datos de Registro: Información de perfil cuando contacta o se registra.",
-            "Datos de Perfil: Información visible en la página de registro.",
-            "Datos de Actividad: Última sesión, comentarios, mensajes.",
-            "Datos de Comunicación: Contenido y metadatos de comunicaciones.",
-            "Datos de Cookies y Tecnologías Similares: Información del dispositivo y navegador."
+            "Datos de Registro: Cuando contacta al equipo de Grouvex Studio utilizando el contacto oficial, se registra en nuestra comunidad o nos contacta a través de una red social, su información de perfil se guarda para que podamos ponernos en contacto con usted.",
+            "Datos de Perfil: Cuando crea o edita su perfil, puede ver su información en la página de registro. La información que usa en el Portal de Miembros es lo que podemos ver, además de lo que nos proporciona voluntariamente o los datos que ocultamos por su seguridad.",
+            "Datos de Actividad: Cuando usa nuestra comunidad, recopilamos información sobre su actividad, como la última vez que ha iniciado sesión, los comentarios que hace, los mensajes que envía.",
+            "Datos de Comunicación: Cuando se comunica con nosotros o con otros usuarios, recopilamos el contenido y los metadatos de sus comunicaciones, como la fecha, hora y destinatario.",
+            "Datos de Cookies y Tecnologías Similares: Cuando visita nuestro sitio web o página de contacto, usamos cookies y otras tecnologías similares para recopilar información sobre su dispositivo, navegador, dirección IP, preferencias y mejorar la calidad de su estancia."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Cómo usamos la información que recopilamos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Para proporcionar y mejorar nuestros servicios.",
-            "Para comunicarnos con usted.",
-            "Para fines analíticos y publicitarios.",
-            "Para cumplir con nuestras obligaciones legales."
+            "Para proporcionar y mejorar nuestros servicios: Usamos la información que recopilamos para brindarle los servicios que solicita, personalizar su experiencia, mejorar la calidad y seguridad de nuestra comunidad, y desarrollar nuevas funciones y productos.",
+            "Para comunicarnos con usted: Usamos la información que recopilamos para enviarle notificaciones, boletines, responder a sus consultas y solicitudes, y mantenerlo informado sobre cambios en nuestra política de privacidad y términos y condiciones.",
+            "Para fines analíticos y publicitarios: Usamos la información que recopilamos para analizar el uso y rendimiento de nuestra comunidad, medir la efectividad de nuestras publicaciones.",
+            "Para cumplir con nuestras obligaciones legales: Usamos la información que recopilamos para cumplir con las leyes y regulaciones aplicables, cooperar con las autoridades competentes y proteger nuestros derechos e intereses legítimos."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Cómo protegemos la información que recopilamos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Implementamos medidas técnicas y organizativas adecuadas.",
-            "Limitamos el acceso a la información.",
-            "Revisamos periódicamente nuestras prácticas de seguridad.",
-            "Ninguna medida de seguridad es perfecta o impenetrable."
+            "Implementamos medidas técnicas y organizativas adecuadas para proteger la información que recopilamos contra el acceso no autorizado, divulgación, modificación, pérdida o uso indebido. Además, cumplimos con los términos de servicio y la política de privacidad de la aplicación donde nos encontramos.",
+            "Limitamos el acceso a la información que recopilamos de nuestros empleados, contratistas y proveedores de servicios que necesitan conocerla para realizar sus funciones.",
+            "Revisamos periódicamente nuestras prácticas de seguridad y actualizamos nuestras medidas de protección según sea necesario.",
+            "Sin embargo, tenga en cuenta que ninguna medida de seguridad es perfecta o impenetrable, y no podemos garantizar la seguridad absoluta de la información que recopilamos."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Cómo compartimos la información que recopilamos"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Con otros usuarios: Información de perfil público con consentimiento.",
-            "Con terceros: Proveedores de servicios con consentimiento.",
-            "Con su consentimiento expreso.",
-            "Por razones legales cuando es requerido por ley."
+            "Con otros usuarios: Compartimos su información de perfil público y su actividad en publicaciones y con otros usuarios de nuestra comunidad si nos da su consentimiento expresamente. Puede controlar qué información comparte con la comunidad contactándonos.",
+            "Con terceros: Compartimos la información que recopilamos con terceros que nos ayudan a proporcionar y mejorar nuestros servicios, como proveedores de alojamiento web, análisis de datos, publicidad y marketing, con su consentimiento. Estos terceros sólo pueden acceder a la información que necesitan para realizar sus funciones y deben tratarla de acuerdo con esta política de privacidad y las leyes aplicables.",
+            "Con su consentimiento: Compartimos la información que recopilamos con otros terceros cuando nos da su consentimiento expreso para hacerlo. Por ejemplo, si decide vincular su cuenta con una red social externa o un servicio de música.",
+            "Por razones legales: Compartimos la información que recopilamos cuando es requerido por ley o una orden judicial, o cuando creemos que es necesario para proteger nuestros derechos e intereses legítimos o los de terceros."
           ]
         },
         {
-          "type": "subtitulo",
-          "content": "Cómo puede acceder, modificar o eliminar su información. Derechos ARCO"
+          "type": "subtitulo-secundario",
+          "content": "Cómo puede acceder, modificar o eliminar su información. Derechos ARCO (Acceso, Rectificación, Cancelación y Oposición)"
         },
         {
           "type": "lista",
           "tipo": "romana",
           "items": [
-            "Acceder y modificar información personal en la configuración.",
-            "Solicitar la eliminación de información personal.",
-            "Optar por no recibir comunicaciones de marketing.",
-            "Rechazar el uso de cookies en la configuración del navegador."
+            "Puede acceder y modificar su información personal, en la web, en cualquier momento a través de la configuración de su perfil y cuenta (Sección de \"has accedido como...\").",
+            "Puede solicitar la eliminación de su información personal en cualquier momento a través de la configuración de su perfil y cuenta (Sección de \"has accedido como...\") o contactando al equipo de soporte. La información utilizada por el equipo de Grouvex Studio puede solicitarse para su eliminación enviando un correo o en cualquier momento a través de la configuración de su perfil y cuenta (Sección de \"has accedido como...\").",
+            "Puede optar por no recibir comunicaciones de marketing de nuestra parte siguiendo las instrucciones incluidas en cada correo electrónico o notificación que le enviemos.",
+            "Puede rechazar el uso de cookies y otras tecnologías similares cambiando la configuración de su navegador o dispositivo. Sin embargo, tenga en cuenta que esto puede afectar la funcionalidad y disponibilidad de algunos de los servicios de la página web."
           ]
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Cambios en nuestra política de privacidad"
         },
         {
           "type": "parrafo",
-          "content": "Podemos modificar esta política de privacidad de vez en cuando para reflejar cambios en nuestras prácticas o en las leyes y regulaciones aplicables. Le notificaremos cualquier cambio significativo a través de un aviso en nuestro sitio web."
+          "content": "Podemos modificar esta política de privacidad de vez en cuando para reflejar cambios en nuestras prácticas o en las leyes y regulaciones aplicables. Le notificaremos cualquier cambio significativo a través de un aviso en nuestro sitio web o aplicación o por correo electrónico a la dirección que nos haya proporcionado. Le recomendamos que revise esta política de privacidad periódicamente para mantenerse informado de cualquier actualización."
         },
         {
-          "type": "subtitulo",
+          "type": "subtitulo-secundario",
           "content": "Disposición final"
         },
         {
           "type": "parrafo",
           "content": "Los anexos podrán modificarse mediante notificación pública con 15 días de antelación, salvo cambios urgentes por requerimiento legal."
+        },
+        {
+          "type": "historial-modificaciones",
+          "tabla": true
         },
         {
           "type": "titulo",
@@ -999,16 +1368,609 @@
           "content": "Este Boletín Oficial se publica en cumplimiento del Artículo 20 del Reglamento de Documentación Corporativa. Próxima publicación: 30 de junio de 2025."
         },
         {
-          "type": "parrafo",
-          "content": "Firmado: Grouvex Phoenix, Director General, Grouvex Studios"
+          "type": "firma",
+          "nombre": "Grouvex Phoenix",
+          "cargo": "Director General",
+          "organismo": "Grouvex Studios"
+        },
+        {
+          "type": "notas",
+          "contenido": "Para consultas legales, contactar con legal@grouvex.com. Para cualquier otra consulta oficina@grouvex.com, si el correo es de un departamento en concreto, este se encargará de remitir el correo al departamento en cuestión."
+        },
+        {
+          "type": "copyright",
+          "contenido": "© 2021 - 2025, Grouvex Studios Madrid, España oficina@grouvex.com"
+        }
+      ]
+    },
+    {
+      "id": "bogs-records-002-2025",
+      "organism": "records",
+      "type": "bo",
+      "title": "B.O. Grouvex Studios Records",
+      "reference": "BOGS/2025/002",
+      "date": 1748649600,
+      "description": "Boletín Oficial de Grouvex Studios Records - Núm. 002/2025. Contiene disposiciones generales, planes de distribución musical y anexos.",
+      "version": 2,
+      "tags": [
+        "boletín oficial",
+        "records",
+        "música",
+        "planes",
+        "distribución",
+        "artistas"
+      ],
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "BOGS/2025/002",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Boletín Oficial",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios Records",
+              "icon": "fa-building"
+            },
+            {
+              "label": "Fecha de Emisión",
+              "value": "31 may 2025 12:00 UTC",
+              "icon": "fa-calendar-alt"
+            },
+            {
+              "label": "Última Actualización",
+              "value": "17 sept 2025 11:00 UTC",
+              "icon": "fa-clock"
+            },
+            {
+              "label": "Fecha de Entrada en Vigor",
+              "value": "8 ago 2025 0:00 UTC",
+              "icon": "fa-gavel"
+            },
+            {
+              "label": "Fecha de Revisión",
+              "value": "20 dic 2025 18:00 UTC",
+              "icon": "fa-calendar-check"
+            },
+            {
+              "label": "Versión",
+              "value": "2",
+              "icon": "fa-code-branch"
+            },
+            {
+              "label": "ISSN",
+              "value": "BOGS/2025/002",
+              "icon": "fa-barcode"
+            }
+          ]
+        },
+        {
+          "type": "aviso-legal",
+          "content": "El presente boletín forma parte del archivo oficial de Documentos Oficiales de Grouvex Studios y debe conservarse según lo establecido en el Artículo 20 del Reglamento de Documentación Corporativa."
+        },
+        {
+          "type": "indice",
+          "items": [
+            "Variación de Normativa",
+            "TÍTULO I. GROUVEX STUDIOS RECORDS",
+            "DISPOSICIÓN BOGS/2025/002",
+            "Capítulo I. Disposiciones Generales de Grouvex Studios Records",
+            "Artículo 1. Definición del GStudios Records",
+            "Artículo 2. Acceso a GStudios Records para Artistas",
+            "Artículo 3. Protección y defensa de los derechos e intereses",
+            "Capítulo II. Definiciones Específicas de Grouvex Studios Records",
+            "Artículo 4. Terminología Relevante",
+            "Capítulo III. Planes de Distribución Musical",
+            "Artículo 4. Plan Gratis",
+            "Artículo 5. Plan Estándar",
+            "Artículo 6. Plan Premium",
+            "Anexo III: Términos de Servicio y Políticas de Privacidad - Grouvex Studios Records",
+            "CIERRE"
+          ]
+        },
+        {
+          "type": "seccion",
+          "numero": "",
+          "content": "Variación de Normativa"
         },
         {
           "type": "parrafo",
-          "content": "Notas: Para consultas legales, contactar con legal@grouvex.com. Para cualquier otra consulta oficina@grouvex.com."
+          "content": "El sello podrá realizar modificaciones temporales en sus normativas, siguiendo la Reglamento de Documentación Corporativa - Normativa General de Modificación de los Términos (B.O.Grouvex Studios), garantizando siempre la comunicación oportuna a los usuarios afectados mediante los siguientes canales:"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Anuncio en Página Oficial (con 2 semanas de antelación).",
+            "Aviso de Anuncio Importante (con 1 semana de antelación).",
+            "Contacto Directo (con 3 días de antelación)."
+          ]
+        },
+        {
+          "type": "titulo",
+          "numero": "I",
+          "content": "GROUVEX STUDIOS RECORDS"
+        },
+        {
+          "type": "disposicion",
+          "referencia": "BOGS/2025/002",
+          "content": ""
+        },
+        {
+          "type": "capitulo",
+          "numero": "I",
+          "content": "Disposiciones Generales de Grouvex Studios Records"
+        },
+        {
+          "type": "seccion",
+          "numero": "I",
+          "content": "Principios de GStudios Records"
+        },
+        {
+          "type": "articulo",
+          "numero": "1",
+          "content": "Definición del GStudios Records"
         },
         {
           "type": "parrafo",
-          "content": "© 2021 - 2025, Grouvex Studios Madrid, España oficina@grouvex.com"
+          "content": "Grouvex Studios Records es un sello discográfico emergente que actualmente colabora con un selecto grupo de artistas y agrupaciones musicales."
+        },
+        {
+          "type": "articulo",
+          "numero": "2",
+          "content": "Acceso a GStudios Records para Artistas (GSRecords for Artists)"
+        },
+        {
+          "type": "parrafo",
+          "content": "Para solicitar nuestro servicio de distribución musical, deberá seguir los siguientes pasos cumpliendo en todo momento la normativa vigente del organismo."
+        },
+        {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Accede a Dashboard",
+            "Dele a \"Regístrate aquí\".",
+            "Y rellene todo.",
+            "Una vez que se apruebe la solicitud, podrá subir sus canciones en el formulario de Contrato de lanzamientos de Albums/EP/Canciones.",
+            "Ante cualquier duda que tenga, pongase en contacto moderacion@grouvex.com"
+          ]
+        },
+        {
+          "type": "articulo",
+          "numero": "3",
+          "content": "Protección y defensa de los derechos e intereses"
+        },
+        {
+          "type": "parrafo",
+          "content": "La normativa destinada a la protección y defensa de los derechos e intereses tanto de los artistas como del equipo de GSRecords se halla debidamente estipulada en los Términos de Servicios y Políticas de Privacidad de GSRecords."
+        },
+        {
+          "type": "capitulo",
+          "numero": "II",
+          "content": "Definiciones Específicas de Grouvex Studios Records"
+        },
+        {
+          "type": "articulo",
+          "numero": "4",
+          "content": "Terminología Relevante"
+        },
+        {
+          "type": "parrafo",
+          "content": "A los efectos de los servicios de grabación y distribución musical, se establecen las siguientes definiciones:"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Artista: Individuo o grupo musical que produce y/o interpreta música para su distribución a través de Grouvex Studios Records.",
+            "Sencillo(s): Canción(es) individual(es).",
+            "EP: Conjunto de 2 a 6 sencillos.",
+            "Álbum: Conjunto de 7 a 15 sencillos.",
+            "EX-Álbum: Conjunto de 16 o más sencillos.",
+            "Lanzamiento: Totalidad de obras musicales publicadas por un artista bajo el sello.",
+            "GS-UserID: Identificador único de usuario en la plataforma Grouvex Studios.",
+            "Pre-Saved: Función que permite a los usuarios guardar o pre-guardar una canción o álbum antes de su lanzamiento oficial en plataformas de streaming.",
+            "Copyright/Sound Copyright: Derechos de autor sobre la composición musical y los derechos conexos sobre la grabación sonora de la obra."
+          ]
+        },
+        {
+          "type": "capitulo",
+          "numero": "III",
+          "content": "Planes de Distribución Musical"
+        },
+        {
+          "type": "articulo",
+          "numero": "4",
+          "content": "Plan Gratis"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Costo: 0€ al mes o 0€ al año.",
+            "Cuentas Artísticas: 2 Cuentas Artísticas por Usuario (GS-UserID).",
+            "Fecha y Hora de Lanzamiento: Personalizado",
+            "Subida de Canciones: Ilimitadas.",
+            "Fecha de Lanzamiento (Fecha de Venta): mínimo 4 semanas de antelación.",
+            "Acceso a UPC/EAN y ISRC",
+            "Video Musical: No incluye video musical.",
+            "Copyright y Sound Copyright: Pertenece a Grouvex Studios Record.",
+            "Pre-Saved: Sin Acceso a la función Pre-Saved.",
+            "Servicio de Soporte: Normal (entre 24h y 72h)",
+            "Repartir Regalías a otros Artistas",
+            "Lanzamientos Ilimitado",
+            "Acceso a Pre-Order (Spotify)",
+            "Playlist Spotify del Sello Personal",
+            "Máximo el 85% de las regalías"
+          ]
+        },
+        {
+          "type": "articulo",
+          "numero": "5",
+          "content": "Plan Estándar"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Todo lo del Plan Gratis",
+            "Costo: 8,99€ al mes o 26,99€ al año.",
+            "3 Cuentas Artísticas por Usuario (GS-UserID)",
+            "1 Video Musical al Año (-10% de las regalías)",
+            "Elegir Otros Idiomas en el Lanzamiento",
+            "Ayuda Obtención Marca Verificada Spotify",
+            "Playlist YouTube del Sello Personal"
+          ]
+        },
+        {
+          "type": "articulo",
+          "numero": "6",
+          "content": "Plan Premium"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Todo lo del Plan Estándar",
+            "Costo: 26,99€ al mes o 80,99€ al año.",
+            "5 Cuentas Artísticas por Usuario (GS-UserID)",
+            "5 Video Musical al Año (-10% de las regalías)",
+            "Acceso a Pre-Order (El resto de plataformas que permitan)",
+            "Ayuda Obtención Marca Verificada YouTube y Conectar Tik Tok",
+            "Letras de las canciones",
+            "Añadir Lanzamiento Aprobado y Subido en Nuestra Web",
+            "Añadir Lanzamiento Aprobado y Pre-Order en Nuestra Web",
+            "Servicio de Soporte: Rápida (>24h)",
+            "Copyright Personalizado",
+            "Mejora de Audio a los estándares de la Distribuidora",
+            "Mejora de Imagen a los estándares de la Distribuidora",
+            "10 Cuentas Artísticas por Usuario (GS-UserID)",
+            "Sound Copyright Personalizado",
+            "20 Videos Musicales al Año (-5% de las regalías por video)",
+            "Ayuda Obtención Marca Verificada Meta y Otros",
+            "Máximo 100% de las regalías"
+          ]
+        },
+        {
+          "type": "anexo",
+          "numero": "III",
+          "titulo": "Términos de Servicio y Políticas de Privacidad - Grouvex Studios Records"
+        },
+        {
+          "type": "titulo-secundario",
+          "content": "Términos de Servicio"
+        },
+        {
+          "type": "subtitulo",
+          "content": "Derechos y Compromisos del Artista"
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "Derechos fundamentales del artista"
+        },
+        {
+          "type": "lista",
+          "tipo": "romana",
+          "items": [
+            "Derecho de acceso y participación:",
+            "A. Acceder a la plataforma y contenidos musicales, conforme a lo establecido en el Artículo 8 de la Ley 34/2002 (LSSI)",
+            "B. Participar en actividades comunitarias con respeto a los derechos de terceros (Artículo 20 Constitución Española)",
+            "Derechos de propiedad intelectual:",
+            "A. Crear, subir y distribuir obras originales de las que sea titular legítimo (Artículo 1 Ley 2/2019 de Propiedad Intelectual)",
+            "B. Exigir el respeto a sus derechos morales como autor (Artículo 14 LPI)",
+            "C. Gestionar sus derechos de explotación según los términos contractuales (Artículo 43 LPI)",
+            "Protección de datos personales:",
+            "A. Ejercer derechos ARCO (acceso, rectificación, cancelación y oposición) conforme al RGPD y LOPDGDD",
+            "B. Solicitar la limitación del tratamiento de sus datos (Artículo 18 RGPD)",
+            "C. Revocar consentimientos otorgados (Artículo 7.3 RGPD)",
+            "Derechos de no discriminación:",
+            "A. Recibir trato equitativo sin discriminación por:",
+            "1. Raza u origen étnico (Artículo 14 CE)",
+            "2. Género u orientación sexual (Ley 3/2007)",
+            "3. Religión o convicciones (Artículo 16 CE)",
+            "4. Discapacidad (Ley General de Derechos de Personas con Discapacidad)",
+            "Derechos contractuales:",
+            "A. Celebrar acuerdos con otros sellos discográficos, salvo pacto de exclusividad (Artículo 1.255 Código Civil)",
+            "B. Recibir información clara y comprensible sobre los términos contractuales (Artículo 60 TRLGDCU)",
+            "C. Exigir transparencia en la rendición de cuentas (Artículo 51 LPI)",
+            "Derechos morales:",
+            "A. Ser reconocido como autor de sus obras (Artículo 14 LPI)",
+            "B. Exigir respeto a la integridad de su obra (Artículo 15 LPI)",
+            "C. Oponerse a modificaciones no autorizadas (Artículo 16 LPI)",
+            "Derechos económicos:",
+            "A. Percibir las regalías pactadas en tiempo y forma (Artículo 46 LPI)",
+            "B. Acceder a información verificable sobre explotación de sus obras (Artículo 51 LPI)",
+            "C. Solicitar auditorías de cuentas cuando existan dudas razonables (Artículo 52 LPI)"
+          ]
+        },
+        {
+          "type": "nota",
+          "content": "Nota: Estos derechos se ejercerán conforme a los procedimientos establecidos en el Reglamento Interno de Grouvex Studios Records y la legislación aplicable."
+        },
+        {
+          "type": "subtitulo",
+          "content": "Política de Privacidad"
+        },
+        {
+          "type": "parrafo",
+          "content": "Aviso Legal Importante: Este documento forma parte del \"Boletín Oficial de Grouvex Studios\"."
+        },
+        {
+          "type": "parrafo",
+          "content": "Introducción: Nuestro Compromiso con el Artista"
+        },
+        {
+          "type": "parrafo",
+          "content": "En Grouvex Studios Records, la protección del artista es la base de nuestro sello discográfico. Nos comprometemos a garantizar la máxima confidencialidad y protección de los datos personales y la información sensible de nuestros artistas, empleados, colaboradores y socios. Este compromiso es un pilar fundamental en la relación de confianza con todas las partes involucradas."
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "I. Información que Recopilamos en el Contexto de Grabación y Distribución"
+        },
+        {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Datos de Identificación y Contacto del Artista: Incluye información proporcionada al registrarse o al establecer acuerdos, como su perfil público, nombre, datos de contacto y detalles necesarios para la gestión de su cuenta y proyectos musicales.",
+            "Contenidos y Proyectos Musicales: Recopilamos y tratamos toda la información relacionada con sus proyectos musicales, grabaciones, maquetas y obras artísticas. Esto incluye archivos de audio, letras, metadatos y cualquier otro elemento creativo que nos confíe para producción, fabricación, distribución o promoción.",
+            "Información Técnica y Comercial: Podemos recopilar información técnica relacionada con la producción musical y datos sobre estrategias comerciales o de distribución musical, ya sea gratuita, con costo o mediante acuerdo formal.",
+            "Datos de Actividad y Comunicación: Información sobre su interacción con nuestra comunidad y equipos, como inicios de sesión, comentarios, mensajes, y el contenido y metadatos de sus comunicaciones.",
+            "Datos de Uso de Plataformas: Al visitar nuestro sitio web o páginas de contacto, podemos utilizar cookies y tecnologías similares para recopilar información sobre su dispositivo, navegador, dirección IP y preferencias, con el fin de mejorar su experiencia."
+          ]
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "II. Cómo Utilizamos la Información del Artista y Proyectos"
+        },
+        {
+          "type": "lista",
+          "tipo": "alfabetica",
+          "items": [
+            "Gestión y Desarrollo Artístico: Proveer y mejorar nuestros servicios como sello discográfico, personalizar su experiencia, y desarrollar nuevas funciones y productos relacionados con la producción y distribución musical.",
+            "Confidencialidad y Cumplimiento Legal: Tratar toda la información obtenida, incluyendo datos personales, información técnica, proyectos musicales y estrategias comerciales, con la debida diligencia y conforme a la legislación vigente en materia de protección de datos.",
+            "Comunicación y Soporte: Comunicarnos con usted para notificaciones importantes, actualizaciones de proyectos y asistencia."
+          ]
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "III. Protección de la Información y Confidencialidad"
+        },
+        {
+          "type": "parrafo",
+          "content": "Implementamos medidas técnicas y organizativas adecuadas para proteger su información contra el acceso no autorizado, divulgación, modificación, pérdida o uso indebido. Limitamos el acceso a esta información a empleados, contratistas y proveedores de servicios que necesitan conocerla para realizar sus funciones específicas en Grouvex Studios Records. Revisamos periódicamente nuestras prácticas de seguridad y actualizamos nuestras medidas de protección según sea necesario. La violación de esta política de confidencialidad por parte de cualquier miembro o tercero asociado a Grouvex Studios será motivo de las acciones legales y disciplinarias que correspondan. Sin embargo, ninguna medida de seguridad es perfecta, y no podemos garantizar la seguridad absoluta de la información que recopilamos."
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "IV. Compartición de Información"
+        },
+        {
+          "type": "parrafo",
+          "content": "Compartimos su información de perfil público y su actividad en publicaciones con otros usuarios de nuestra comunidad. Cualquier otra compartición de información sensible o de proyectos musicales se realizará de acuerdo con los términos contractuales específicos que usted establezca con Grouvex Studios Records y siempre con su consentimiento, salvo las excepciones legales aplicables."
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "V. Derechos del Artista sobre su Información (Derechos ARCO y Otros)"
+        },
+        {
+          "type": "parrafo",
+          "content": "Como artista, usted tiene derechos fundamentales sobre sus datos personales. Puede ejercer sus derechos de Acceso, Rectificación, Cancelación y Oposición (ARCO) conforme al RGPD y LOPDGDD. Específicamente, usted puede:"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Acceso y Modificación: Acceder y modificar su información personal en la web a través de la configuración de su perfil y cuenta en cualquier momento.",
+            "Eliminación: Solicitar la eliminación de su información personal contactando al equipo de soporte, incluso para la información utilizada por el equipo de Grouvex Studios, mediante un correo electrónico.",
+            "Limitación y Revocación: Solicitar la limitación del tratamiento de sus datos y revocar los consentimientos otorgados.",
+            "Opciones de Comunicación: Optar por no recibir comunicaciones de marketing siguiendo las instrucciones incluidas en cada correo electrónico o notificación que le enviemos.",
+            "Control de Cookies: Rechazar el uso de cookies y otras tecnologías similares cambiando la configuración de su navegador o dispositivo, aunque esto puede afectar la funcionalidad de algunos servicios."
+          ]
+        },
+        {
+          "type": "subtitulo-secundario",
+          "content": "VI. Cambios en Nuestra Política de Privacidad"
+        },
+        {
+          "type": "parrafo",
+          "content": "Podemos modificar esta política de privacidad. Cualquier cambio se reflejará en el historial de modificaciones del Boletín Oficial. Le recomendamos revisar periódicamente este documento para estar al tanto de cualquier actualización. Para consultas legales o relacionadas con esta política, puede contactar con legal@grouvex.com."
+        },
+        {
+          "type": "historial-modificaciones",
+          "tabla": true
+        },
+        {
+          "type": "titulo",
+          "content": "CIERRE"
+        },
+        {
+          "type": "parrafo",
+          "content": "Este Boletín Oficial se publica en cumplimiento del Artículo 20 del Reglamento de Documentación Corporativa. Próxima publicación: 30 de junio de 2025."
+        },
+        {
+          "type": "firma",
+          "nombre": "Grouvex Phoenix",
+          "cargo": "Director General",
+          "organismo": "Grouvex Studios Records"
+        },
+        {
+          "type": "notas",
+          "contenido": "Para consultas legales, contactar con legal@grouvex.com. Para cualquier otra consulta oficina@grouvex.com, si el correo es de un departamento en concreto, este se encargará de remitir el correo al departamento en cuestión."
+        },
+        {
+          "type": "copyright",
+          "contenido": "© 2021 - 2025, Grouvex Studios Madrid, España oficina@grouvex.com"
+        }
+      ]
+    },
+    {
+      "id": "nogs-001-2025",
+      "organism": "grouvex",
+      "type": "no",
+      "title": "N.O. Grouvex Studios",
+      "reference": "NOGS/2025/001",
+      "date": 1748649600,
+      "description": "Noticias Oficiales de Grouvex Studios. Comunicados importantes y anuncios.",
+      "version": 3,
+      "tags": [
+        "noticias",
+        "comunicados",
+        "GCO",
+        "vacaciones",
+        "suministro eléctrico"
+      ],
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "NOGS/2025/001",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Noticias Oficiales",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios",
+              "icon": "fa-building"
+            },
+            {
+              "label": "Última Actualización",
+              "value": "22 nov 2025 20:30 UTC",
+              "icon": "fa-clock"
+            }
+          ]
+        },
+        {
+          "type": "indice",
+          "items": [
+            "Activación del Sistema GCO",
+            "Vacaciones",
+            "Caída del Suministro Eléctrico"
+          ]
+        },
+        {
+          "type": "noticia",
+          "fecha": 1764001800,
+          "fecha_str": "22 nov 2025 20:30 GMT",
+          "usuario": "Grouvex Studios",
+          "titulo": "Activación del Sistema GCO",
+          "referencia": "NOGS/2025/GCO-002",
+          "asunto": "Activación del Sistema de Gestión de Continuidad Operacional (GCO) por Concurrencia de Eventos Críticos y Suspensión de GSDesigns",
+          "de": "Equipo de Gestión de Grouvex Studios",
+          "fecha_emision": "22 de noviembre de 2025",
+          "fecha_vigor": "22 de noviembre de 2025 a las 20:40 UTC",
+          "content": "Por medio de la presente, y en estricto cumplimiento del Capítulo VI. Del Sistema de Gestión de Continuidad Operacional (GCO) de nuestro Boletín Oficial, el Equipo de Gestión de Grouvex Studios notifica la ACTIVACIÓN INMEDIATA de dicho Sistema debido a la concurrencia de factores operativos planificados y extraordinarios que exigen la aplicación urgente de medidas de continuidad y reestructuración.\n\nEl Sistema GCO se activa de manera simultánea bajo las siguientes causas estipuladas en el Artículo 23 del citado Capítulo:\n\nCausa I.A) Vacaciones y Descansos Colectivos (Planificada): Se inicia la fase de gestión previa y coordinación de la pausa operativa anual programada para todos los Organismos y Miembros, con vigencia desde el Lunes, 15 de diciembre de 2025 hasta el Lunes, 15 de febrero de 2026. (Teniendo en cuenta, que dicha causa no será motivo de finalización del Sistema)\n\nCausa II.C) Falta Crítica de Personal y Saturación de Equipo (Emergente/Operativa): La incapacidad y ausencia prolongada de personal crítico en áreas clave, sumada a una sobrecarga de trabajo grave, ha mermado significativamente la capacidad de nuestros Organismos Secundarios para cumplir con los plazos de entrega (SLA). Esta situación requiere la intervención del GCO para centralizar la gestión de la carga laboral y proteger la calidad de los servicios esenciales.\n\nCausa II.D) Fuerza Mayor o Caso Fortuito (Emergente/Externa): Un acontecimiento de fuerza mayor ajeno a la gestión del Organismo ha surgido, obligando a detener gran parte de nuestros servicios debido a su impacto directo en la infraestructura tecnológica y/o legal necesaria para su ejecución.\n\nDisposiciones adoptadas bajo la Potestad GCO\n\nBajo la potestad del Artículo 22, se establecen las siguientes medidas extraordinarias que tienen efecto inmediato:\n\n1. Suspensión Total de GSDesigns: Se declara la suspensión total e inmediata de las operaciones del Organismo Secundario Grouvex Studios Designs (GSDesigns). Todo proyecto y servicio gráfico queda congelado hasta nuevo aviso. El personal de GSDesigns pasa temporalmente a disposición del Equipo de Gestión para tareas administrativas o de soporte en el Organismo Principal.\n\n2. Priorización y Reducción de Tiempos (Art. 22.4): Se ordena la activación de un protocolo de \"Entrega Crítica Restringida\" en GSRecords (ToS&PP - GSRecords: 1.A.b.IX.A: 4 semanas de antelación a la fecha de venta que desea el artista). Se establece una reducción del tiempo de trabajo en proyectos de baja prioridad para enfocar el 100% de la capacidad operativa residual en aquellos proyectos con fechas de lanzamiento inminentes, asegurando el cumplimiento de la distribución musical. GSRecords solo operará para finalizar proyectos ya aprobados y mitigar el riesgo del backlog generado por la Causa II.C. Esta normativa recobrará su vigencia tan pronto cese la activación del GCO.\n\n3. Activación de Sistemas Automáticos (Art. 24.1): Se prioriza la activación de los sistemas automáticos de respuesta para gestionar las consultas no críticas y notificar de manera continua el estado de la activación del GCO, liberando al personal operativo de tareas administrativas.\n\nEl Sistema GCO permanecerá activo de manera indefinida hasta que la situación de Causa II.D se haya resuelto completamente y el Equipo de Gestión lo haya comunicado oficialmente. En el momento de su desactivación, todos los Artículos, Secciones y Normativas que hayan sido suspendidos, así como el funcionamiento normal de GSDesigns, recobrarán automáticamente su plena vigencia y operatividad (Artículo 25).\n\nAgradecemos la comprensión de todos los Miembros y la Comunidad ante estas medidas. Para cualquier consulta urgente, se mantiene activo el contacto oficial en oficina@grouvex.com.\n\nAtentamente,\nEquipo de Gestión de Grouvex Studios"
+        },
+        {
+          "type": "noticia",
+          "fecha": 1753534800,
+          "fecha_str": "1 ago 2025 10:00 GMT",
+          "usuario": "Grouvex Studios",
+          "titulo": "Vacaciones",
+          "content": "El equipo de Grouvex Studios y sus suborganismos han trabajado muy duro durante este año. Todos los servicios, menos las comunidades, proyectos que se quieran mantener activos así como miembros del equipo, nos tomaremos un descanso desde el 1 de agosto, 17:30 GTM, hasta el 1 de octubre de 2025. El contacto oficial será oficina@grouvex.com. El servicio chat live está cerrado durante este período. Hasta entonces, descansen y diviértanse en la comunidad.\n\nAtentamente, Equipo de Gestión de Grouvex Studios"
+        },
+        {
+          "type": "noticia",
+          "fecha": 1745931600,
+          "fecha_str": "29 abr 2025 10:00 GMT",
+          "usuario": "Grouvex Studios",
+          "titulo": "Caída del Suministro Eléctrico",
+          "content": "A fecha de 28 de abril de 2025, la situación de la caída del suministro eléctrico en la Península Ibérica, desde el Equipo de Gestión de Grouvex Studios, se informa que los servicios con los que trabajamos no se han visto afectados y por ello aquellos que tenían previsto lanzar proyectos hoy, se han podido realizar.\n\nDesde el equipo de Grouvex Studios Records se nos ha informado que no han recibido en estas últimas horas, en las que se ha recuperado la electricidad, ningún nuevo proyecto y por lo tanto no se ha visto afectada ninguna solicitud.\n\nPuesto que nuestro funcionamiento es a través de Internet, los servicios estarán activos en la medida de lo posible salvo que vuelva a caer el suministro eléctrico.\n\nPodrán consultar cualquier cosa poniéndose en contacto con oficina@grouvex.com.\n\nLes informamos que el equipo técnico de Grouvex Studios está planteando medidas de contacto en circunstancias similares a la ocurrida.\n\nInforme del Gobierno español - La Moncloa\n\nAtentamente, Equipo de Gestión de Grouvex Studios"
+        }
+      ]
+    },
+    {
+      "id": "nogs-records-001-2025",
+      "organism": "records",
+      "type": "no",
+      "title": "N.O. GS-Records",
+      "reference": "NOGS/RECORDS/2025",
+      "date": 1748649600,
+      "description": "Noticias Oficiales de Grouvex Records. Comunicados sobre modificaciones y estado del equipo.",
+      "version": 2,
+      "tags": [
+        "records",
+        "noticias",
+        "planes",
+        "saturación",
+        "mantenimiento"
+      ],
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "NOGS/RECORDS/2025",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Noticias Oficiales",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios Records",
+              "icon": "fa-building"
+            }
+          ]
+        },
+        {
+          "type": "indice",
+          "items": [
+            "Modificación de Planes",
+            "Saturación del Equipo"
+          ]
+        },
+        {
+          "type": "noticia",
+          "fecha": 1758634200,
+          "fecha_str": "30 may 2025 21:30 GMT",
+          "usuario": "Grouvex Phoenix",
+          "titulo": "Modificación de Planes",
+          "asunto": "Suspensión Temporal de Cuenta por Mantenimiento",
+          "de": "Grouvex Phoenix, Director Ejecutivo de GSRecords",
+          "content": "Se le informa que, como parte de las actualizaciones en los Planes de Distribución Musical, su cuenta ha sido suspendida temporalmente por motivos de mantenimiento interno. Para mayor información sobre estos cambios, puede consultar la documentación oficial en el siguiente enlace: Documentación de Actualización GSRecords.\n\nAgradecemos su comprensión y colaboración durante este proceso. Para cualquier consulta, no dude en contactar a nuestro equipo de soporte.\n\nAtentamente,\nGrouvex Phoenix\nDirector Ejecutivo\nGrouvex Studios Records"
+        },
+        {
+          "type": "noticia",
+          "fecha": 1758378600,
+          "fecha_str": "27 may 2025 22:30 GMT",
+          "usuario": "Grouvex Phoenix",
+          "titulo": "Saturación del Equipo",
+          "content": "El Equipo de Grouvex Studios Records está saturado actualmente, por tanto, durante un periodo, la entrega del proyecto para lanzarlo, deberá ser 6 semanas antes de la fecha de venta que indique el artista."
         }
       ]
     },
@@ -1020,49 +1982,73 @@
       "reference": "MIEMBROS/GS/2025",
       "date": 1748649600,
       "description": "Listado oficial de miembros de Grouvex Studios",
-      "content": "Miembros de Grouvex Studios\n\nGrouvex Studios - grouvex.studios@grouvex.com - Jefe\nGrouvex Phoenix - grouvex.phoenix@grouvex.com - Administrador\nTarlight Etherall - etarlight.etherall@grouvex.com - Moderador",
-      "version": 1,
+      "version": 2,
       "tags": ["miembros", "equipo", "contactos"],
-      "versions": []
-    },
-    {
-      "id": "nogs-001-2025",
-      "organism": "grouvex",
-      "type": "no",
-      "title": "N.O.Grouvex Studios",
-      "reference": "NOGS/2025/001",
-      "date": 1748649600,
-      "description": "Noticias Oficiales de Grouvex Studios",
-      "content": "Noticias Oficiales de Grouvex Studios\n\n22 nov 2025 - Activación Sistema GCO\nEl Sistema de Gestión de Continuidad Operacional (GCO) se activa por concurrencia de eventos críticos.\n\n1 ago 2025 - Vacaciones\nEl equipo de Grouvex Studios se toma un descanso del 1 de agosto al 1 de octubre.",
-      "version": 1,
-      "tags": ["noticias", "comunicados", "GCO"],
-      "versions": []
-    },
-    {
-      "id": "tos-comunidad-2025",
-      "organism": "grouvex",
-      "type": "tos",
-      "title": "ToS&PP - Comunidad",
-      "reference": "TOS/COMUNIDAD/2025",
-      "date": 1748649600,
-      "description": "Términos de Servicio y Políticas de Privacidad de la Comunidad",
-      "content": "TÉRMINOS DE SERVICIO Y POLÍTICAS DE PRIVACIDAD - COMUNIDAD\n\nArtículo 1. Objeto y Ámbito de Aplicación\nEl presente documento establece los Términos de Servicio (TOS) y las Políticas de Privacidad (PP) que regulan el acceso, uso y participación en la comunidad en línea de Grouvex Studios.",
-      "version": 1,
-      "tags": ["tos", "privacidad", "comunidad"],
-      "versions": []
-    },
-    {
-      "id": "bogs-records-2025",
-      "organism": "records",
-      "type": "bo",
-      "title": "B.O.GS-Records",
-      "reference": "BOGS/RECORDS/2025/002",
-      "date": 1748649600,
-      "description": "Boletín Oficial de Grouvex Studios Records",
-      "content": "B.O.Grouvex Studios Records\n\nCapítulo III. Planes de Distribución Musical\n\nPlan Gratis:\n- Costo: 0€ al mes\n- Cuentas Artísticas: 2 por usuario\n- Fecha de Lanzamiento: personalizada\n- Subida de Canciones: ilimitada\n- Copyright: Grouvex Studios Record\n\nPlan Estándar: 8,99€/mes\nPlan Premium: 26,99€/mes",
-      "version": 1,
-      "tags": ["records", "música", "planes"],
-      "versions": []
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "MIEMBROS/GS/2025",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Miembros",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios",
+              "icon": "fa-building"
+            },
+            {
+              "label": "Última Actualización",
+              "value": "17 sept 2025 11:00 UTC",
+              "icon": "fa-clock"
+            }
+          ]
+        },
+        {
+          "type": "aviso",
+          "content": "Los correos con dominio o subdominio diferente a @grouvex.com o [organismo].gstudios@gmail.com (ejemplo: records.gstudios@gmail.com) no serán válidos como contacto oficial entre usuario y miembro del equipo. Salvo que el miembro se ponga en contacto con el usuario usando los dominios externos a @grouvex.com.\n\nLos correos personales, serán un método de contacto únicamente y exclusivamente si el miembro en cuestión le informa que tiene permiso para ello. En caso de ponerse directamente en contacto con los correos personales, estos no les podrá atender. Deberán enviar un correo a oficina@grouvex.com."
+        },
+        {
+          "type": "tabla-miembros",
+          "titulo": "Miembros de Grouvex Studios",
+          "headers": ["Nombre", "Correo electrónico", "Teléfono", "Posición Principal", "Insignias", "Fecha de Inscripción", "Estado"],
+          "rows": [
+            {
+              "nombre": "Grouvex Studios",
+              "email": "grouvex.studios@grouvex.com",
+              "telefono": "",
+              "posicion": "Jefe",
+              "insignias": "powered by",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            },
+            {
+              "nombre": "Grouvex Phoenix",
+              "email": "grouvex.phoenix@grouvex.com",
+              "telefono": "",
+              "posicion": "Administrador",
+              "insignias": "✓ ✓ ✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            },
+            {
+              "nombre": "Tarlight Etherall",
+              "email": "etarlight.etherall@grouvex.com",
+              "telefono": "",
+              "posicion": "Moderador",
+              "insignias": "✓ ✓ ✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "miembros-records-2025",
@@ -1072,49 +2058,68 @@
       "reference": "MIEMBROS/RECORDS/2025",
       "date": 1748649600,
       "description": "Miembros del sello discográfico Grouvex Records",
-      "content": "Miembros de GSRecords\n\nGrouvex Studios - Soporte\nGrouvex Phoenix - Director Ejecutivo\nTarlight Etherall - Soporte",
-      "version": 1,
+      "version": 2,
       "tags": ["records", "miembros", "equipo"],
-      "versions": []
-    },
-    {
-      "id": "nogs-records-2025",
-      "organism": "records",
-      "type": "no",
-      "title": "N.O.GS-Records",
-      "reference": "NOGS/RECORDS/2025",
-      "date": 1748649600,
-      "description": "Noticias Oficiales de Grouvex Records",
-      "content": "Noticias Oficiales de GSRecords\n\n30 may 2025 - Modificación de Planes\nActualización de los Planes de Distribución Musical.\n\n27 may 2025 - Saturación del Equipo\nEl equipo está saturado, plazo de entrega extendido a 6 semanas.",
-      "version": 1,
-      "tags": ["records", "noticias", "planes"],
-      "versions": []
-    },
-    {
-      "id": "tos-records-2025",
-      "organism": "records",
-      "type": "tos",
-      "title": "ToS&PP - GSRecords",
-      "reference": "TOS/RECORDS/2025",
-      "date": 1748649600,
-      "description": "Términos de Servicio de Grouvex Records",
-      "content": "TÉRMINOS DE SERVICIO - GROUVEX STUDIOS RECORDS\n\nDerechos del Artista:\n- Acceso a la plataforma y contenidos\n- Derechos de propiedad intelectual\n- Protección de datos personales\n- Derechos económicos (regalías)\n\nCompromisos del Artista:\n- Garantía de originalidad\n- Respeto de exclusividad\n- Colaboración promocional",
-      "version": 1,
-      "tags": ["records", "tos", "artistas"],
-      "versions": []
-    },
-    {
-      "id": "bogs-designs-2025",
-      "organism": "designs",
-      "type": "bo",
-      "title": "B.O.GS-Designs",
-      "reference": "BOGS/DESIGNS/2025",
-      "date": 1748649600,
-      "description": "Boletín Oficial de Grouvex Designs",
-      "content": "B.O.Grouvex Studios Designs\n\nGrouvex Studios Designs se especializa en la creación de diseños de imagen, abarcando la elaboración de portadas para libros y obras musicales.",
-      "version": 1,
-      "tags": ["designs", "diseño", "portadas"],
-      "versions": []
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "MIEMBROS/RECORDS/2025",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Miembros",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios Records",
+              "icon": "fa-building"
+            }
+          ]
+        },
+        {
+          "type": "aviso",
+          "content": "Los correos con dominio o subdominio diferente a @grouvex.com o [organismo].gstudios@gmail.com (ejemplo: records.gstudios@gmail.com) no serán válidos como contacto oficial entre usuario y miembro del equipo. Salvo que el miembro se ponga en contacto con el usuario usando los dominios externos a @grouvex.com.\n\nLos correos personales, serán un método de contacto únicamente y exclusivamente si el miembro en cuestión le informa que tiene permiso para ello. En caso de ponerse directamente en contacto con los correos personales, estos no les podrá atender. Deberán enviar un correo a oficina@grouvex.com."
+        },
+        {
+          "type": "tabla-miembros",
+          "titulo": "Miembros de GSRecords",
+          "headers": ["Nombre", "Correo electrónico", "Teléfono", "Posición Principal", "Insignias", "Fecha de Inscripción", "Estado"],
+          "rows": [
+            {
+              "nombre": "Grouvex Studios",
+              "email": "grouvex.studios@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Vacaciones"
+            },
+            {
+              "nombre": "Grouvex Phoenix",
+              "email": "grouvex.phoenix@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Vacaciones"
+            },
+            {
+              "nombre": "Tarlight Etherall",
+              "email": "etarlight.etherall@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Vacaciones"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "miembros-designs-2025",
@@ -1124,113 +2129,288 @@
       "reference": "MIEMBROS/DESIGNS/2025",
       "date": 1748649600,
       "description": "Equipo de diseño de Grouvex Studios",
-      "content": "Miembros de GSDesigns\n\nGrouvex Studios - Soporte\nGrouvex Phoenix - Diseñador Principal\nTarlight Etherall - Diseñador",
-      "version": 1,
+      "version": 2,
       "tags": ["designs", "miembros", "equipo"],
-      "versions": []
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "MIEMBROS/DESIGNS/2025",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Miembros",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios Designs",
+              "icon": "fa-building"
+            }
+          ]
+        },
+        {
+          "type": "aviso",
+          "content": "Los correos con dominio o subdominio diferente a @grouvex.com o [organismo].gstudios@gmail.com (ejemplo: records.gstudios@gmail.com) no serán válidos como contacto oficial entre usuario y miembro del equipo. Salvo que el miembro se ponga en contacto con el usuario usando los dominios externos a @grouvex.com.\n\nLos correos personales, serán un método de contacto únicamente y exclusivamente si el miembro en cuestión le informa que tiene permiso para ello. En caso de ponerse directamente en contacto con los correos personales, estos no les podrá atender. Deberán enviar un correo a oficina@grouvex.com."
+        },
+        {
+          "type": "tabla-miembros",
+          "titulo": "Miembros de GSDesigns",
+          "headers": ["Nombre", "Correo electrónico", "Teléfono", "Posición Principal", "Insignias", "Fecha de Inscripción", "Estado"],
+          "rows": [
+            {
+              "nombre": "Grouvex Studios",
+              "email": "grouvex.studios@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            },
+            {
+              "nombre": "Grouvex Phoenix",
+              "email": "grouvex.phoenix@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓ ✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            },
+            {
+              "nombre": "Tarlight Etherall",
+              "email": "etarlight.etherall@grouvex.com",
+              "telefono": "",
+              "posicion": "Soporte",
+              "insignias": "✓ ✓",
+              "fecha_inscripcion": "Fecha",
+              "estado": "Activo"
+            }
+          ]
+        }
+      ]
     },
     {
-      "id": "nogs-designs-2025",
-      "organism": "designs",
-      "type": "no",
-      "title": "N.O.GS-Designs",
-      "reference": "NOGS/DESIGNS/2025",
-      "date": 1748649600,
-      "description": "Noticias de Grouvex Designs",
-      "content": "Noticias Oficiales de GSDesigns\n\nPróximamente: Nuevos servicios de diseño corporativo.",
-      "version": 1,
-      "tags": ["designs", "noticias"],
-      "versions": []
-    },
-    {
-      "id": "tos-designs-2025",
-      "organism": "designs",
-      "type": "tos",
-      "title": "ToS&PP - Designs",
-      "reference": "TOS/DESIGNS/2025",
-      "date": 1748649600,
-      "description": "Términos de servicio de Grouvex Designs",
-      "content": "Términos de Servicio - Grouvex Designs\n\nServicios de diseño gráfico, ilustración y branding.",
-      "version": 1,
-      "tags": ["designs", "tos"],
-      "versions": []
-    },
-    {
-      "id": "bogs-games-2025",
-      "organism": "games",
-      "type": "bo",
-      "title": "B.O.GS-Games",
-      "reference": "BOGS/GAMES/2025",
-      "date": 1748649600,
-      "description": "Boletín Oficial de Grouvex Games",
-      "content": "B.O.Grouvex Studios Games\n\nDivisión de videojuegos de Grouvex Studios.",
-      "version": 1,
-      "tags": ["games", "videojuegos"],
-      "versions": []
-    },
-    {
-      "id": "miembros-games-2025",
-      "organism": "games",
-      "type": "miembros",
-      "title": "Miembros de GS-Games",
-      "reference": "MIEMBROS/GAMES/2025",
-      "date": 1748649600,
-      "description": "Equipo de desarrollo de videojuegos",
-      "content": "Miembros de GSGames\n\nPróximamente...",
-      "version": 1,
-      "tags": ["games", "miembros"],
-      "versions": []
-    },
-    {
-      "id": "nogs-games-2025",
-      "organism": "games",
-      "type": "no",
-      "title": "N.O.GS-Games",
-      "reference": "NOGS/GAMES/2025",
-      "date": 1748649600,
-      "description": "Noticias de Grouvex Games",
-      "content": "Próximos lanzamientos y novedades de GSGames.",
-      "version": 1,
-      "tags": ["games", "noticias"],
-      "versions": []
-    },
-    {
-      "id": "tos-games-2025",
-      "organism": "games",
-      "type": "tos",
-      "title": "ToS&PP - Games",
-      "reference": "TOS/GAMES/2025",
-      "date": 1748649600,
-      "description": "Términos de servicio de Grouvex Games",
-      "content": "Términos y condiciones para el uso de los servicios de Grouvex Games.",
-      "version": 1,
-      "tags": ["games", "tos"],
-      "versions": []
-    },
-    {
-      "id": "ddoo-main-2025",
+      "id": "plantilla-bogs",
       "organism": "grouvex",
       "type": "bo",
-      "title": "DDOO - Grouvex Studios",
-      "reference": "DDOO/GS/2025",
+      "title": "Plantilla B.O. Grouvex Studios",
+      "reference": "PLANTILLA/BOGS",
       "date": 1748649600,
-      "description": "Documentos Oficiales de Grouvex Studios (índice completo)",
-      "content": "DOCUMENTOS OFICIALES GROUVEX STUDIOS (DDOO)\n\nGrouvex Studios:\n- B.O.Grouvex Studios\n- Miembros de Grouvex Studios\n- N.O.Grouvex Studios\n- ToS&PP - Comunidad\n\nGrouvex Studios Records:\n- B.O.GS-Records\n- Miembros de GS-Records\n- N.O.GS-Records\n- ToS&PP - GSRecords\n\nGrouvex Studios Designs:\n- B.O.GS-Designs\n- Miembros de GS-Designs\n- N.O.GS-Designs\n- ToS&PP - Designs\n\nGrouvex Studios Games:\n- B.O.GS-Games\n- Miembros de GS-Games\n- N.O.GS-Games\n- ToS&PP - Games",
+      "description": "Plantilla oficial para la creación de nuevos Boletines Oficiales de Grouvex Studios",
       "version": 1,
-      "tags": ["ddoo", "índice", "documentos"],
-      "versions": []
-    },
-    {
-      "id": "doc_1772053448847_yaw7dd88h",
-      "organism": "games",
-      "type": "no",
-      "title": "Suspensión del Organismo",
-      "reference": "NOGSGames/2026/01",
-      "date": 1772053349,
-      "description": "Organismo Secundario sin Propietario",
-      "content": "El organismo GSGames tiene que suspender sus servicios hasta que se encuentre un nuevo propietario para dicho organismo.",
-      "tags": ["games", "suspensión"],
-      "version": 1
+      "tags": ["plantilla", "boletín", "formato"],
+      "structure": [
+        {
+          "type": "metadata",
+          "items": [
+            {
+              "label": "Referencia",
+              "value": "BOGS/[AÑO]/[NÚMERO]",
+              "icon": "fa-hashtag"
+            },
+            {
+              "label": "Tipo",
+              "value": "Boletín Oficial",
+              "icon": "fa-tag"
+            },
+            {
+              "label": "Organismo",
+              "value": "Grouvex Studios",
+              "icon": "fa-building"
+            },
+            {
+              "label": "Fecha",
+              "value": "31 de mayo de 2025",
+              "icon": "fa-calendar-alt"
+            },
+            {
+              "label": "ISSN",
+              "value": "BOGS-[AÑO]-[NÚMERO]",
+              "icon": "fa-barcode"
+            }
+          ]
+        },
+        {
+          "type": "sumario",
+          "titulo": "SUMARIO",
+          "items": [
+            {"texto": "SUMARIO", "id": "sumario"},
+            {"texto": "SECCIÓN I: DISPOSICIONES GENERALES", "id": "seccion-I"},
+            {"texto": "DISPOSICIÓN BOGS/[AÑO]/[NÚMERO]", "id": "disposicion"},
+            {"texto": "[TÍTULO DE LA DISPOSICIÓN]", "id": "titulo-disposicion"},
+            {"texto": "Artículo X. [Título descriptivo]", "id": "articulo-X"},
+            {"texto": "DISPOSICIONES FINALES", "id": "disposiciones-finales"},
+            {"texto": "SECCIÓN II: ANUNCIOS OFICIALES", "id": "seccion-II"},
+            {"texto": "[E.G. Convocatoria BOGS/[AÑO]/[NÚMERO]]", "id": "convocatoria"},
+            {"texto": "[E.G. Edicto BOGS/[AÑO]/[NÚMERO]]", "id": "edicto"},
+            {"texto": "SECCIÓN III: REGISTROS Y ACTUALIZACIONES", "id": "seccion-III"},
+            {"texto": "Registro BOGS/[AÑO]/[NÚMERO]", "id": "registro"},
+            {"texto": "Actualización BOGS/[AÑO]/[NÚMERO]", "id": "actualizacion"},
+            {"texto": "SECCIÓN IV: APÉNDICES", "id": "seccion-IV"},
+            {"texto": "Anexo I: [Título del Anexo]", "id": "anexo-I"},
+            {"texto": "Anexo II: [Título del Anexo]", "id": "anexo-II"},
+            {"texto": "CIERRE", "id": "cierre"}
+          ]
+        },
+        {
+          "type": "seccion",
+          "numero": "I",
+          "content": "DISPOSICIONES GENERALES"
+        },
+        {
+          "type": "descripcion-seccion",
+          "content": "Esta sección incluye normativas internas, políticas, reglamentos y acuerdos corporativos. Aquí se establecen o modifican las reglas de la empresa."
+        },
+        {
+          "type": "disposicion",
+          "referencia": "BOGS/[AÑO]/[NÚMERO]",
+          "content": "[TÍTULO DE LA DISPOSICIÓN, e.g., APROBACIÓN DE LA POLÍTICA DE SEGURIDAD DE DATOS]"
+        },
+        {
+          "type": "articulo",
+          "numero": "X",
+          "content": "[Título descriptivo]"
+        },
+        {
+          "type": "lista",
+          "tipo": "numerada",
+          "items": [
+            "Concepto: Definición clara de lo que regula.",
+            "Alcance: ¿A quiénes aplica? (usuarios, equipos, terceros).",
+            "Condiciones específicas: Límites, excepciones o requisitos.",
+            "Referencia a anexos (si aplica): \"Ver desarrollo en Anexo III, Tabla 2\""
+          ]
+        },
+        {
+          "type": "subtitulo",
+          "content": "DISPOSICIONES FINALES"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Vigencia: Entra en vigor el [Fecha de Vigencia, e.g., 01/07/2025]. Deroga versiones anteriores ([CÓDIGO DE VERSIÓN ANTERIOR]).",
+            "Publicación: Difusión en la web oficial y notificación por email a usuarios registrados."
+          ]
+        },
+        {
+          "type": "firma",
+          "nombre": "[Nombre del Director]",
+          "cargo": "[Cargo]"
+        },
+        {
+          "type": "seccion",
+          "numero": "II",
+          "content": "ANUNCIOS OFICIALES"
+        },
+        {
+          "type": "convocatoria",
+          "referencia": "[E.G. Convocatoria BOGS/[AÑO]/[NÚMERO]]",
+          "titulo": "[Título del Anuncio, e.g., Pruebas Beta para \"Proyecto Eclíptica\"]"
+        },
+        {
+          "type": "lista",
+          "tipo": "numerada",
+          "items": [
+            "Objetivo: Breve descripción.",
+            "Detalles: Fechas, beneficios, acciones requeridas.",
+            "Contacto: Correo/encargado"
+          ]
+        },
+        {
+          "type": "edicto",
+          "referencia": "[E.G. Edicto BOGS/[AÑO]/[NÚMERO]]",
+          "content": "[Título del Anuncio, e.g., Cambio de Razón Social de Subsidiaria]"
+        },
+        {
+          "type": "lista",
+          "tipo": "numerada",
+          "items": [
+            "Motivo: Razón del cambio.",
+            "Impacto: Áreas afectadas.",
+            "Vigencia: Fecha de obligatoriedad."
+          ]
+        },
+        {
+          "type": "seccion",
+          "numero": "III",
+          "content": "REGISTROS Y ACTUALIZACIONES"
+        },
+        {
+          "type": "registro",
+          "referencia": "Registro BOGS/[AÑO]/[NÚMERO]",
+          "titulo": "[Título del Registro, e.g., Depósito Legal del Juego \"Chronicles of Aether\"]"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Tipo: Copyright/Patente/ISO.",
+            "Número de expediente: [Ej: DL-2025-789].",
+            "Fecha: DD/MM/AAAA."
+          ]
+        },
+        {
+          "type": "actualizacion",
+          "referencia": "Actualización BOGS/[AÑO]/[NÚMERO]",
+          "titulo": "[Título de la Actualización, e.g., Estado del Servidor \"Nexus Online\"]"
+        },
+        {
+          "type": "lista",
+          "tipo": "simple",
+          "items": [
+            "Ámbito: Servidor/Plataforma afectada.",
+            "Cambios: Lista breve.",
+            "Tiempo de inactividad: (Si aplica)."
+          ]
+        },
+        {
+          "type": "seccion",
+          "numero": "IV",
+          "content": "APÉNDICES"
+        },
+        {
+          "type": "anexo",
+          "numero": "I",
+          "titulo": "[Título del Anexo]",
+          "subtitulo": "[Subtítulo del Anexo]"
+        },
+        {
+          "type": "historial-modificaciones",
+          "tabla": true
+        },
+        {
+          "type": "anexo",
+          "numero": "II",
+          "titulo": "[Título del Anexo]",
+          "subtitulo": "[Subtítulo del Anexo]"
+        },
+        {
+          "type": "historial-modificaciones",
+          "tabla": true
+        },
+        {
+          "type": "titulo",
+          "content": "CIERRE"
+        },
+        {
+          "type": "parrafo",
+          "content": "Este Boletín Oficial se publica en cumplimiento del Artículo 8 del Estatuto de Grouvex Studios. Próxima publicación: [Fecha de Próxima Publicación, e.g., 30 de junio de 2025]."
+        },
+        {
+          "type": "firma",
+          "nombre": "[Nombre del Director General]",
+          "cargo": "Director General",
+          "organismo": "Grouvex Studios"
+        },
+        {
+          "type": "notas",
+          "contenido": "Para consultas legales, contactar con [correo electrónico de contacto, e.g., legal@grouvexstudios.com]."
+        }
+      ]
     }
   ]
 }
