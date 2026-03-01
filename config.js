@@ -1080,11 +1080,9 @@ function signOut() {
 }
 
 const authorizedEmails = [
-    'admin@grouvex.com',
-    'legal@grouvex.com',
-    'grouvex.phoenix@grouvex.com',
-    'director@grouvex.com',
-    'grouvex.studio@gmail.com',
+    'tarlightetherall@gmail.com','tarlight.etherall@grouvex.com',
+    'grouvex.phoenix@grouvex.com','grouvex@gmail.com',
+    'grouvex.studio@gmail.com', 'grouvex.studios@grouvex.com',
     'gco.gstudios@gmail.com'
 ];
 
