@@ -21,6 +21,212 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
+// AUTENTICACIÓN CON FIREBASE (CORREGIDA)
+// ============================================
+
+// Lista de correos autorizados
+const authorizedEmails = [
+    'tarlightetherall@gmail.com',
+    'tarlight.etherall@grouvex.com',
+    'grouvex.phoenix@grouvex.com',
+    'grouvex@gmail.com',
+    'grouvex.studio@gmail.com',
+    'grouvex.studios@grouvex.com',
+    'gco.gstudios@gmail.com'
+];
+
+function isAuthorized(email) {
+    return authorizedEmails.includes(email);
+}
+
+// Configurar listener de autenticación
+function setupAuthListener() {
+    // Verificar que Firebase Auth esté disponible
+    if (!firebase || !firebase.auth) {
+        console.error('Firebase Auth no está inicializado');
+        showAuthMessage('error', 'Error de configuración de Firebase');
+        return;
+    }
+    
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (user && isAuthorized(user.email)) {
+            currentUser = user;
+            showAdminPanel();
+            await loadCurrentData();
+            showEditorMessage('success', `👋 Bienvenido, ${user.displayName || user.email}`);
+        } else {
+            if (user) {
+                // Usuario no autorizado - cerrar sesión
+                await firebase.auth().signOut();
+                showAuthMessage('error', '⛔ No tienes permisos para acceder. Usa una cuenta @grouvex.com o autorizada.');
+            }
+            showAuthSection();
+        }
+    });
+}
+
+// FUNCIÓN PRINCIPAL DE LOGIN CON GOOGLE (CORREGIDA)
+function signInWithGoogle() {
+    console.log('Iniciando sesión con Google...');
+    
+    try {
+        // Verificar que Firebase esté disponible
+        if (!firebase || !firebase.auth) {
+            console.error('Firebase no está inicializado');
+            showAuthMessage('error', 'Error: Firebase no está configurado correctamente');
+            return;
+        }
+        
+        // Configurar proveedor de Google
+        const provider = new firebase.auth.GoogleAuthProvider();
+        
+        // Configuraciones adicionales
+        provider.setCustomParameters({
+            prompt: 'select_account' // Siempre pide seleccionar cuenta
+        });
+        
+        // Agregar scopes necesarios
+        provider.addScope('profile');
+        provider.addScope('email');
+        
+        // Mostrar indicador de carga
+        const authMessage = document.getElementById('authMessage');
+        authMessage.textContent = '⏳ Abriendo ventana de Google...';
+        authMessage.className = 'auth-message info';
+        
+        // Iniciar sesión con popup
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                // Éxito en la autenticación
+                const user = result.user;
+                const credential = result.credential;
+                
+                console.log('✅ Login exitoso:', user.email);
+                
+                // Verificar autorización
+                if (!isAuthorized(user.email)) {
+                    // Usuario no autorizado
+                    firebase.auth().signOut();
+                    showAuthMessage('error', '⛔ Acceso denegado. Correo no autorizado.');
+                    return;
+                }
+                
+                // Login exitoso y autorizado
+                showAuthMessage('success', `✅ Bienvenido, ${user.displayName || user.email}`);
+                
+            })
+            .catch((error) => {
+                console.error('❌ Error en autenticación:', error);
+                
+                // Manejo específico de errores
+                let errorMessage = 'Error al iniciar sesión';
+                
+                switch (error.code) {
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'La ventana se cerró antes de completar el proceso';
+                        break;
+                    case 'auth/popup-blocked':
+                        errorMessage = 'El navegador bloqueó la ventana emergente';
+                        break;
+                    case 'auth/cancelled-popup-request':
+                        errorMessage = 'Solo una ventana de autenticación puede estar abierta';
+                        break;
+                    case 'auth/unauthorized-domain':
+                        errorMessage = 'Dominio no autorizado en Firebase Console';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Error de conexión. Verifica tu internet';
+                        break;
+                    default:
+                        errorMessage = error.message || 'Error desconocido';
+                }
+                
+                showAuthMessage('error', `❌ ${errorMessage}`);
+            });
+            
+    } catch (error) {
+        console.error('Error crítico:', error);
+        showAuthMessage('error', 'Error al iniciar el proceso de autenticación');
+    }
+}
+
+// Función alternativa con redirect (para móviles)
+function signInWithGoogleRedirect() {
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        firebase.auth().signInWithRedirect(provider);
+    } catch (error) {
+        console.error('Error en redirect:', error);
+        showAuthMessage('error', 'Error al redirigir a Google');
+    }
+}
+
+// Manejar resultado de redirect (llamar al cargar la página)
+function handleRedirectResult() {
+    firebase.auth().getRedirectResult()
+        .then((result) => {
+            if (result.user) {
+                console.log('Redirect login exitoso:', result.user.email);
+                if (!isAuthorized(result.user.email)) {
+                    firebase.auth().signOut();
+                    showAuthMessage('error', 'Acceso denegado');
+                }
+            }
+        })
+        .catch((error) => {
+            console.error('Error en redirect result:', error);
+        });
+}
+
+// Cerrar sesión
+function signOut() {
+    firebase.auth().signOut()
+        .then(() => {
+            console.log('Sesión cerrada');
+            window.location.reload(); // Recargar para limpiar todo
+        })
+        .catch((error) => {
+            console.error('Error al cerrar sesión:', error);
+            showAuthMessage('error', 'Error al cerrar sesión');
+        });
+}
+
+// Mostrar panel de administración
+function showAdminPanel() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    
+    if (currentUser) {
+        document.getElementById('userName').textContent = currentUser.displayName || 'Administrador';
+        document.getElementById('userEmail').textContent = currentUser.email;
+        document.getElementById('userAvatar').src = currentUser.photoURL || 'https://via.placeholder.com/56x56?text=Admin';
+    }
+}
+
+// Mostrar sección de autenticación
+function showAuthSection() {
+    document.getElementById('authSection').style.display = 'flex';
+    document.getElementById('adminPanel').style.display = 'none';
+}
+
+// Mostrar mensaje de autenticación
+function showAuthMessage(type, message) {
+    const messageEl = document.getElementById('authMessage');
+    if (!messageEl) return;
+    
+    messageEl.textContent = message;
+    messageEl.className = `auth-message ${type}`;
+    
+    if (type !== 'info') {
+        setTimeout(() => {
+            messageEl.textContent = '';
+            messageEl.className = 'auth-message';
+        }, 5000);
+    }
+}
+
+// ============================================
 // FUNCIÓN PARA OBTENER EL TOKEN DEL SECRET
 // ============================================
 async function getGitHubToken() {
@@ -1027,70 +1233,6 @@ function viewFullHistory() {
 }
 
 // ============================================
-// AUTENTICACIÓN
-// ============================================
-
-function setupAuthListener() {
-    auth.onAuthStateChanged(async (user) => {
-        if (user && isAuthorized(user.email)) {
-            currentUser = user;
-            showAdminPanel();
-            await loadCurrentData();
-        } else {
-            if (user) {
-                await auth.signOut();
-                showAuthMessage('error', 'No tienes permisos para acceder');
-            }
-            showAuthSection();
-        }
-    });
-}
-
-function showAdminPanel() {
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    
-    document.getElementById('userName').textContent = currentUser.displayName || 'Administrador';
-    document.getElementById('userEmail').textContent = currentUser.email;
-    document.getElementById('userAvatar').src = currentUser.photoURL || 'https://via.placeholder.com/56x56?text=Admin';
-}
-
-function showAuthSection() {
-    document.getElementById('authSection').style.display = 'flex';
-    document.getElementById('adminPanel').style.display = 'none';
-}
-
-function signInWithGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .catch(error => {
-            console.error('Error signing in:', error);
-            showAuthMessage('error', 'Error al iniciar sesión');
-        });
-}
-
-function signOut() {
-    auth.signOut()
-        .then(() => {
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Error signing out:', error);
-        });
-}
-
-const authorizedEmails = [
-    'tarlightetherall@gmail.com','tarlight.etherall@grouvex.com',
-    'grouvex.phoenix@grouvex.com','grouvex@gmail.com',
-    'grouvex.studio@gmail.com', 'grouvex.studios@grouvex.com',
-    'gco.gstudios@gmail.com'
-];
-
-function isAuthorized(email) {
-    return authorizedEmails.includes(email);
-}
-
-// ============================================
 // UTILIDADES
 // ============================================
 
@@ -1138,17 +1280,6 @@ function switchTab(tabName) {
 
 function closeDocumentModal() {
     document.getElementById('documentModal').classList.remove('active');
-}
-
-function showAuthMessage(type, message) {
-    const messageEl = document.getElementById('authMessage');
-    messageEl.textContent = message;
-    messageEl.className = `auth-message ${type}`;
-    
-    setTimeout(() => {
-        messageEl.textContent = '';
-        messageEl.className = 'auth-message';
-    }, 5000);
 }
 
 function showEditorMessage(type, message) {
