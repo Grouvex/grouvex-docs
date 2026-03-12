@@ -18,10 +18,309 @@ let currentEditingDoc = null;
 document.addEventListener('DOMContentLoaded', () => {
     setupAuthListener();
     loadVersions();
+    setupNavigation(); // Nueva función para navegación
 });
 
 // ============================================
-// AUTENTICACIÓN CON FIREBASE (CORREGIDA)
+// SISTEMA DE NAVEGACIÓN MEJORADO
+// ============================================
+
+function setupNavigation() {
+    // Detectar si hay un hash en la URL al cargar
+    if (window.location.hash) {
+        const targetId = window.location.hash.substring(1); // quitar el #
+        setTimeout(() => navigateToSection(targetId), 500);
+    }
+    
+    // Configurar click en todos los enlaces del índice
+    document.addEventListener('click', (e) => {
+        // Enlaces del índice con clase 'index-link'
+        if (e.target.closest('.index-link')) {
+            e.preventDefault();
+            const link = e.target.closest('.index-link');
+            const targetId = link.getAttribute('href').substring(1);
+            navigateToSection(targetId);
+        }
+        
+        // Enlaces del menú principal
+        if (e.target.closest('.nav-link')) {
+            e.preventDefault();
+            const link = e.target.closest('.nav-link');
+            const targetId = link.getAttribute('data-target');
+            navigateToSection(targetId);
+        }
+    });
+}
+
+function navigateToSection(sectionId) {
+    const element = document.getElementById(sectionId);
+    
+    if (element) {
+        // Scroll suave
+        element.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
+        
+        // Actualizar URL sin recargar
+        history.pushState(null, null, `#${sectionId}`);
+        
+        // Resaltar elemento
+        highlightSection(element);
+    } else {
+        console.log(`Sección ${sectionId} no encontrada`);
+    }
+}
+
+function highlightSection(element) {
+    // Quitar resaltado de todas las secciones
+    document.querySelectorAll('.highlight-section').forEach(el => {
+        el.classList.remove('highlight-section');
+    });
+    
+    // Añadir resaltado temporal
+    element.classList.add('highlight-section');
+    
+    // Quitar resaltado después de 2 segundos
+    setTimeout(() => {
+        element.classList.remove('highlight-section');
+    }, 2000);
+}
+
+// ============================================
+// GENERAR ÍNDICE AUTOMÁTICO
+// ============================================
+
+function generateIndex() {
+    if (!currentData || !currentData.documents) return '';
+    
+    const organismOrder = ['grouvex', 'records', 'designs', 'games'];
+    let indexHtml = '<div class="document-index">';
+    indexHtml += '<h3><i class="fas fa-list"></i> Índice de Documentos</h3>';
+    
+    organismOrder.forEach(org => {
+        const orgDocs = currentData.documents.filter(d => d.organism === org);
+        if (orgDocs.length > 0) {
+            indexHtml += `
+                <div class="index-organism">
+                    <h4 class="organism-title ${org}">${getOrganismLabel(org)}</h4>
+                    <ul class="index-list">
+            `;
+            
+            orgDocs.forEach(doc => {
+                const docId = `doc-${doc.id}`;
+                const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
+                
+                indexHtml += `
+                    <li class="index-item">
+                        <a href="#${docId}" class="index-link">
+                            <span class="index-badge ${doc.type}">${getTypeLabel(doc.type)}</span>
+                            <span class="index-title">${escapeHtml(doc.title)}</span>
+                            ${hasStructure ? '<i class="fas fa-code structure-icon" title="Documento estructurado"></i>' : ''}
+                        </a>
+                    </li>
+                `;
+            });
+            
+            indexHtml += '</ul></div>';
+        }
+    });
+    
+    indexHtml += '</div>';
+    return indexHtml;
+}
+
+// ============================================
+// RENDERIZAR DOCUMENTOS CON IDS PARA NAVEGACIÓN
+// ============================================
+
+function renderDocumentsList() {
+    const container = document.getElementById('documentsList');
+    const organismFilter = document.getElementById('organismFilter')?.value || 'all';
+    
+    if (!currentData || !currentData.documents) {
+        container.innerHTML = '<p class="loading-small">No hay documentos</p>';
+        return;
+    }
+    
+    let filteredDocs = currentData.documents;
+    if (organismFilter !== 'all') {
+        filteredDocs = filteredDocs.filter(doc => doc.organism === organismFilter);
+    }
+    
+    const grouped = {};
+    filteredDocs.forEach(doc => {
+        if (!grouped[doc.organism]) grouped[doc.organism] = [];
+        grouped[doc.organism].push(doc);
+    });
+    
+    let html = '<div class="documents-container">';
+    
+    // Generar índice si estamos en la pestaña de visualización
+    if (document.getElementById('visualEditorTab')?.classList.contains('active')) {
+        html += generateIndex();
+    }
+    
+    html += '<div class="documents-grid">';
+    
+    const organismOrder = ['grouvex', 'records', 'designs', 'games'];
+    
+    organismOrder.forEach(org => {
+        if (grouped[org]) {
+            html += `<div class="organism-group" id="org-${org}">`;
+            html += `<h4 class="organism-title ${org}">${getOrganismLabel(org)}</h4>`;
+            html += `<div class="organism-documents">`;
+            
+            grouped[org].forEach(doc => {
+                const docId = `doc-${doc.id}`;
+                const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
+                
+                html += `
+                    <div class="doc-management-card" id="${docId}">
+                        <div class="doc-info">
+                            <div class="doc-badges-mini">
+                                <span class="doc-type-badge ${doc.type}">${getTypeLabel(doc.type)}</span>
+                                ${hasStructure ? '<span class="doc-structure-badge"><i class="fas fa-code"></i> Estructurado</span>' : ''}
+                            </div>
+                            <h5>${escapeHtml(doc.title)}</h5>
+                            <p class="doc-ref">${escapeHtml(doc.reference || 'Sin referencia')}</p>
+                        </div>
+                        <div class="doc-actions">
+                            <button class="icon-btn" onclick="editDocument('${doc.id}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="icon-btn" onclick="viewDocumentStructure('${doc.id}')" title="Ver estructura">
+                                <i class="fas fa-sitemap"></i>
+                            </button>
+                            <button class="icon-btn" onclick="viewDocumentVersions('${doc.id}')" title="Versiones">
+                                <i class="fas fa-history"></i>
+                            </button>
+                            <button class="icon-btn delete" onclick="deleteDocument('${doc.id}')" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div></div>`;
+        }
+    });
+    
+    html += '</div></div>';
+    container.innerHTML = html;
+    
+    // Re-inicializar navegación después de renderizar
+    setupNavigation();
+}
+
+// ============================================
+// FUNCIÓN PARA VER DOCUMENTO (VISTA PÚBLICA)
+// ============================================
+
+function viewDocument(docId) {
+    const doc = currentData.documents.find(d => d.id === docId);
+    if (!doc) return;
+    
+    let html = `
+        <div class="document-full-view">
+            <div class="document-header">
+                <h2>${escapeHtml(doc.title)}</h2>
+                <div class="document-meta">
+                    <span class="badge ${doc.organism}">${getOrganismLabel(doc.organism)}</span>
+                    <span class="badge ${doc.type}">${getTypeLabel(doc.type)}</span>
+                    <span class="badge"><i class="fas fa-tag"></i> ${escapeHtml(doc.reference || 'Sin ref')}</span>
+                    <span class="badge"><i class="fas fa-calendar"></i> ${formatDate(doc.date)}</span>
+                </div>
+            </div>
+            <div class="document-content">
+    `;
+    
+    if (doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0) {
+        // Renderizar estructura semántica
+        doc.structure.forEach(element => {
+            html += renderStructureElement(element);
+        });
+    } else if (doc.content) {
+        // Renderizar contenido plano
+        html += `<div class="doc-plain-content">${escapeHtml(doc.content).replace(/\n/g, '<br>')}</div>`;
+    }
+    
+    html += `
+            </div>
+            <div class="document-footer">
+                <p><i class="fas fa-code-branch"></i> Versión ${doc.version || 1}</p>
+                ${doc.tags ? `<p><i class="fas fa-tags"></i> ${doc.tags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join(' ')}</p>` : ''}
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = 'Vista del Documento';
+    document.getElementById('documentModalBody').innerHTML = html;
+    document.getElementById('documentModal').classList.add('active');
+}
+
+function renderStructureElement(element) {
+    let html = '';
+    
+    switch(element.type) {
+        case 'metadata':
+            html = `<div class="struct-metadata"><i class="fas fa-table"></i> ${escapeHtml(element.content || '')}</div>`;
+            break;
+        case 'sumario':
+            html = `<div class="struct-sumario"><h3><i class="fas fa-list"></i> ${escapeHtml(element.content || 'Sumario')}</h3>`;
+            if (element.items) {
+                html += '<ul>';
+                element.items.forEach(item => {
+                    html += `<li><a href="#${item.target}">${escapeHtml(item.text)}</a></li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+            break;
+        case 'titulo':
+        case 'h1':
+            html = `<h1 class="struct-titulo">${escapeHtml(element.content || '')}</h1>`;
+            break;
+        case 'capitulo':
+        case 'h2':
+            html = `<h2 class="struct-capitulo">${element.numero ? `Capítulo ${element.numero}: ` : ''}${escapeHtml(element.content || '')}</h2>`;
+            break;
+        case 'seccion':
+        case 'h3':
+            html = `<h3 class="struct-seccion">${element.numero ? `Sección ${element.numero}: ` : ''}${escapeHtml(element.content || '')}</h3>`;
+            break;
+        case 'articulo':
+        case 'h4':
+            html = `<div class="struct-articulo">`;
+            html += `<h4>Artículo ${element.numero || ''}</h4>`;
+            html += `<p>${escapeHtml(element.content || '')}</p>`;
+            html += `</div>`;
+            break;
+        case 'parrafo':
+        case 'p':
+            html = `<p class="struct-parrafo">${escapeHtml(element.content || '')}</p>`;
+            break;
+        case 'lista':
+            html = `<div class="struct-lista">`;
+            if (element.items) {
+                html += '<ul>';
+                element.items.forEach(item => {
+                    html += `<li>${escapeHtml(item)}</li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+            break;
+        default:
+            html = `<div class="struct-generic">${escapeHtml(element.content || '')}</div>`;
+    }
+    
+    return html;
+}
+
+// ============================================
+// AUTENTICACIÓN CON FIREBASE
 // ============================================
 
 // Lista de correos autorizados
@@ -41,7 +340,6 @@ function isAuthorized(email) {
 
 // Configurar listener de autenticación
 function setupAuthListener() {
-    // Verificar que Firebase Auth esté disponible
     if (!firebase || !firebase.auth) {
         console.error('Firebase Auth no está inicializado');
         showAuthMessage('error', 'Error de configuración de Firebase');
@@ -56,7 +354,6 @@ function setupAuthListener() {
             showEditorMessage('success', `👋 Bienvenido, ${user.displayName || user.email}`);
         } else {
             if (user) {
-                // Usuario no autorizado - cerrar sesión
                 await firebase.auth().signOut();
                 showAuthMessage('error', '⛔ No tienes permisos para acceder. Usa una cuenta @grouvex.com o autorizada.');
             }
@@ -65,60 +362,46 @@ function setupAuthListener() {
     });
 }
 
-// FUNCIÓN PRINCIPAL DE LOGIN CON GOOGLE (CORREGIDA)
+// FUNCIÓN PRINCIPAL DE LOGIN CON GOOGLE
 function signInWithGoogle() {
     console.log('Iniciando sesión con Google...');
     
     try {
-        // Verificar que Firebase esté disponible
         if (!firebase || !firebase.auth) {
             console.error('Firebase no está inicializado');
             showAuthMessage('error', 'Error: Firebase no está configurado correctamente');
             return;
         }
         
-        // Configurar proveedor de Google
         const provider = new firebase.auth.GoogleAuthProvider();
         
-        // Configuraciones adicionales
         provider.setCustomParameters({
-            prompt: 'select_account' // Siempre pide seleccionar cuenta
+            prompt: 'select_account'
         });
         
-        // Agregar scopes necesarios
         provider.addScope('profile');
         provider.addScope('email');
         
-        // Mostrar indicador de carga
         const authMessage = document.getElementById('authMessage');
         authMessage.textContent = '⏳ Abriendo ventana de Google...';
         authMessage.className = 'auth-message info';
         
-        // Iniciar sesión con popup
         firebase.auth().signInWithPopup(provider)
             .then((result) => {
-                // Éxito en la autenticación
                 const user = result.user;
-                const credential = result.credential;
-                
                 console.log('✅ Login exitoso:', user.email);
                 
-                // Verificar autorización
                 if (!isAuthorized(user.email)) {
-                    // Usuario no autorizado
                     firebase.auth().signOut();
                     showAuthMessage('error', '⛔ Acceso denegado. Correo no autorizado.');
                     return;
                 }
                 
-                // Login exitoso y autorizado
                 showAuthMessage('success', `✅ Bienvenido, ${user.displayName || user.email}`);
-                
             })
             .catch((error) => {
                 console.error('❌ Error en autenticación:', error);
                 
-                // Manejo específico de errores
                 let errorMessage = 'Error al iniciar sesión';
                 
                 switch (error.code) {
@@ -150,41 +433,12 @@ function signInWithGoogle() {
     }
 }
 
-// Función alternativa con redirect (para móviles)
-function signInWithGoogleRedirect() {
-    try {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-        firebase.auth().signInWithRedirect(provider);
-    } catch (error) {
-        console.error('Error en redirect:', error);
-        showAuthMessage('error', 'Error al redirigir a Google');
-    }
-}
-
-// Manejar resultado de redirect (llamar al cargar la página)
-function handleRedirectResult() {
-    firebase.auth().getRedirectResult()
-        .then((result) => {
-            if (result.user) {
-                console.log('Redirect login exitoso:', result.user.email);
-                if (!isAuthorized(result.user.email)) {
-                    firebase.auth().signOut();
-                    showAuthMessage('error', 'Acceso denegado');
-                }
-            }
-        })
-        .catch((error) => {
-            console.error('Error en redirect result:', error);
-        });
-}
-
 // Cerrar sesión
 function signOut() {
     firebase.auth().signOut()
         .then(() => {
             console.log('Sesión cerrada');
-            window.location.reload(); // Recargar para limpiar todo
+            window.location.reload();
         })
         .catch((error) => {
             console.error('Error al cerrar sesión:', error);
@@ -481,82 +735,6 @@ async function loadVersions() {
 }
 
 // ============================================
-// INTERFAZ VISUAL
-// ============================================
-
-function renderDocumentsList() {
-    const container = document.getElementById('documentsList');
-    const organismFilter = document.getElementById('organismFilter')?.value || 'all';
-    
-    if (!currentData || !currentData.documents) {
-        container.innerHTML = '<p class="loading-small">No hay documentos</p>';
-        return;
-    }
-    
-    let filteredDocs = currentData.documents;
-    if (organismFilter !== 'all') {
-        filteredDocs = filteredDocs.filter(doc => doc.organism === organismFilter);
-    }
-    
-    const grouped = {};
-    filteredDocs.forEach(doc => {
-        if (!grouped[doc.organism]) grouped[doc.organism] = [];
-        grouped[doc.organism].push(doc);
-    });
-    
-    let html = '';
-    const organismOrder = ['grouvex', 'records', 'designs', 'games'];
-    
-    organismOrder.forEach(org => {
-        if (grouped[org]) {
-            html += `<div class="organism-group">`;
-            html += `<h4 class="organism-title ${org}">${getOrganismLabel(org)}</h4>`;
-            html += `<div class="organism-documents">`;
-            
-            grouped[org].forEach(doc => {
-                // Detectar si tiene estructura semántica
-                const hasStructure = doc.structure && Array.isArray(doc.structure) && doc.structure.length > 0;
-                
-                html += `
-                    <div class="doc-management-card">
-                        <div class="doc-info">
-                            <div class="doc-badges-mini">
-                                <span class="doc-type-badge ${doc.type}">${getTypeLabel(doc.type)}</span>
-                                ${hasStructure ? '<span class="doc-structure-badge"><i class="fas fa-code"></i> Estructurado</span>' : ''}
-                            </div>
-                            <h5>${escapeHtml(doc.title)}</h5>
-                            <p class="doc-ref">${escapeHtml(doc.reference || 'Sin referencia')}</p>
-                        </div>
-                        <div class="doc-actions">
-                            <button class="icon-btn" onclick="editDocument('${doc.id}')" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="icon-btn" onclick="viewDocumentStructure('${doc.id}')" title="Ver estructura">
-                                <i class="fas fa-sitemap"></i>
-                            </button>
-                            <button class="icon-btn" onclick="viewDocumentVersions('${doc.id}')" title="Versiones">
-                                <i class="fas fa-history"></i>
-                            </button>
-                            <button class="icon-btn delete" onclick="deleteDocument('${doc.id}')" title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += `</div></div>`;
-        }
-    });
-    
-    container.innerHTML = html;
-}
-
-function filterDocumentsByOrganism() {
-    renderDocumentsList();
-}
-
-// ============================================
 // VISUALIZAR ESTRUCTURA DEL DOCUMENTO
 // ============================================
 
@@ -632,7 +810,7 @@ function getStructurePreview(element) {
 }
 
 // ============================================
-// FORMULARIOS DE DOCUMENTOS (ACTUALIZADOS)
+// FORMULARIOS DE DOCUMENTOS
 // ============================================
 
 function showNewDocumentForm() {
@@ -912,19 +1090,17 @@ async function saveDocument(event) {
         };
         
         if (hasStructure) {
-            // Guardar estructura semántica
             try {
                 const structureText = document.getElementById('docStructure').value;
                 docData.structure = JSON.parse(structureText);
-                docData.content = ''; // No usar content cuando hay estructura
+                docData.content = '';
             } catch (e) {
                 showEditorMessage('error', 'Error: La estructura JSON no es válida');
                 return;
             }
         } else {
-            // Guardar contenido tradicional
             docData.content = document.getElementById('docContent').value;
-            docData.structure = []; // Vaciar estructura si existe
+            docData.structure = [];
         }
         
         if (!currentEditingDoc) {
@@ -1284,6 +1460,8 @@ function closeDocumentModal() {
 
 function showEditorMessage(type, message) {
     const messageEl = document.getElementById('editorMessage');
+    if (!messageEl) return;
+    
     messageEl.textContent = message;
     messageEl.className = `editor-message ${type}`;
     
@@ -1335,3 +1513,5 @@ window.signInWithGoogle = signInWithGoogle;
 window.signOut = signOut;
 window.switchFormTab = switchFormTab;
 window.toggleStructureEditor = toggleStructureEditor;
+window.viewDocument = viewDocument;
+window.navigateToSection = navigateToSection;
