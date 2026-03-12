@@ -2280,3 +2280,209 @@ body {
         grid-template-columns: repeat(5, 1fr);
     }
 }
+
+/* Estilos para el índice y navegación */
+.document-index {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.document-index h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.index-organism {
+    margin-bottom: 1.5rem;
+}
+
+.index-organism h4 {
+    margin: 0 0 0.5rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.1rem;
+}
+
+.index-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.index-item {
+    margin-bottom: 0.5rem;
+}
+
+.index-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: background-color 0.2s;
+}
+
+.index-link:hover {
+    background-color: var(--bg-hover);
+}
+
+.index-badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    background-color: var(--badge-bg);
+    color: white;
+    min-width: 40px;
+    text-align: center;
+}
+
+.index-badge.bo { background-color: #3498db; }
+.index-badge.miembros { background-color: #2ecc71; }
+.index-badge.no { background-color: #f39c12; }
+.index-badge.tos { background-color: #e74c3c; }
+
+.index-title {
+    flex: 1;
+    font-size: 0.95rem;
+}
+
+.structure-icon {
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* Resaltado de sección */
+.highlight-section {
+    animation: highlight-pulse 2s ease;
+}
+
+@keyframes highlight-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+    }
+    20%, 80% {
+        box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.3);
+    }
+}
+
+/* IDs para navegación */
+[id^="doc-"] {
+    scroll-margin-top: 100px;
+}
+
+/* Estilos para vista de documento */
+.document-full-view {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.document-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.document-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.document-content {
+    line-height: 1.6;
+}
+
+.struct-titulo {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin: 2rem 0 1rem;
+    text-align: center;
+}
+
+.struct-capitulo {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin: 1.5rem 0 1rem;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 1rem;
+}
+
+.struct-seccion {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin: 1rem 0;
+}
+
+.struct-articulo {
+    background: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    border-left: 4px solid var(--accent-color);
+}
+
+.struct-articulo h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--accent-color);
+}
+
+.struct-parrafo {
+    margin: 0.75rem 0;
+}
+
+.struct-lista ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.struct-metadata,
+.struct-sumario {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-style: italic;
+}
+
+.document-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    margin-right: 0.3rem;
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .document-index {
+        padding: 1rem;
+    }
+    
+    .index-link {
+        flex-wrap: wrap;
+    }
+    
+    .document-meta {
+        flex-direction: column;
+    }
+}
